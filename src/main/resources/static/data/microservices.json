@@ -2,12 +2,7 @@
   {
     "id": "pointofsale-mobile-id",
     "label": "pointofsale-mobile-id",
-    "microservice-url": "https://example.com/posmid",
-    "consumes" : [
-      "alertmessages",
-      "kcb-shop"
-    ],
-    "metadata": "lorem ipsum dolores"
+    "microservice-url": "https://example.com/posmid"
   },
   {
     "id": "offerandpromotion",
@@ -27,7 +22,19 @@
   {
     "id": "customerconsent",
     "label": "customerconsent",
-    "microservice-url": "https://example.com/customerconsent"
+    "microservice-url": "https://example.com/customerconsent",
+    "consumes": [
+      "alertmessages",
+      "kcb-shop"
+    ],
+    "metadata": {
+      "description": "lorem ipsum",
+      "team": "ZOE",
+      "phase": "Konzeption",
+      "tags": [
+        "Kaffee"
+      ]
+    }
   },
   {
     "id": "kcb-couponcenter",
