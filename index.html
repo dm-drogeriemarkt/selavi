@@ -13,8 +13,7 @@ bonjour monde!
 
     var microserviceJsonNodes = JSON.parse(msReq.response);
     microserviceJsonNodes = microserviceJsonNodes.map(function(el) {
-        el.color = "blue";
-        el.font = { color: "white" }
+        el.color = "lightblue";
         return el;
     });
 
@@ -24,8 +23,7 @@ bonjour monde!
 
     var consumerJsonNodes = JSON.parse(consumerReq.response);
     consumerJsonNodes = consumerJsonNodes.map(function(el) {
-        el.color = "red";
-        el.font = { color: "white" }
+        el.color = "orange";
         return el;
     });
 
@@ -55,7 +53,17 @@ bonjour monde!
         nodes: nodes,
         edges: edges
     };
-    var options = {};
+    var options = {
+        nodes: {
+            borderWidth: 2,
+            shadow: true,
+            font: { color: "white" }
+        },
+        edges: {
+            width: 2,
+            shadow: true
+        }
+    };
     var network = new vis.Network(container, data, options);
 
 </script>
