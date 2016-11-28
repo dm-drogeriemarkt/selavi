@@ -6,7 +6,8 @@
     "consumes" : [
       "alertmessages",
       "kcb-shop"
-    ]
+    ],
+    "metadata": "lorem ipsum dolores"
   },
   {
     "id": "offerandpromotion",
