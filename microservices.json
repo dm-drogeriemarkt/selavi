@@ -1,0 +1,61 @@
+[
+  {
+    "id": "pointofsale-mobile-id",
+    "label": "pointofsale-mobile-id",
+    "microservice-url": "https://example.com/posmid",
+    "consumes" : [
+      "alertmessages",
+      "kcb-shop"
+    ]
+  },
+  {
+    "id": "offerandpromotion",
+    "label": "offerandpromotion",
+    "microservice-url": "https://example.com/offerandpromotion"
+  },
+  {
+    "id": "alertmessages",
+    "label": "alertmessages",
+    "microservice-url": "https://example.com/alertmessages"
+  },
+  {
+    "id": "pir",
+    "label": "pir",
+    "microservice-url": "https://example.com/pir"
+  },
+  {
+    "id": "customerconsent",
+    "label": "customerconsent",
+    "microservice-url": "https://example.com/customerconsent"
+  },
+  {
+    "id": "kcb-couponcenter",
+    "label": "kcb-couponcenter",
+    "microservice-url": "https://example.com/kcb-couponcenter"
+  },
+  {
+    "id": "kcb-assets",
+    "label": "kcb-assets",
+    "microservice-url": "https://example.com/kcb-assets"
+  },
+  {
+    "id": "productdata",
+    "label": "productdata",
+    "microservice-url": "https://example.com/product"
+  },
+  {
+    "id": "kcb-shop",
+    "label": "kcb-shop",
+    "microservice-url": "https://example.com/kcb-shop"
+  },
+  {
+    "id": "kcb-servicecenter",
+    "label": "kcb-servicecenter",
+    "microservice-url": "https://example.com/kcb-servicecenter"
+  },
+  {
+    "id": "pir-gui",
+    "label": "pir-gui",
+    "microservice-url": "https://example.com/pir-gui"
+  }
+]
