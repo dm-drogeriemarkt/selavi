@@ -4,6 +4,7 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
 import MicroserviceList from "./microserviceList";
+import MicroserviceMindmap from "./microserviceMindmap";
 
 class App extends React.Component {
 
@@ -18,11 +19,18 @@ class App extends React.Component {
         client({path: '/data/microservices.json'}).then(response => {
             this.setState({microservices: response.entity});
         });
+        client({path: '/data/consumers.json'}).then(response => {
+            this.setState({consumers: response.entity});
+        });
     }
 
     render() {
         return (
-            <MicroserviceList microservices={this.state.microservices}/>
+            <div>
+                <MicroserviceMindmap microservices={this.state.microservices}
+                                     consumers={this.state.consumers}/>
+                <MicroserviceList microservices={this.state.microservices}/>
+            </div>
         )
     }
 }
