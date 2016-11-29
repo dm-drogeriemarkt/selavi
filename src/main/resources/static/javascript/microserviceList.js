@@ -11,9 +11,9 @@ export default class MicroserviceList extends React.Component {
             <table>
                 <tbody>
                 <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Description</th>
+                    <th>id</th>
+                    <th>label</th>
+                    <th>url</th>
                 </tr>
                 {microservices}
                 </tbody>
