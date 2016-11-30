@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/services")
 public class ServiceController {
 
     private ContentService contentService;
@@ -21,7 +22,7 @@ public class ServiceController {
 
     }
 
-    @RequestMapping(value = "/services", method = RequestMethod.GET)
+    @RequestMapping
     public Collection<ContentDto> readServiceNames() {
         final Map<String, ContentDto> servicesWithContent = contentService.getServicesWithContent();
         return servicesWithContent.values();
