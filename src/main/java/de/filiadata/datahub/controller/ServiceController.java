@@ -1,14 +1,11 @@
 package de.filiadata.datahub.controller;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.business.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/services")
@@ -23,9 +20,8 @@ public class ServiceController {
     }
 
     @RequestMapping
-    public Collection<ContentDto> readServiceNames() {
-        final Map<String, ContentDto> servicesWithContent = contentService.getServicesWithContent();
-        return servicesWithContent.values();
+    public Collection<ObjectNode> readServiceNames() {
+        return contentService.getServicesWithContent();
     }
 
     @RequestMapping(value = "/{serviceName}", method = RequestMethod.POST)
@@ -33,8 +29,9 @@ public class ServiceController {
         // TODO
     }
 
-    @RequestMapping(value = "/{serviceName}", method = RequestMethod.PUT)
-    public void updateProperty(@PathVariable String serviceName, ContentDto dto) {
-        // TODO
+    @RequestMapping(value = "/{serviceName}/consumes", method = RequestMethod.PUT)
+    public void updateProperty(@PathVariable String serviceName, @RequestBody String consumedServiceId) {
+
+        // contentService.createConsumerRelation(consumedServiceId, serviceName)
     }
 }

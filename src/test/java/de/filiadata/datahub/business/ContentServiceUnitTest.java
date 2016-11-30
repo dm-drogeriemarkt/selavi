@@ -2,14 +2,13 @@ package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.filiadata.datahub.controller.ContentDto;
 import de.filiadata.datahub.repository.ServiceInfoRepository;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 
@@ -32,7 +31,7 @@ public class ContentServiceUnitTest {
         Mockito.when(microserviceReaderService.readServices()).thenReturn(microservicesMap);
 
         // when
-        Map<String, ContentDto> serviceInfo = service.getServicesWithContent();
+        Collection<ObjectNode> serviceInfo = service.getServicesWithContent();
 
         // then
         MatcherAssert.assertThat(serviceInfo.size(), is(3));

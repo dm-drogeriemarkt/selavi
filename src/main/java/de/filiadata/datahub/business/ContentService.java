@@ -6,7 +6,7 @@ import de.filiadata.datahub.repository.ServiceInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
 
 @Service
@@ -22,16 +22,9 @@ public class ContentService {
         this.serviceInfoRepository = serviceInfoRepository;
     }
 
-    public Map<String, ContentDto> getServicesWithContent() {
-        final Map<String, ContentDto> result = new HashMap<>();
+    public Collection<ObjectNode> getServicesWithContent() {
         final Map<String, ObjectNode> allServices = microserviceReaderService.readServices();
-        allServices.forEach((key, value) -> {
-
-            // TODO: read values from db
-            result.put(key, new ContentDto(value));
-        });
-
-        return result;
+        return allServices.values();
     }
 
     private void getConent(String serviceName, ObjectNode content) {
