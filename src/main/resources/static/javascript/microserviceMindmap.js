@@ -2,13 +2,13 @@ const React = require('react');
 
 export default class MicroserviceMindmap extends React.Component {
 
-    componentDidMount() {
-        var microservices = this.props.microservices.map(microservice => {
+    componentWillReceiveProps(nextProps) {
+        var microservices = nextProps.microservices.map(microservice => {
             microservice.color = "lightblue";
             return microservice;
         });
 
-        var consumers = this.props.microservices.map(consumer => {
+        var consumers = nextProps.consumers.map(consumer => {
             consumer.color = "orange";
             return consumer;
         });
