@@ -27,9 +27,4 @@ public class ServiceController {
     public void addService(@PathVariable String serviceName, @RequestBody ObjectNode dto) {
         contentService.createNewServiceInfo(serviceName, dto);
     }
-
-    @RequestMapping(value = "/{serviceName}/consumes", method = RequestMethod.PUT)
-    public void updateConsumer(@PathVariable String serviceName, @RequestBody String consumedServiceId) {
-        contentService.createNewConsumerRelation(consumedServiceId, serviceName);
-    }
 }

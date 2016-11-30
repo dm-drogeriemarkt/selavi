@@ -5,5 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ServiceInfoRepository extends CrudRepository<ServiceInfo, String> {
 
-    ServiceInfo findById(String serviceName);
 }
