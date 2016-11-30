@@ -1,13 +1,13 @@
 var path = require('path');
 
 module.exports = {
-    entry: './src/main/resources/static/javascript/app.js',
+    entry: './src/main/javascript/app.js',
     devtool: 'sourcemaps',
     cache: true,
     debug: true,
     output: {
         path: __dirname,
-        filename: './src/main/resources/static/built/bundle.js'
+        filename: './target/classes/static/bundle.js'
     },
     module: {
         loaders: [
