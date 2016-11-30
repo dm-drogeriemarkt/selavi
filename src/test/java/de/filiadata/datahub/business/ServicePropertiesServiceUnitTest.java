@@ -2,7 +2,8 @@ package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.filiadata.datahub.repository.ServiceInfoRepository;
+import de.filiadata.datahub.repository.MicroserviceRepository;
+import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -12,11 +13,11 @@ import java.util.HashMap;
 
 import static org.hamcrest.core.Is.is;
 
-public class ContentServiceUnitTest {
+public class ServicePropertiesServiceUnitTest {
 
-    private final MicroserviceReaderService microserviceReaderService = Mockito.mock(MicroserviceReaderService.class);
-    private final ServiceInfoRepository serviceInfoRepository = Mockito.mock(ServiceInfoRepository.class);
-    private final ContentService service = new ContentService(microserviceReaderService, serviceInfoRepository);
+    private final MicroserviceRepository microserviceRepository = Mockito.mock(MicroserviceRepository.class);
+    private final ServicePropertiesRepository servicePropertiesRepository = Mockito.mock(ServicePropertiesRepository.class);
+    private final ServicePropertiesService service = new ServicePropertiesService(microserviceRepository, servicePropertiesRepository);
 
     @Test
     public void shouldMergeNothinigIfNoDBContentIsAvailable() throws Exception {
@@ -27,7 +28,7 @@ public class ContentServiceUnitTest {
         microservicesMap.put("kcb-assets", createObjectNode("kcb-assets", "https://example.com/kcb-assets"));
         microservicesMap.put("pir-gui", createObjectNode("pir-gui", "https://example.com/pir-gui"));
 
-        Mockito.when(microserviceReaderService.readServices()).thenReturn(microservicesMap);
+        Mockito.when(microserviceRepository.findAllServices()).thenReturn(microservicesMap);
 
         // when
         Collection<ObjectNode> serviceInfo = service.getServicesWithContent();
