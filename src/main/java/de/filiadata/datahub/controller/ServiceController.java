@@ -16,7 +16,6 @@ public class ServiceController {
     @Autowired
     public ServiceController(ContentService contentService) {
         this.contentService = contentService;
-
     }
 
     @RequestMapping
@@ -25,13 +24,12 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/{serviceName}", method = RequestMethod.POST)
-    public void addProperty(@PathVariable String serviceName, ContentDto dto) {
-        // TODO
+    public void addService(@PathVariable String serviceName, @RequestBody ObjectNode dto) {
+        contentService.createNewServiceInfo(serviceName, dto);
     }
 
     @RequestMapping(value = "/{serviceName}/consumes", method = RequestMethod.PUT)
-    public void updateProperty(@PathVariable String serviceName, @RequestBody String consumedServiceId) {
-
-        // contentService.createConsumerRelation(consumedServiceId, serviceName)
+    public void updateConsumer(@PathVariable String serviceName, @RequestBody String consumedServiceId) {
+        contentService.createNewConsumerRelation(consumedServiceId, serviceName);
     }
 }

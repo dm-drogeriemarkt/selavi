@@ -2,6 +2,7 @@ package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.repository.ConsumerRelationRepository;
 import de.filiadata.datahub.repository.ServiceInfoRepository;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -16,8 +17,8 @@ public class ContentServiceUnitTest {
 
     private final MicroserviceReaderService microserviceReaderService = Mockito.mock(MicroserviceReaderService.class);
     private final ServiceInfoRepository serviceInfoRepository = Mockito.mock(ServiceInfoRepository.class);
-    private final ContentService service = new ContentService(microserviceReaderService, serviceInfoRepository);
-
+    private final ConsumerRelationRepository consumerRelationRepository = Mockito.mock(ConsumerRelationRepository.class);
+    private final ContentService service = new ContentService(microserviceReaderService, serviceInfoRepository, consumerRelationRepository);
 
     @Test
     public void shouldMergeNothinigIfNoDBContentIsAvailable() throws Exception {
