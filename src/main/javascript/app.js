@@ -10,14 +10,16 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {microservices: [],
-                      consumers: []};
+        this.state = {
+            microservices: [],
+            consumers: []
+        };
     }
 
     componentDidMount() {
 
         var client = rest.wrap(mime);
-        client({path: '/data/microservices.json'}).then(response => {
+        client({path: '/services'}).then(response => {
             this.setState({microservices: response.entity});
         });
         client({path: '/data/consumers.json'}).then(response => {
