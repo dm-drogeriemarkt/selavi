@@ -8,6 +8,10 @@ export default class MicroserviceMindmap extends React.Component {
     }
 
     componentDidUpdate() {
+        this.updateMindmap();
+    }
+
+    updateMindmap() {
         var microservices = this.state.microservices.map(microservice => {
             microservice.color = "lightblue";
             return microservice;
@@ -59,6 +63,6 @@ export default class MicroserviceMindmap extends React.Component {
     }
 
     render() {
-        return <div ref="vizcontainer"></div>;
+        return <div className="microserviceMindmap" ref="vizcontainer"></div>;
     }
 }

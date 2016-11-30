@@ -29,7 +29,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="appcontainer">
                 <MicroserviceMindmap microservices={this.state.microservices}
                                      consumers={this.state.consumers}/>
                 <MicroserviceList microservices={this.state.microservices}/>

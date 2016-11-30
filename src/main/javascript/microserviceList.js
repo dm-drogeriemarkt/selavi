@@ -8,7 +8,7 @@ export default class MicroserviceList extends React.Component {
             <Microservice key={microservice.id} microservice={microservice}/>
         );
         return (
-            <table>
+            <table className="microserviceList">
                 <tbody>
                 <tr>
                     <th>id</th>

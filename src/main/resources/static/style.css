@@ -1,0 +1,12 @@
+.appcontainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.microserviceMindmap {
+    flex-grow: 2;
+}
+
+.microserviceList {
+    width: 50em;
+}
