@@ -1,6 +1,14 @@
 const React = require('react');
+import { connect } from 'react-redux';
 
-export default class MicroserviceMindmap extends React.Component {
+const mapStateToProps = (state) => {
+    return {
+        microservices: state.microservices,
+        consumers: state.consumers
+    };
+};
+
+class MicroserviceMindmap extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({microservices: nextProps.microservices,
@@ -66,3 +74,5 @@ export default class MicroserviceMindmap extends React.Component {
         return <div className="microserviceMindmap" ref="vizcontainer"></div>;
     }
 }
+
+export default connect(mapStateToProps) (MicroserviceMindmap);

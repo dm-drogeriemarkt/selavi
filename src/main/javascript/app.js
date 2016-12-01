@@ -3,8 +3,12 @@ const ReactDOM = require('react-dom');
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
-import MicroserviceList from "./microserviceList";
-import MicroserviceMindmap from "./microserviceMindmap";
+import { Provider } from 'react-redux'
+
+import MicroserviceList from "./components/microserviceList";
+import MicroserviceMindmap from "./components/microserviceMindmap";
+
+import store from "./stores/microserviceStore";
 
 class App extends React.Component {
 
@@ -20,25 +24,32 @@ class App extends React.Component {
 
         var client = rest.wrap(mime);
         client({path: '/services'}).then(response => {
-            this.setState({microservices: response.entity});
+            store.dispatch({
+                type: 'FETCH_MICROSERVICES_SUCCESS',
+                response: response
+            });
         });
         client({path: '/data/consumers.json'}).then(response => {
-            this.setState({consumers: response.entity});
+            store.dispatch({
+                type: 'FETCH_CONSUMERS_SUCCESS',
+                response: response
+            });
         });
     }
 
     render() {
         return (
             <div className="appcontainer">
-                <MicroserviceMindmap microservices={this.state.microservices}
-                                     consumers={this.state.consumers}/>
-                <MicroserviceList microservices={this.state.microservices}/>
+                <MicroserviceMindmap/>
+                <MicroserviceList/>
             </div>
         )
     }
 }
 
 ReactDOM.render(
-    <App />,
+    <Provider store={store}>
+        <App />
+    </Provider>,
     document.getElementById('react')
 );

@@ -1,8 +1,15 @@
 const React = require('react');
+import { connect } from 'react-redux';
 
 import Microservice from "./microservice";
 
-export default class MicroserviceList extends React.Component {
+const mapStateToProps = (state) => {
+    return {
+        microservices: state.microservices
+    };
+};
+
+class MicroserviceList extends React.Component {
     render() {
         var microservices = this.props.microservices.map(microservice =>
             <Microservice key={microservice.id} microservice={microservice}/>
@@ -21,3 +28,5 @@ export default class MicroserviceList extends React.Component {
         )
     }
 }
+
+export default connect(mapStateToProps) (MicroserviceList);
