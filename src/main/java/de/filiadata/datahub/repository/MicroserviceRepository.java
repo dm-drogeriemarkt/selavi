@@ -37,7 +37,7 @@ public class MicroserviceRepository {
         final Map<String, ObjectNode> result = new HashMap<>();
         fieldNames.forEachRemaining(name -> {
             final JsonNode nodeValue = jsonNode.get(name);
-            final String microserviceUrl = nodeValue.get("href").toString();
+            final String microserviceUrl = nodeValue.get("href").asText();
             final ObjectNode resultNode = createResultNode(name, microserviceUrl);
             result.put(name, resultNode);
         });
