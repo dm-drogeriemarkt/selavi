@@ -5,21 +5,22 @@ import Microservice from "./microservice";
 
 const mapStateToProps = (state) => {
     return {
-        microservices: state.microservices
+        microservices: state.microservices,
+        selectedService: state.selectedService
     };
 };
 
 class MicroserviceList extends React.Component {
     render() {
-        var microservices = this.props.microservices.map(microservice =>
-            <Microservice key={microservice.id} microservice={microservice}/>
-        );
+        var microservices = this.props.microservices.map(microservice => {
+            var selected = (this.props.selectedService === microservice.id);
+            return <Microservice key={microservice.id} microservice={microservice} selected={selected} />
+        });
         return (
             <table className="microserviceList">
                 <tbody>
                 <tr>
                     <th>id</th>
-                    <th>label</th>
                     <th>url</th>
                 </tr>
                 {microservices}

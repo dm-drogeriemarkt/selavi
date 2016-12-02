@@ -8,6 +8,17 @@ const mapStateToProps = (state) => {
     };
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSelectMicroserviceNode: (params) => {
+            dispatch({
+                type: 'MICROSERVICE_NODE_SELECTED',
+                selectedServiceId: params.nodes[0]
+            });
+        }
+    };
+};
+
 class MicroserviceMindmap extends React.Component {
 
     componentWillReceiveProps(nextProps) {
@@ -68,6 +79,8 @@ class MicroserviceMindmap extends React.Component {
         };
 
         var network = new vis.Network(this.refs.vizcontainer, data, options);
+
+        network.on("selectNode", this.props.onSelectMicroserviceNode);
     }
 
     render() {
@@ -75,4 +88,4 @@ class MicroserviceMindmap extends React.Component {
     }
 }
 
-export default connect(mapStateToProps) (MicroserviceMindmap);
+export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceMindmap);

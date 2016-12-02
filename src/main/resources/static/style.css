@@ -1,3 +1,7 @@
+body {
+    font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+}
+
 .appcontainer {
     display: flex;
     flex-direction: row;
@@ -9,4 +13,9 @@
 
 .microserviceList {
     width: 50em;
+}
+
+.microserviceListEntry.selected {
+    font-style: italic;
+    font-weight: bold;
 }
