@@ -14,7 +14,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class ServiceProperties implements Serializable {
 
     @Id
