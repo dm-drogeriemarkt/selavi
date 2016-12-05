@@ -7,6 +7,13 @@ body {
     flex-direction: row;
 }
 
+.microserviceMindmap, .microserviceList {
+    border-style: solid;
+    border-radius: 0.5em;
+    border-color: #5793ec;
+    margin: 0.5em;
+}
+
 .microserviceMindmap {
     flex-grow: 2;
 }
@@ -18,4 +25,8 @@ body {
 .microserviceListEntry.selected {
     font-style: italic;
     font-weight: bold;
+}
+
+.contextMenu {
+    background-color: lightgrey;
 }

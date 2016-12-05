@@ -1,19 +1,39 @@
 const React = require('react');
 import { connect } from 'react-redux';
 
+import MicroserviceMindmapContextMenu from './microserviceMindmapContextMenu'
+
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
-        consumers: state.consumers
+        consumers: state.consumers,
+        addLinkConsumerId: state.addLinkConsumerId
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSelectMicroserviceNode: (params) => {
+        onSelectMicroserviceNode: function(params) {
+            if (this.props.addLinkConsumerId) {
+                dispatch({
+                    type: 'ADD_LINK_SET_CONSUMED_SERVICE',
+                    consumedServiceId: params.nodes[0]
+                });
+            } else {
+                dispatch({
+                    type: 'MICROSERVICE_NODE_SELECTED',
+                    selectedServiceId: params.nodes[0]
+                });
+            }
+        },
+        onContextMenuOpen: (params) => {
+            params.event.preventDefault();
+
             dispatch({
-                type: 'MICROSERVICE_NODE_SELECTED',
-                selectedServiceId: params.nodes[0]
+                type: 'CONTEXT_MENU_OPEN',
+                top: params.pointer.DOM.y,
+                left: params.pointer.DOM.x,
+                contextMenuServiceId: params.nodes[0]
             });
         }
     };
@@ -75,16 +95,27 @@ class MicroserviceMindmap extends React.Component {
             edges: {
                 width: 2,
                 shadow: true
+            },
+            layout: {
+                randomSeed:2
             }
         };
 
         var network = new vis.Network(this.refs.vizcontainer, data, options);
 
-        network.on("selectNode", this.props.onSelectMicroserviceNode);
+        var boundFn = this.props.onSelectMicroserviceNode.bind(this);
+
+        network.on("selectNode", boundFn);
+        network.on("oncontext", this.props.onContextMenuOpen);
     }
 
     render() {
-        return <div className="microserviceMindmap" ref="vizcontainer"></div>;
+        return (
+            <div className="microserviceMindmap" >
+                <MicroserviceMindmapContextMenu/>
+                <div ref="vizcontainer"></div>
+            </div>
+        );
     }
 }
 
