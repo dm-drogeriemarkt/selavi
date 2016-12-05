@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ServicePropertiesRepository extends CrudRepository<ServiceProperties, String> {
 
+    ServiceProperties findById(String id);
+
 }
