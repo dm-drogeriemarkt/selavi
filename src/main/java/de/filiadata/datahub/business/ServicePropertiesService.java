@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,21 +33,25 @@ public class ServicePropertiesService {
     }
 
     public Collection<ObjectNode> getServicesWithContent() {
-        final Map<String, ObjectNode> allServices = microserviceRepository.findAllServices();
-        final List<ObjectNode> values = new ArrayList<>(allServices.values());
-        appendPersistedServices(values);
+        final Map<String, ObjectNode> servicesFromGateway = microserviceRepository.findAllServices();
+        appendPersistedServices(servicesFromGateway);
 
-        return values;
+        return servicesFromGateway.values();
     }
 
-    private void appendPersistedServices(List<ObjectNode> values) {
+    private void appendPersistedServices(Map<String, ObjectNode> servicesFromGateway) {
         final Iterable<ServiceProperties> allAdditionalServicesWithProperties = servicePropertiesRepository.findAll();
         final ObjectMapper mapper = new ObjectMapper();
 
         allAdditionalServicesWithProperties.forEach(info -> {
             try {
                 ObjectNode node = (ObjectNode) mapper.readTree(info.getContent());
-                values.add(node);
+                if (servicesFromGateway.containsKey(info.getId())) {
+                    ObjectNode existingNode = servicesFromGateway.get(info.getId());
+                    existingNode.setAll(node);
+                } else {
+                    servicesFromGateway.put(info.getId(), node);
+                }
             } catch (IOException e) {
                 LOG.info("Service properties with ID '{}' is corrupted and will be skipped.", info.getId(), e);
             }
