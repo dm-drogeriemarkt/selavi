@@ -18,7 +18,11 @@ public class ServicePropertiesServiceUnitTest {
     private final MicroserviceRepository microserviceRepository = Mockito.mock(MicroserviceRepository.class);
     private final ServicePropertiesRepository servicePropertiesRepository = Mockito.mock(ServicePropertiesRepository.class);
     private final DefaultNodeContentFactory defaultNodeContentFactory = Mockito.mock(DefaultNodeContentFactory.class);
-    private final ServicePropertiesService service = new ServicePropertiesService(microserviceRepository, servicePropertiesRepository, defaultNodeContentFactory);
+    private final ServicePropertiesHandlerService servicePropertiesHandlerService = Mockito.mock(ServicePropertiesHandlerService.class);
+    private final ServicePropertiesService service = new ServicePropertiesService(microserviceRepository,
+            servicePropertiesRepository,
+            defaultNodeContentFactory,
+            servicePropertiesHandlerService);
 
     @Test
     public void shouldMergeNothinigIfNoDBContentIsAvailable() throws Exception {

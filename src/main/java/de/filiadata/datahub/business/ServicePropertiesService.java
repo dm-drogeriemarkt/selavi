@@ -1,7 +1,5 @@
 package de.filiadata.datahub.business;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.MicroserviceRepository;
@@ -19,17 +17,21 @@ import java.util.Map;
 public class ServicePropertiesService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServicePropertiesService.class);
+
     private MicroserviceRepository microserviceRepository;
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
+    private ServicePropertiesHandlerService servicePropertiesHandlerService;
 
     @Autowired
     public ServicePropertiesService(MicroserviceRepository microserviceRepository,
                                     ServicePropertiesRepository servicePropertiesRepository,
-                                    DefaultNodeContentFactory defaultNodeContentFactory) {
+                                    DefaultNodeContentFactory defaultNodeContentFactory,
+                                    ServicePropertiesHandlerService servicePropertiesHandlerService) {
         this.microserviceRepository = microserviceRepository;
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
+        this.servicePropertiesHandlerService = servicePropertiesHandlerService;
     }
 
     public Collection<ObjectNode> getServicesWithContent() {
@@ -41,11 +43,9 @@ public class ServicePropertiesService {
 
     private void appendPersistedServices(Map<String, ObjectNode> servicesFromGateway) {
         final Iterable<ServiceProperties> allAdditionalServicesWithProperties = servicePropertiesRepository.findAll();
-        final ObjectMapper mapper = new ObjectMapper();
-
         allAdditionalServicesWithProperties.forEach(info -> {
             try {
-                ObjectNode node = (ObjectNode) mapper.readTree(info.getContent());
+                ObjectNode node = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(info.getContent());
                 if (servicesFromGateway.containsKey(info.getId())) {
                     ObjectNode existingNode = servicesFromGateway.get(info.getId());
                     existingNode.setAll(node);
@@ -59,37 +59,21 @@ public class ServicePropertiesService {
     }
 
     public void createNewServiceInfo(String serviceName, ObjectNode dto) {
-        servicePropertiesRepository.save(new ServiceProperties(serviceName, dto.toString()));
+        if (!servicePropertiesRepository.exists(serviceName)) {
+            servicePropertiesRepository.save(new ServiceProperties(serviceName, dto.toString()));
+        }
     }
 
     public void addRelation(String serviceName, String relatedServiceName) {
-        ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
-        ObjectMapper mapper = defaultNodeContentFactory.getMapper();
-        if (serviceProperties == null) {
-            ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
-            ArrayNode arrayNode = mapper.createArrayNode();
-            arrayNode.add(relatedServiceName);
-            contentNode.put("consumes", arrayNode);
-            serviceProperties = new ServiceProperties(serviceName, contentNode.toString());
-            servicePropertiesRepository.save(serviceProperties);
+        final Boolean servicePropertiesExist = servicePropertiesRepository.exists(serviceName);
+        if (!servicePropertiesExist) {
+            servicePropertiesHandlerService.createAndSaveNewProperties(serviceName, relatedServiceName);
         } else {
-
-
             try {
-                ObjectNode node = (ObjectNode) mapper.readTree(serviceProperties.getContent());
-                boolean nodeExists = node.hasNonNull("consumes");
-                if (nodeExists) {
-                    ((ArrayNode) node.get("consumes")).add(relatedServiceName);
-                }
-                // TODO consumes erstellen wenn noch nicht da
-                serviceProperties.setContent(node.toString());
-                servicePropertiesRepository.save(serviceProperties);
-
+                servicePropertiesHandlerService.updateExistingProperties(serviceName, relatedServiceName);
             } catch (IOException e) {
-                // TODO
-
+                LOG.info("Update of service properties failed.", e);
             }
         }
-
     }
 }
