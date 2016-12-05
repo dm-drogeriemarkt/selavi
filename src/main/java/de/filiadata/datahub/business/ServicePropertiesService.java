@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class ServicePropertiesService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ServiceConsumerRelationService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServicePropertiesService.class);
     private MicroserviceRepository microserviceRepository;
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
