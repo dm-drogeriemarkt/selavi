@@ -1,9 +1,8 @@
 const React = require('react');
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
-import { connect } from 'react-redux';
-
-import MicroserviceMindmapContextMenu from './microserviceMindmapContextMenu'
+import {connect} from "react-redux";
+import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 
 const mapStateToProps = (state) => {
     return {
@@ -15,15 +14,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSelectMicroserviceNode: function(params) {
+        onSelectMicroserviceNode: function (params) {
             if (this.props.addLinkConsumerId) {
                 var client = rest.wrap(mime);
-                client({path: '/consumer/' + this.props.addLinkConsumerId,
-                    method: 'POST',
-                    entity: [params.nodes[0]],
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                client({
+                    path: '/services/' + this.props.addLinkConsumerId + '/relation',
+                    method: 'PUT',
+                    entity: params.nodes[0]
                 }).then(response => {
                     dispatch({
                         type: 'ADD_LINK_SET_CONSUMED_SERVICE',
@@ -54,8 +51,10 @@ const mapDispatchToProps = (dispatch) => {
 class MicroserviceMindmap extends React.Component {
 
     componentWillReceiveProps(nextProps) {
-        this.setState({microservices: nextProps.microservices,
-                       consumers: nextProps.consumers});
+        this.setState({
+            microservices: nextProps.microservices,
+            consumers: nextProps.consumers
+        });
     }
 
     componentDidUpdate() {
@@ -109,7 +108,7 @@ class MicroserviceMindmap extends React.Component {
                 shadow: true
             },
             layout: {
-                randomSeed:2
+                randomSeed: 2
             }
         };
 
@@ -123,7 +122,7 @@ class MicroserviceMindmap extends React.Component {
 
     render() {
         return (
-            <div className="microserviceMindmap" >
+            <div className="microserviceMindmap">
                 <MicroserviceMindmapContextMenu/>
                 <div ref="vizcontainer"></div>
             </div>
@@ -131,4 +130,4 @@ class MicroserviceMindmap extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceMindmap);
+export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmap);
