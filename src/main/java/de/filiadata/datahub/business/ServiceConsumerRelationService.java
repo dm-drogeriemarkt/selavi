@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.domain.ServiceConsumerRelation;
 import de.filiadata.datahub.repository.ServiceConsumerRelationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @Service
 public class ServiceConsumerRelationService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceConsumerRelationService.class);
     private ServiceConsumerRelationRepository serviceConsumerRelationRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
 
@@ -33,7 +36,7 @@ public class ServiceConsumerRelationService {
                 ObjectNode node = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(relation.getContent());
                 result.add(node);
             } catch (IOException e) {
-                // TODO: Logging
+                LOG.info("Relation with ID '{}' is corrupted and will be skipped.", relation.getId(), e);
             }
         });
 

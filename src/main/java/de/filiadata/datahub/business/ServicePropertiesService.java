@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.MicroserviceRepository;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.Map;
 @Service
 public class ServicePropertiesService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceConsumerRelationService.class);
     private MicroserviceRepository microserviceRepository;
     private ServicePropertiesRepository servicePropertiesRepository;
 
@@ -44,7 +47,7 @@ public class ServicePropertiesService {
                 ObjectNode node = (ObjectNode) mapper.readTree(info.getContent());
                 values.add(node);
             } catch (IOException e) {
-                // TODO: Logging
+                LOG.info("Service properties with ID '{}' is corrupted and will be skipped.", info.getId(), e);
             }
         });
     }
