@@ -1,4 +1,6 @@
 const React = require('react');
+const rest = require('rest');
+const mime = require('rest/interceptor/mime');
 import { connect } from 'react-redux';
 
 import MicroserviceMindmapContextMenu from './microserviceMindmapContextMenu'
@@ -15,10 +17,20 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onSelectMicroserviceNode: function(params) {
             if (this.props.addLinkConsumerId) {
-                dispatch({
-                    type: 'ADD_LINK_SET_CONSUMED_SERVICE',
-                    consumedServiceId: params.nodes[0]
+                var client = rest.wrap(mime);
+                client({path: '/consumer/' + this.props.addLinkConsumerId,
+                    method: 'POST',
+                    entity: [params.nodes[0]],
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    dispatch({
+                        type: 'ADD_LINK_SET_CONSUMED_SERVICE',
+                        consumedServiceId: params.nodes[0]
+                    });
                 });
+
             } else {
                 dispatch({
                     type: 'MICROSERVICE_NODE_SELECTED',
