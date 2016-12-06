@@ -7,6 +7,17 @@ import { shallow } from 'enzyme';
 import { MicroserviceMindmap } from '../../main/javascript/components/microserviceMindmap';
 
 describe('<MicroserviceMindmap/>', function () {
+
+    before(function() {
+        // global is node.js' window
+        global.vis = {
+            DataSet: sinon.spy(),
+            Network: sinon.stub().returns({
+                on: sinon.spy()
+            })
+        };
+    });
+
     it('can be instantiated', function () {
 
         const wrapper = shallow(<MicroserviceMindmap />);
@@ -16,31 +27,9 @@ describe('<MicroserviceMindmap/>', function () {
 
     it('creates vis js graph', function () {
 
-        const props = {
-            onSelectMicroserviceNode: sinon.spy()
-        }
+        const props = createProps();
 
-        // enzyme's shallow rendering does not call all lifecycle methods of the component, unless
-        // lifecycleExperimental is set to 'true'. in our case, componentDidUpdate() was not called.
-        // this might be resolved in the future, see https://github.com/airbnb/enzyme/pull/318
-        const wrapper = shallow(<MicroserviceMindmap {...props}/>, { lifecycleExperimental: true });
-
-        const microservices = [
-            {
-                id: "foo-service",
-                label: "foo-service"
-            }
-        ];
-
-        const consumers = [
-            {
-                id: "bar-consumer",
-                label: "bar-consumer",
-                consumes: [
-                    "foo-service"
-                ]
-            }
-        ];
+        const wrapper = shallow(<MicroserviceMindmap {...props}/>);
 
         const expectedAllNodes = [
             {
@@ -58,17 +47,33 @@ describe('<MicroserviceMindmap/>', function () {
             }
         ]
 
-        // global is node.js' window
-        global.vis = {
-            DataSet: sinon.spy(),
-            Network: sinon.stub().returns({
-                on: sinon.spy()
-            })
-        };
-
-        wrapper.setProps({ microservices: microservices,
-                           consumers: consumers});
-
         chai.expect(global.vis.DataSet.calledWith(expectedAllNodes));
     });
 });
+
+function createProps() {
+    const microservices = [
+        {
+            id: "foo-service",
+            label: "foo-service"
+        }
+    ];
+
+    const consumers = [
+        {
+            id: "bar-consumer",
+            label: "bar-consumer",
+            consumes: [
+                "foo-service"
+            ]
+        }
+    ];
+
+    const props = {
+        onSelectMicroserviceNode: sinon.spy(),
+        microservices: microservices,
+        consumers: consumers
+    };
+
+    return props;
+}
