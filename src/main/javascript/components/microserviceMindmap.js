@@ -66,11 +66,8 @@ const mapDispatchToProps = (dispatch) => {
 
 export class MicroserviceMindmap extends React.Component {
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            microservices: nextProps.microservices,
-            consumers: nextProps.consumers
-        });
+    componentDidMount() {
+        this.updateMindmap();
     }
 
     componentDidUpdate() {
@@ -78,12 +75,12 @@ export class MicroserviceMindmap extends React.Component {
     }
 
     updateMindmap() {
-        var microservices = this.state.microservices.map(microservice => {
+        var microservices = this.props.microservices.map(microservice => {
             microservice.color = "lightblue";
             return microservice;
         });
 
-        var consumers = this.state.consumers.map(consumer => {
+        var consumers = this.props.consumers.map(consumer => {
             consumer.color = "orange";
             return consumer;
         });

@@ -29,7 +29,10 @@ describe('<MicroserviceMindmap/>', function () {
 
         const props = createProps();
 
-        const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+        // enzyme's shallow rendering does not call all lifecycle methods of the component, unless
+        // lifecycleExperimental is set to 'true'. in our case, componentDidUpdate() was not called.
+        // this might be resolved in the future, see https://github.com/airbnb/enzyme/pull/318
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
 
         const expectedAllNodes = [
             {
@@ -47,7 +50,7 @@ describe('<MicroserviceMindmap/>', function () {
             }
         ]
 
-        chai.expect(global.vis.DataSet.calledWith(expectedAllNodes));
+        chai.expect(global.vis.DataSet.calledWith(expectedAllNodes)).to.be.ok;
     });
 });
 
