@@ -45,6 +45,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "bar-consumer",
                 label: "bar-consumer",
+                isExternal: true,
                 consumes: [
                     "foo-service"
                 ],
@@ -80,13 +81,11 @@ function createProps() {
         {
             id: "foo-service",
             label: "foo-service"
-        }
-    ];
-
-    const consumers = [
+        },
         {
             id: "bar-consumer",
             label: "bar-consumer",
+            isExternal: true,
             consumes: [
                 "foo-service"
             ]
@@ -95,8 +94,7 @@ function createProps() {
 
     const props = {
         onSelectMicroserviceNode: sinon.spy(),
-        microservices: microservices,
-        consumers: consumers
+        microservices: microservices
     };
 
     return props;

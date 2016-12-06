@@ -7,7 +7,6 @@ import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
-        consumers: state.consumers,
         addLinkConsumerId: state.addLinkConsumerId
     };
 };
@@ -76,23 +75,20 @@ export class MicroserviceMindmap extends React.Component {
 
     updateMindmap() {
         var microservices = this.props.microservices.map(microservice => {
-            microservice.color = "lightblue";
+            if (microservice.isExternal) {
+                microservice.color = "orange";
+            } else {
+                microservice.color = "lightblue";
+            }
             return microservice;
         });
 
-        var consumers = this.props.consumers.map(consumer => {
-            consumer.color = "orange";
-            return consumer;
-        });
-
-        var allNodes = microservices.concat(consumers);
-
         // create an array with nodes
-        var nodes = new vis.DataSet(allNodes);
+        var nodes = new vis.DataSet(microservices);
 
         var edgeArray = [];
 
-        allNodes.filter(function (el) {
+        microservices.filter(function (el) {
             return el.consumes;
         }).forEach(function (el) {
             el.consumes.forEach(function (consumer) {

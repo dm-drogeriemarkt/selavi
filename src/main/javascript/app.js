@@ -29,12 +29,6 @@ class App extends React.Component {
                 response: response
             });
         });
-        client({path: '/data/consumers.json'}).then(response => {
-            store.dispatch({
-                type: 'FETCH_CONSUMERS_SUCCESS',
-                response: response
-            });
-        });
     }
 
     render() {
