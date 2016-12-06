@@ -55,6 +55,7 @@ function updateStore(state = initialState, action) {
 
             var consumedServiceIndex = state.consumers.findIndex((node) => node.id === state.addLinkConsumerId);
 
+            // TODO: doppelter code fliegt weg, sobald alle services von einer resource ausgeliefert werden
             if (consumedServiceIndex != -1) {
                 const newConsumer = Object.assign({}, state.consumers[consumedServiceIndex]);
                 newConsumer.consumes.push(action.consumedServiceId);
