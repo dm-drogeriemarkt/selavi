@@ -26,45 +26,48 @@ public class CustomPropertiesService {
         this.defaultNodeContentFactory = defaultNodeContentFactory;
     }
 
-    public void addSingleValueProperties(String serviceName, Map<String, String> property) {
+    public void addSingleValueProperties(String serviceName, Map<String, String> properties) {
         boolean isPersistedNode = servicePropertiesRepository.exists(serviceName);
         if (!isPersistedNode) {
-            servicePropertiesRepository.save(persistNewEntry(serviceName, property));
+            final ServiceProperties newServiceProperties = createNewServiceProperty(serviceName, properties);
+            servicePropertiesRepository.save(newServiceProperties);
         } else {
-            final ServiceProperties serviceProperties = setPropertyForPersistedEntry(serviceName, property);
-            if (serviceProperties != null) {
-                servicePropertiesRepository.save(serviceProperties);
+            final ServiceProperties updatedServiceProperties = updateExistingServiceProperty(serviceName, properties);
+            if (updatedServiceProperties != null) {
+                servicePropertiesRepository.save(updatedServiceProperties);
             }
         }
     }
 
-    private ServiceProperties persistNewEntry(String serviceName, Map<String, String> property) {
+    private ServiceProperties createNewServiceProperty(String serviceName, Map<String, String> properties) {
         final ObjectNode node = defaultNodeContentFactory.create(serviceName);
-        addOrUpdatePropertyToNode(node, property);
+        addOrUpdateContentForServiceProperty(node, properties);
         return new ServiceProperties(serviceName, node.toString());
     }
 
-    private ServiceProperties setPropertyForPersistedEntry(String serviceName, Map<String, String> property) {
+    private ServiceProperties updateExistingServiceProperty(String serviceName, Map<String, String> properties) {
         try {
-            final ServiceProperties properties = servicePropertiesRepository.findById(serviceName);
-            final ObjectNode node;
-            node = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(properties.getContent());
-            addOrUpdatePropertyToNode(node, property);
-            properties.setContent(node.toString());
-            return properties;
+            final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
+            final ObjectNode node = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(serviceProperties.getContent());
+
+            addOrUpdateContentForServiceProperty(node, properties);
+            serviceProperties.setContent(node.toString());
+
+            return serviceProperties;
 
         } catch (IOException e) {
-            LOG.error("Update of service property for service '{}' failed.", serviceName, e);
+            LOG.error("Update of service properties for service '{}' failed.", serviceName, e);
         }
+
         return null;
     }
 
-    private void addOrUpdatePropertyToNode(ObjectNode node, Map<String, String> property) {
-        property.forEach((k, v) -> {
-            if (node.hasNonNull(k)) {
-                node.set(k, JsonNodeFactory.instance.textNode(v));
+    private void addOrUpdateContentForServiceProperty(ObjectNode node, Map<String, String> property) {
+        property.forEach((key, value) -> {
+            if (node.hasNonNull(key)) {
+                node.set(key, JsonNodeFactory.instance.textNode(value));
             } else {
-                node.put(k, v);
+                node.put(key, value);
             }
         });
     }
