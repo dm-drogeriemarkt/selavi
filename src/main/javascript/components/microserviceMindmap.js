@@ -35,15 +35,23 @@ const mapDispatchToProps = (dispatch) => {
                 });
             }
         },
-        onContextMenuOpen: (params) => {
+        onContextMenuOpen: function (params) {
             params.event.preventDefault();
 
-            dispatch({
-                type: 'CONTEXT_MENU_OPEN',
-                top: params.pointer.DOM.y,
-                left: params.pointer.DOM.x,
-                contextMenuServiceId: params.nodes[0]
-            });
+            const nodeId = this.getNodeAt(params.pointer.DOM);
+            
+            if (nodeId) {
+
+                // right click does not select node!
+                this.selectNodes([nodeId]);
+
+                dispatch({
+                    type: 'CONTEXT_MENU_OPEN',
+                    top: params.pointer.DOM.y,
+                    left: params.pointer.DOM.x,
+                    contextMenuServiceId: nodeId
+                });
+            }
         }
     };
 };
