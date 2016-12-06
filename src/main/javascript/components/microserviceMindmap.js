@@ -39,9 +39,8 @@ const mapDispatchToProps = (dispatch) => {
             params.event.preventDefault();
 
             const nodeId = this.getNodeAt(params.pointer.DOM);
-            
-            if (nodeId) {
 
+            if (nodeId) {
                 // right click does not select node!
                 this.selectNodes([nodeId]);
 
@@ -50,6 +49,15 @@ const mapDispatchToProps = (dispatch) => {
                     top: params.pointer.DOM.y,
                     left: params.pointer.DOM.x,
                     contextMenuServiceId: nodeId
+                });
+            } else {
+                this.unselectAll();
+
+                dispatch({
+                    type: 'CONTEXT_MENU_OPEN',
+                    top: -1,
+                    left: -1,
+                    contextMenuServiceId: undefined
                 });
             }
         }
