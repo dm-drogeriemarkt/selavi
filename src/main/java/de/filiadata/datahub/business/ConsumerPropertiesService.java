@@ -13,10 +13,10 @@ import java.io.IOException;
 @Service
 public class ConsumerPropertiesService {
 
+    private static final String CONSUMER_NODE_NAME = "consumes";
+
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
-
-    private static final String CONSUMER_NODE_NAME = "consumes";
 
     @Autowired
     public ConsumerPropertiesService(ServicePropertiesRepository servicePropertiesRepository,
