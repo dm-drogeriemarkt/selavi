@@ -22,16 +22,19 @@ public class ServicePropertiesService {
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
     private ServicePropertiesHandlerService servicePropertiesHandlerService;
+    private CustomPropertiesService customPropertiesService;
 
     @Autowired
     public ServicePropertiesService(MicroserviceRepository microserviceRepository,
                                     ServicePropertiesRepository servicePropertiesRepository,
                                     DefaultNodeContentFactory defaultNodeContentFactory,
-                                    ServicePropertiesHandlerService servicePropertiesHandlerService) {
+                                    ServicePropertiesHandlerService servicePropertiesHandlerService,
+                                    CustomPropertiesService customPropertiesService) {
         this.microserviceRepository = microserviceRepository;
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.servicePropertiesHandlerService = servicePropertiesHandlerService;
+        this.customPropertiesService = customPropertiesService;
     }
 
     public Collection<ObjectNode> getServicesWithContent() {
@@ -75,5 +78,9 @@ public class ServicePropertiesService {
                 LOG.info("Update of service properties failed.", e);
             }
         }
+    }
+
+    public void addProperties(String serviceName, Map<String, String> property) {
+        customPropertiesService.addSingleValueProperties(serviceName, property);
     }
 }
