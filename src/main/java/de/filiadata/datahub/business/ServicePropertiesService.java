@@ -21,19 +21,19 @@ public class ServicePropertiesService {
     private MicroserviceRepository microserviceRepository;
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
-    private ServicePropertiesHandlerService servicePropertiesHandlerService;
+    private ConsumerPropertiesService consumerPropertiesService;
     private CustomPropertiesService customPropertiesService;
 
     @Autowired
     public ServicePropertiesService(MicroserviceRepository microserviceRepository,
                                     ServicePropertiesRepository servicePropertiesRepository,
                                     DefaultNodeContentFactory defaultNodeContentFactory,
-                                    ServicePropertiesHandlerService servicePropertiesHandlerService,
+                                    ConsumerPropertiesService consumerPropertiesService,
                                     CustomPropertiesService customPropertiesService) {
         this.microserviceRepository = microserviceRepository;
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
-        this.servicePropertiesHandlerService = servicePropertiesHandlerService;
+        this.consumerPropertiesService = consumerPropertiesService;
         this.customPropertiesService = customPropertiesService;
     }
 
@@ -70,10 +70,10 @@ public class ServicePropertiesService {
     public void addRelation(String serviceName, String relatedServiceName) {
         final Boolean servicePropertiesExist = servicePropertiesRepository.exists(serviceName);
         if (!servicePropertiesExist) {
-            servicePropertiesHandlerService.createAndSaveNewProperties(serviceName, relatedServiceName);
+            consumerPropertiesService.createAndSaveNewProperties(serviceName, relatedServiceName);
         } else {
             try {
-                servicePropertiesHandlerService.updateExistingProperties(serviceName, relatedServiceName);
+                consumerPropertiesService.updateExistingProperties(serviceName, relatedServiceName);
             } catch (IOException e) {
                 LOG.info("Update of service properties failed.", e);
             }

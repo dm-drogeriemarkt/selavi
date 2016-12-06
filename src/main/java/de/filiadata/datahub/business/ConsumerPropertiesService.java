@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class ServicePropertiesHandlerService {
+public class ConsumerPropertiesService {
 
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
@@ -19,8 +19,8 @@ public class ServicePropertiesHandlerService {
     private static final String CONSUMER_NODE_NAME = "consumes";
 
     @Autowired
-    public ServicePropertiesHandlerService(ServicePropertiesRepository servicePropertiesRepository,
-                                           DefaultNodeContentFactory defaultNodeContentFactory) {
+    public ConsumerPropertiesService(ServicePropertiesRepository servicePropertiesRepository,
+                                     DefaultNodeContentFactory defaultNodeContentFactory) {
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
     }
@@ -38,23 +38,24 @@ public class ServicePropertiesHandlerService {
             return servicePropertiesRepository.save(serviceProperties);
         }
 
-        final ObjectNode newConsumerNode = createConsumerNode(serviceName, relatedServiceName);
-        serviceProperties.setContent(newConsumerNode.toString());
+        final ArrayNode newConsumerNode = createConsumerNode(relatedServiceName);
+        existingNode.set(CONSUMER_NODE_NAME, newConsumerNode);
+        serviceProperties.setContent(existingNode.toString());
         return servicePropertiesRepository.save(serviceProperties);
     }
 
     public ServiceProperties createAndSaveNewProperties(String serviceName, String relatedServiceName) {
-        ObjectNode nodeWithConsumers = createConsumerNode(serviceName, relatedServiceName);
-        ServiceProperties newServiceProperties = new ServiceProperties(serviceName, nodeWithConsumers.toString());
+        final ArrayNode consumerNode = createConsumerNode(relatedServiceName);
+        final ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
+        contentNode.set(CONSUMER_NODE_NAME, consumerNode);
+
+        final ServiceProperties newServiceProperties = new ServiceProperties(serviceName, contentNode.toString());
         return servicePropertiesRepository.save(newServiceProperties);
     }
 
-    private ObjectNode createConsumerNode(String serviceName, String relatedServiceName) {
-        ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
+    private ArrayNode createConsumerNode(String relatedServiceName) {
         ArrayNode consumerNode = defaultNodeContentFactory.getMapper().createArrayNode();
         consumerNode.add(relatedServiceName);
-        contentNode.set(CONSUMER_NODE_NAME, consumerNode);
-
-        return contentNode;
+        return consumerNode;
     }
 }
