@@ -54,7 +54,7 @@ public class CustomPropertiesService {
             return properties;
 
         } catch (IOException e) {
-            LOG.info("Update of service property for service '{}' failed.", serviceName, e);
+            LOG.error("Update of service property for service '{}' failed.", serviceName, e);
         }
         return null;
     }

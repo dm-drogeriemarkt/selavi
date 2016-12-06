@@ -56,7 +56,7 @@ public class ServicePropertiesService {
                     servicesFromGateway.put(info.getId(), node);
                 }
             } catch (IOException e) {
-                LOG.info("Service properties with ID '{}' is corrupted and will be skipped.", info.getId(), e);
+                LOG.error("Service properties with ID '{}' is corrupted and will be skipped.", info.getId(), e);
             }
         });
     }
@@ -75,7 +75,7 @@ public class ServicePropertiesService {
             try {
                 consumerPropertiesService.updateExistingProperties(serviceName, relatedServiceName);
             } catch (IOException e) {
-                LOG.info("Update of service properties failed.", e);
+                LOG.error("Update of service properties failed.", e);
             }
         }
     }
