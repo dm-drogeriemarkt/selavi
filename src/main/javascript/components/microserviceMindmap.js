@@ -64,7 +64,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-class MicroserviceMindmap extends React.Component {
+export class MicroserviceMindmap extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
