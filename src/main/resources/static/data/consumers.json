@@ -1,9 +1,0 @@
-[
-  {
-    "id": "glueckskind-app",
-    "label": "glueckskind-app",
-    "consumes": [
-      "customerconsent"
-    ]
-  }
-]
