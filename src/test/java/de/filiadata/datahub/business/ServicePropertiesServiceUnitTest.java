@@ -1,54 +1,127 @@
 package de.filiadata.datahub.business;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.filiadata.datahub.repository.MicroserviceRepository;
+import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.*;
 
 public class ServicePropertiesServiceUnitTest {
 
-    private final MicroserviceRepository microserviceRepository = Mockito.mock(MicroserviceRepository.class);
-    private final ServicePropertiesRepository servicePropertiesRepository = Mockito.mock(ServicePropertiesRepository.class);
-    private final DefaultNodeContentFactory defaultNodeContentFactory = Mockito.mock(DefaultNodeContentFactory.class);
-    private final ConsumerPropertiesService consumerPropertiesService = Mockito.mock(ConsumerPropertiesService.class);
-    private final CustomPropertiesService customPropertiesService = Mockito.mock(CustomPropertiesService.class);
-    private final ServicePropertiesService service = new ServicePropertiesService(microserviceRepository,
+    private final ServicePropertiesRepository servicePropertiesRepository = mock(ServicePropertiesRepository.class);
+    private final ConsumerPropertiesService consumerPropertiesService = mock(ConsumerPropertiesService.class);
+    private final CustomPropertiesService customPropertiesService = mock(CustomPropertiesService.class);
+    private final PropertiesContentProviderService propertiesContentProviderService = mock(PropertiesContentProviderService.class);
+    private final ServicePropertiesService service = new ServicePropertiesService(propertiesContentProviderService,
             servicePropertiesRepository,
-            defaultNodeContentFactory,
             consumerPropertiesService,
             customPropertiesService);
 
     @Test
-    public void shouldMergeNothinigIfNoDBContentIsAvailable() throws Exception {
-
-        // given
-        final HashMap<String, ObjectNode> microservicesMap = new HashMap<>();
-        microservicesMap.put("customerconsent", createObjectNode("customerconsent", "https://example.com/customerconsent"));
-        microservicesMap.put("kcb-assets", createObjectNode("kcb-assets", "https://example.com/kcb-assets"));
-        microservicesMap.put("pir-gui", createObjectNode("pir-gui", "https://example.com/pir-gui"));
-
-        Mockito.when(microserviceRepository.findAllServices()).thenReturn(microservicesMap);
+    public void shouldDelegateToContentProvider() throws Exception {
 
         // when
-        Collection<ObjectNode> serviceInfo = service.getServicesWithContent();
+        service.getServicesWithContent();
 
         // then
-        MatcherAssert.assertThat(serviceInfo.size(), is(3));
+        verify(propertiesContentProviderService).getAllServicesWithContent();
     }
 
-    private ObjectNode createObjectNode(String serviceName, String url) {
-        ObjectNode objectNode = new ObjectMapper().createObjectNode();
-        objectNode.put("id", serviceName);
-        objectNode.put("label", serviceName);
-        objectNode.put("microservice-url", url);
-        return objectNode;
+    @Test
+    public void shouldPersistNewServiceIfItDoesNotExist() throws Exception {
+        // given
+        final String serviceName = "serviceName";
+        final ObjectNode objectNode = mock(ObjectNode.class);
+        final JsonNode idNode = mock(JsonNode.class);
+
+        when(servicePropertiesRepository.exists(serviceName)).thenReturn(false);
+        when(objectNode.get("id")).thenReturn(idNode);
+        when(idNode.textValue()).thenReturn(serviceName);
+
+        // when
+        service.createNewServiceInfo(objectNode);
+
+        // then
+        verify(servicePropertiesRepository).save(any(ServiceProperties.class));
+    }
+
+    @Test
+    public void shouldNotSaveNewServiceIfItExists() throws Exception {
+        // given
+        final String serviceName = "someName";
+        final ObjectNode objectNode = mock(ObjectNode.class);
+        final JsonNode idNode = mock(JsonNode.class);
+
+        when(servicePropertiesRepository.exists(serviceName)).thenReturn(true);
+        when(objectNode.get("id")).thenReturn(idNode);
+        when(idNode.textValue()).thenReturn(serviceName);
+
+        // when
+        service.createNewServiceInfo(objectNode);
+
+        // then
+        verify(servicePropertiesRepository, never()).save(any(ServiceProperties.class));
+    }
+
+    @Test
+    public void shouldDeletegateToCustomPropertiesServiceToAddOrUpdateProperties() throws Exception {
+        // given
+        final String serviceName = "serviceName";
+        final Map<String, String> properties = Collections.emptyMap();
+
+        // when
+        service.addProperties(serviceName, properties);
+
+        // then
+        verify(customPropertiesService).addSingleValueProperties(serviceName, properties);
+    }
+
+    @Test
+    public void shouldDeletegateToCustomPropertiesServiceToDeleteProperties() throws Exception {
+        // given
+        final List<String> propertyNames = Collections.emptyList();
+        final String serviceName = "fooName";
+
+        // when
+        service.deleteProperties(serviceName, propertyNames);
+
+        // then
+        verify(customPropertiesService).deleteProperty(serviceName, propertyNames);
+    }
+
+    @Test
+    public void shouldDelegateToConsumerServiceToCreateNewRelation() throws Exception {
+        // given
+        final String serviceName = "ultraServiceName";
+        final String relatedServiceName = "relatedServiceName";
+
+        when(servicePropertiesRepository.exists(serviceName)).thenReturn(false);
+
+        // when
+        service.addRelation(serviceName, relatedServiceName);
+
+        // then
+        verify(consumerPropertiesService).createAndSaveNewProperties(serviceName, relatedServiceName);
+    }
+
+    @Test
+    public void shouldDelegateToConsumerServiceToUpdateRelations() throws Exception {
+        // given
+        final String serviceName = "ultraServiceName";
+        final String relatedServiceName = "relatedServiceName";
+
+        when(servicePropertiesRepository.exists(serviceName)).thenReturn(true);
+
+        // when
+        service.addRelation(serviceName, relatedServiceName);
+
+        // then
+        verify(consumerPropertiesService).updateExistingProperties(serviceName, relatedServiceName);
     }
 }

@@ -2,7 +2,6 @@ package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.domain.ServiceProperties;
-import de.filiadata.datahub.repository.MicroserviceRepository;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,48 +18,26 @@ public class ServicePropertiesService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServicePropertiesService.class);
 
-    private MicroserviceRepository microserviceRepository;
     private ServicePropertiesRepository servicePropertiesRepository;
-    private DefaultNodeContentFactory defaultNodeContentFactory;
     private ConsumerPropertiesService consumerPropertiesService;
     private CustomPropertiesService customPropertiesService;
+    private PropertiesContentProviderService propertiesContentProviderService;
 
     @Autowired
-    public ServicePropertiesService(MicroserviceRepository microserviceRepository,
+    public ServicePropertiesService(PropertiesContentProviderService propertiesContentProviderService,
                                     ServicePropertiesRepository servicePropertiesRepository,
-                                    DefaultNodeContentFactory defaultNodeContentFactory,
                                     ConsumerPropertiesService consumerPropertiesService,
                                     CustomPropertiesService customPropertiesService) {
-        this.microserviceRepository = microserviceRepository;
+        this.propertiesContentProviderService = propertiesContentProviderService;
         this.servicePropertiesRepository = servicePropertiesRepository;
-        this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.consumerPropertiesService = consumerPropertiesService;
         this.customPropertiesService = customPropertiesService;
     }
 
     public Collection<ObjectNode> getServicesWithContent() {
-        final Map<String, ObjectNode> servicesFromGateway = microserviceRepository.findAllServices();
-        appendPersistedServices(servicesFromGateway);
-
-        return servicesFromGateway.values();
+        return propertiesContentProviderService.getAllServicesWithContent().values();
     }
 
-    private void appendPersistedServices(Map<String, ObjectNode> servicesFromGateway) {
-        final Iterable<ServiceProperties> allAdditionalServicesWithProperties = servicePropertiesRepository.findAll();
-        allAdditionalServicesWithProperties.forEach(info -> {
-            try {
-                ObjectNode node = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(info.getContent());
-                if (servicesFromGateway.containsKey(info.getId())) {
-                    ObjectNode existingNode = servicesFromGateway.get(info.getId());
-                    existingNode.setAll(node);
-                } else {
-                    servicesFromGateway.put(info.getId(), node);
-                }
-            } catch (IOException e) {
-                LOG.error("Service properties with ID '{}' is corrupted and will be skipped.", info.getId(), e);
-            }
-        });
-    }
 
     public void createNewServiceInfo(ObjectNode dto) {
         String serviceName = dto.get("id").textValue();
@@ -77,7 +54,7 @@ public class ServicePropertiesService {
             try {
                 consumerPropertiesService.updateExistingProperties(serviceName, relatedServiceName);
             } catch (IOException e) {
-                LOG.error("Update of service properties failed.", e);
+                LOG.warn("Update of service properties failed.", e);
             }
         }
     }
