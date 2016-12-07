@@ -17,7 +17,7 @@ function updateStore(state = initialState, action) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
-                contextMenuVisible: false
+                menuMode: undefined
             });
             return newState;
         }
@@ -64,7 +64,7 @@ function updateStore(state = initialState, action) {
         }
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
-                contextMenuVisible: true
+                menuMode: 'ADD_SERVICE'
             });
             return newState;
         }

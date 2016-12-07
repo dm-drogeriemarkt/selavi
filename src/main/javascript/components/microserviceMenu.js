@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
     return {
-        contextMenuVisible: state.contextMenuVisible
+        menuMode: state.menuMode
     };
 };
 
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
 class MicroserviceMindmapPopup extends React.Component {
 
     render() {
-        if (this.props.contextMenuVisible) {
+        if (this.props.menuMode === 'ADD_SERVICE') {
             return (
                 <div className="microserviceMenu">
                     <div>Add Service: Service ID:</div>
