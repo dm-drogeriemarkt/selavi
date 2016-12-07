@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,5 +38,10 @@ public class ServiceController {
     @RequestMapping(value = "/{serviceName}/properties", method = RequestMethod.PUT)
     public void addProperty(@PathVariable String serviceName, @RequestBody Map<String, String> properties) {
         servicePropertiesService.addProperties(serviceName, properties);
+    }
+
+    @RequestMapping(value = "/{serviceName}/properties", method = RequestMethod.DELETE)
+    public void deleteProperty(@PathVariable String serviceName, @RequestBody List<String> properyNames) {
+        servicePropertiesService.deleteProperties(serviceName, properyNames);
     }
 }

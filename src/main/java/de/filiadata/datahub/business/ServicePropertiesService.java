@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -83,5 +84,9 @@ public class ServicePropertiesService {
 
     public void addProperties(String serviceName, Map<String, String> property) {
         customPropertiesService.addSingleValueProperties(serviceName, property);
+    }
+
+    public void deleteProperties(String serviceName, List<String> propertyNames) {
+        customPropertiesService.deleteProperty(serviceName, propertyNames);
     }
 }

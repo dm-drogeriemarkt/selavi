@@ -8,14 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class CustomPropertiesService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CustomPropertiesService.class);
+    private static final String MANDATORY_PROPERTY_ID = "id";
+    private static final String MANDATORY_PROPERTY_LABEL = "label";
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
 
@@ -36,6 +40,35 @@ public class CustomPropertiesService {
             if (updatedServiceProperties != null) {
                 servicePropertiesRepository.save(updatedServiceProperties);
             }
+        }
+    }
+
+    public void deleteProperty(String serviceName, List<String> propertyNames) {
+        if (CollectionUtils.isEmpty(propertyNames)) {
+            LOG.info("No properties to remove from.", serviceName);
+            return;
+        }
+
+        final boolean serviceExists = servicePropertiesRepository.exists(serviceName);
+        if (!serviceExists) {
+            LOG.warn("There is no service '{}' to remove its properties", serviceName);
+            return;
+        }
+
+        final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
+        try {
+            final ObjectNode content = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(serviceProperties.getContent());
+            propertyNames.forEach(name -> {
+                if (!MANDATORY_PROPERTY_ID.equals(name) && !MANDATORY_PROPERTY_LABEL.equals(name)) {
+                    content.remove(name);
+                }
+            });
+
+            serviceProperties.setContent(content.toString());
+            servicePropertiesRepository.save(serviceProperties);
+
+        } catch (IOException e) {
+            LOG.error("Property could not be removed.", e);
         }
     }
 

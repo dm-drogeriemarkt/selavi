@@ -9,8 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -96,5 +95,72 @@ public class CustomPropertiesServiceUnitTest {
 
         // then
         verify(servicePropertiesRepository, never()).save(any(ServiceProperties.class));
+    }
+
+    @Test
+    public void deletePropertyFromExistingServiceShouldRemoveIt() throws Exception {
+        // given
+        String propertyName = "somePropertyName";
+        final List<String> propertyNames = Collections.singletonList(propertyName);
+        final ServiceProperties serviceProperties = mock(ServiceProperties.class);
+        final ObjectNode objectNode = mock(ObjectNode.class);
+
+        when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(true);
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
+        when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
+        when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
+
+        // when
+        service.deleteProperty(SERVICE_NAME, propertyNames);
+
+        // then
+        verify(objectNode).remove(propertyName);
+        verify(serviceProperties).setContent(objectNode.toString());
+        verify(servicePropertiesRepository).save(serviceProperties);
+    }
+
+    @Test
+    public void noPropertiesShouldSkipRemoveOfProperty() throws Exception {
+        // when
+        service.deleteProperty(SERVICE_NAME, Collections.emptyList());
+
+        // then
+        verify(servicePropertiesRepository, never()).exists(SERVICE_NAME);
+    }
+
+    @Test
+    public void notExistingServiceNameShouldSkipRemoveOfProperty() throws Exception {
+        // given
+        when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(false);
+
+        // when
+        service.deleteProperty(SERVICE_NAME, Collections.singletonList("somePropertyName"));
+
+        // then
+        verify(servicePropertiesRepository, never()).findById(SERVICE_NAME);
+    }
+
+    @Test
+    public void mandatoryPropertiesShouldNotBeRemoved() throws Exception {
+        // given
+        String propertyNameId = "id";
+        String propertyNameLabel = "label";
+        final List<String> propertyNames = Arrays.asList(propertyNameId, propertyNameLabel);
+        final ServiceProperties serviceProperties = mock(ServiceProperties.class);
+        final ObjectNode objectNode = mock(ObjectNode.class);
+
+        when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(true);
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
+        when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
+        when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
+
+        // when
+        service.deleteProperty(SERVICE_NAME, propertyNames);
+
+        // then
+        verify(objectNode, never()).remove(propertyNameId);
+        verify(objectNode, never()).remove(propertyNameLabel);
+        verify(serviceProperties).setContent(objectNode.toString());
+        verify(servicePropertiesRepository).save(serviceProperties);
     }
 }
