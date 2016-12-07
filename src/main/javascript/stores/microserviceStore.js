@@ -14,17 +14,10 @@ const initialState = {
 // reducer function, creates a new state object from the previous state and the action
 function updateStore(state = initialState, action) {
     switch(action.type) {
-        case 'ADD_RELATION':
-            // TODO implement me
-        case 'FETCH_CONSUMERS_SUCCESS': {
-            const newState = Object.assign({}, state, {
-                consumers: action.response.entity,
-            });
-            return newState;
-        }
         case 'FETCH_MICROSERVICES_SUCCESS': {
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
+                contextMenuVisible: false
             });
             return newState;
         }
@@ -72,12 +65,6 @@ function updateStore(state = initialState, action) {
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
                 contextMenuVisible: true
-            });
-            return newState;
-        }
-        case 'SUBMIT_ADD_SERVICE': {
-            const newState = Object.assign({}, state, {
-                contextMenuVisible: false
             });
             return newState;
         }

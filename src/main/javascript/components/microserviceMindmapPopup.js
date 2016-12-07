@@ -24,9 +24,11 @@ const mapDispatchToProps = (dispatch) => {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
-                dispatch({
-                    type: 'SUBMIT_ADD_SERVICE',
-                    serviceId: this.refs.textbox.value
+                client({path: '/services'}).then(response => {
+                    dispatch({
+                        type: 'FETCH_MICROSERVICES_SUCCESS',
+                        response: response
+                    });
                 });
             });
         }
