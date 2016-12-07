@@ -7,7 +7,7 @@ body {
     flex-direction: row;
 }
 
-.microserviceMindmap, .microserviceList {
+.microserviceMindmap, .microserviceList, .microserviceMenu {
     border-style: solid;
     border-radius: 0.5em;
     border-color: #5793ec;
@@ -18,8 +18,13 @@ body {
     flex-grow: 2;
 }
 
-.microserviceList {
+.microserviceRightPanel {
     width: 50em;
+    flex-direction: column;
+}
+
+.microserviceMenu {
+    padding: 0.5em;
 }
 
 .microserviceListEntry.selected {
@@ -29,10 +34,4 @@ body {
 
 .contextMenu {
     background-color: lightgrey;
-}
-
-.popup {
-    top: 50%;
-    left: 50%;
-    z-index: 999;
 }

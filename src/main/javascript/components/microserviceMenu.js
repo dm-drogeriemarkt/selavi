@@ -11,6 +11,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        onAddService: function() {
+            dispatch({
+                type: 'ADD_SERVICE',
+            });
+        },
         onSubmit: function() {
             var client = rest.wrap(mime);
             client({
@@ -40,13 +45,18 @@ class MicroserviceMindmapPopup extends React.Component {
     render() {
         if (this.props.contextMenuVisible) {
             return (
-                <div className="popup">
+                <div className="microserviceMenu">
+                    <div>Add Service: Service ID:</div>
                     <input type="text" ref="textbox"></input>
                     <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
                 </div>
             );
         } else {
-            return <div hidden className="popup"></div>;
+            return (
+                <div className="microserviceMenu">
+                    <button onClick={this.props.onAddService}>Add Service</button>
+                </div>
+            );
         }
 
     }

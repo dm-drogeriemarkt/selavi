@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 
 import MicroserviceList from "./components/microserviceList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
+import MicroserviceMenu from "./components/microserviceMenu";
 
 import store from "./stores/microserviceStore";
 
@@ -35,7 +36,10 @@ class App extends React.Component {
         return (
             <div className="appcontainer">
                 <MicroserviceMindmap/>
-                <MicroserviceList/>
+                <div className="microserviceRightPanel">
+                    <MicroserviceList/>
+                    <MicroserviceMenu/>
+                </div>
             </div>
         )
     }

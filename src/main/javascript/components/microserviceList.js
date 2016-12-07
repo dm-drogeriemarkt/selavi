@@ -17,15 +17,17 @@ class MicroserviceList extends React.Component {
             return <Microservice key={microservice.id} microservice={microservice} selected={selected} />
         });
         return (
-            <table className="microserviceList">
-                <tbody>
-                <tr>
-                    <th>id</th>
-                    <th>url</th>
-                </tr>
-                {microservices}
-                </tbody>
-            </table>
+            <div className="microserviceList">
+                <table >
+                    <tbody>
+                    <tr>
+                        <th>id</th>
+                        <th>url</th>
+                    </tr>
+                    {microservices}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 }
