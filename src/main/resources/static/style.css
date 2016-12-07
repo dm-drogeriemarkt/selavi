@@ -30,3 +30,9 @@ body {
 .contextMenu {
     background-color: lightgrey;
 }
+
+.popup {
+    top: 50%;
+    left: 50%;
+    z-index: 999;
+}

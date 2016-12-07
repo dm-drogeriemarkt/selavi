@@ -24,9 +24,9 @@ public class ServiceController {
         return servicePropertiesService.getServicesWithContent();
     }
 
-    @RequestMapping(value = "/{serviceName}", method = RequestMethod.POST)
-    public void addService(@PathVariable String serviceName, @RequestBody ObjectNode dto) {
-        servicePropertiesService.createNewServiceInfo(serviceName, dto);
+    @RequestMapping(method = RequestMethod.POST)
+    public void addService(@RequestBody ObjectNode dto) {
+        servicePropertiesService.createNewServiceInfo(dto);
     }
 
     @RequestMapping(value = "/{serviceName}/relation", method = RequestMethod.PUT)

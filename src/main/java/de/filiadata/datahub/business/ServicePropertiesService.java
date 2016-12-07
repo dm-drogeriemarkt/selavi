@@ -61,7 +61,8 @@ public class ServicePropertiesService {
         });
     }
 
-    public void createNewServiceInfo(String serviceName, ObjectNode dto) {
+    public void createNewServiceInfo(ObjectNode dto) {
+        String serviceName = dto.get("id").textValue();
         if (!servicePropertiesRepository.exists(serviceName)) {
             servicePropertiesRepository.save(new ServiceProperties(serviceName, dto.toString()));
         }

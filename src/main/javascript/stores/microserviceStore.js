@@ -7,7 +7,8 @@ const initialState = {
     contextMenuTop: -1,
     contextMenuLeft: -1,
     contextMenuServiceId: undefined,
-    addLinkConsumerId: undefined
+    addLinkConsumerId: undefined,
+    contextMenuVisible: false
 }
 
 // reducer function, creates a new state object from the previous state and the action
@@ -66,6 +67,18 @@ function updateStore(state = initialState, action) {
                 addLinkConsumerId: undefined
             });
 
+            return newState;
+        }
+        case 'ADD_SERVICE': {
+            const newState = Object.assign({}, state, {
+                contextMenuVisible: true
+            });
+            return newState;
+        }
+        case 'SUBMIT_ADD_SERVICE': {
+            const newState = Object.assign({}, state, {
+                contextMenuVisible: false
+            });
             return newState;
         }
         default:

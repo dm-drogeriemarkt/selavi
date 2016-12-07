@@ -3,6 +3,7 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
+import MicroserviceMindmapPopup from "./microserviceMindmapPopup";
 
 const mapStateToProps = (state) => {
     return {
@@ -133,6 +134,7 @@ export class MicroserviceMindmap extends React.Component {
         return (
             <div className="microserviceMindmap">
                 <MicroserviceMindmapContextMenu/>
+                <MicroserviceMindmapPopup/>
                 <div ref="vizcontainer"></div>
             </div>
         );
