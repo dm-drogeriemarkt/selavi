@@ -3,12 +3,11 @@ const ReactDOM = require('react-dom');
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
-import { Provider } from 'react-redux'
-
+import {Provider} from "react-redux";
 import MicroserviceList from "./components/microserviceList";
+import MicroservicePropertyList from "./components/microservicePropertyList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceMenu from "./components/microserviceMenu";
-
 import store from "./stores/microserviceStore";
 
 class App extends React.Component {
@@ -39,6 +38,7 @@ class App extends React.Component {
                 <div className="microserviceRightPanel">
                     <MicroserviceList/>
                     <MicroserviceMenu/>
+                    <MicroservicePropertyList/>
                 </div>
             </div>
         )

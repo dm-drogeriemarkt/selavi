@@ -40,6 +40,7 @@ public class ServiceController {
         servicePropertiesService.addProperties(serviceName, properties);
     }
 
+    // TODO: besser wäre: /{serviceName}/properties/{propertyName}
     @RequestMapping(value = "/{serviceName}/properties", method = RequestMethod.DELETE)
     public void deleteProperty(@PathVariable String serviceName, @RequestBody List<String> properyNames) {
         servicePropertiesService.deleteProperties(serviceName, properyNames);
