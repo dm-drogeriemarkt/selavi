@@ -56,6 +56,11 @@ const mapDispatchToProps = (dispatch) => {
                     });
                 });
             });
+        },
+        onCancel: function() {
+            dispatch({
+                type: 'CANCEL_MENU_ACTION',
+            });
         }
     };
 };
@@ -67,30 +72,46 @@ class MicroserviceMindmapPopup extends React.Component {
             case 'ADD_SERVICE':
                 return (
                     <div className="microserviceMenu">
-                        <div>Add Service: Service ID:</div>
-                        <input type="text" ref="serviceId"></input>
-                        <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
+                        <div>Add Service</div>
+                        <div className="inputBoxes">
+                            <input type="text" ref="serviceId" placeholder="Service ID"></input>
+                        </div>
+                        <div className="buttons">
+                            <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
+                            <button onClick={this.props.onCancel}>Cancel</button>
+                        </div>
                     </div>
                 );
             case 'ADD_PROPERTY':
                 return (
                     <div className="microserviceMenu">
-                        <div>Add Property: ID / Value</div>
-                        <input type="text" ref="propertyId"></input>
-                        <input type="text" ref="propertyValue"></input>
-                        <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
+                        <div>Add Property for Service {this.props.addLinkConsumerId}</div>
+                        <div className="inputBoxes">
+                            <input type="text" ref="propertyId" placeholder="Property ID"></input>
+                            <input type="text" ref="propertyValue" placeholder="Property Value"></input>
+                        </div>
+                        <div className="buttons">
+                            <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
+                            <button onClick={this.props.onCancel}>Cancel</button>
+                        </div>
                     </div>
                 );
             case 'ADD_LINK':
                 return (
                     <div className="microserviceMenu">
                         <div>Add Link for Service {this.props.addLinkConsumerId}: select consumed Service!</div>
+                        <div className="buttons">
+                            <button onClick={this.props.onCancel}>Cancel</button>
+                        </div>
                     </div>
                 );
             default:
                 return (
                     <div className="microserviceMenu">
-                        <button onClick={this.props.onAddService}>Add Service</button>
+                        <div>SeLaVi - Service Landscape Visualizer</div>
+                        <div className="buttons">
+                            <button onClick={this.props.onAddService}>Add Service</button>
+                        </div>
                     </div>
                 );
         }

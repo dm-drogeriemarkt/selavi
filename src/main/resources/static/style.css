@@ -24,7 +24,24 @@ body {
 }
 
 .microserviceMenu {
+    display: flex;
+    flex-direction: column;
     padding: 0.5em;
+}
+.microserviceMenu > * {
+    margin-bottom: 0.5em;
+}
+.microserviceMenu > *:last-child {
+    margin-bottom: 0em;
+}
+.microserviceMenu .inputBoxes {
+    display: flex;
+    flex-direction: column;
+    width: 25em;
+}
+.microserviceMenu .buttons {
+    display: flex;
+    flex-direction: row;
 }
 
 .microserviceListEntry.selected {
