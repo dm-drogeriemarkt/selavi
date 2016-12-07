@@ -34,4 +34,19 @@ body {
 
 .contextMenu {
     background-color: lightgrey;
+    display: flex;
+    flex-direction: column;
+    border: darkgray;
+    border-style: solid;
+    border-width: 0.1em;
+    padding: 0.5em;
+}
+.contextMenu button {
+    margin-bottom: 0.5em;
+}
+.contextMenu button:last-child {
+    margin-bottom: 0em;
+}
+.contextMenu[hidden] {
+    display: none;
 }
