@@ -185,6 +185,16 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>npm run test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <arguments>run testCI</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>webpack build</id>
                         <goals>
                             <goal>webpack</goal>
