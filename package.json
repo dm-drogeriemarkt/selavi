@@ -13,7 +13,7 @@
   "scripts": {
     "watch": "webpack --watch -d",
     "test": "mocha -w src/test/javascript/setup.js src/test/javascript/*.spec.js",
-    "testCI": "mocha src/test/javascript/setup.js src/test/javascript/*.spec.js"
+    "testCI": "npm install && mocha src/test/javascript/setup.js src/test/javascript/*.spec.js"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
