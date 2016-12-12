@@ -2,6 +2,7 @@ package de.filiadata.datahub.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.business.DefaultNodeContentFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +51,47 @@ public class MicroserviceRepository {
         final String nodeApplicationName = "name";
         final Map<String, ObjectNode> result = new HashMap<>();
         applicationsNode.forEach(application -> {
-            String applicationName = application.get(nodeApplicationName).textValue();
-            result.put(applicationName.toLowerCase(), defaultNodeContentFactory.create(applicationName));
+            final String applicationName = application.get(nodeApplicationName).textValue();
+            final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
+            applicationNode.set("hosts", readHostInfos(application));
+            result.put(applicationName.toLowerCase(), applicationNode);
         });
         return result;
+    }
+
+    private ArrayNode readHostInfos(JsonNode applicationNode) {
+        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+        final ArrayNode instances = (ArrayNode) applicationNode.get("instance");
+        instances.forEach(instanceNode -> {
+            final ObjectNode hostResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
+            addSingleProperty(hostResultNode, instanceNode, "hostName");
+            addSingleProperty(hostResultNode, instanceNode, "ipAddr");
+            addSingleProperty(hostResultNode, instanceNode, "homePageUrl");
+
+            final ArrayNode portNodes = JsonNodeFactory.instance.arrayNode();
+            addArrayProperty(portNodes, instanceNode, "port");
+            addArrayProperty(portNodes, instanceNode, "securePort");
+
+            hostResultNode.set("ports", portNodes);
+            result.add(hostResultNode);
+        });
+
+        return result;
+    }
+
+    private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
+        if (instanceNode.hasNonNull(propertyName)) {
+            final JsonNode port = instanceNode.get(propertyName);
+            if (port.get("@enabled").textValue().equals("true")) {
+                portsNode.add(JsonNodeFactory.instance.numberNode(port.get("$").intValue()));
+            }
+        }
+    }
+
+    private void addSingleProperty(ObjectNode hostNode, JsonNode instanceNode, String propertyName) {
+        if (instanceNode.hasNonNull(propertyName)) {
+            hostNode.set(propertyName, JsonNodeFactory.instance.textNode(instanceNode.get(propertyName).asText()));
+        }
     }
 
     private ResponseEntity<ObjectNode> requestServices() {
