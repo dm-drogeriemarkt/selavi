@@ -69,8 +69,6 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-var _network = undefined;
-
 export class MicroserviceMindmap extends React.Component {
 
     componentDidMount() {
@@ -79,9 +77,9 @@ export class MicroserviceMindmap extends React.Component {
 
     componentDidUpdate() {
         if (this.props.menuMode === 'ADD_LINK') {
-            _network.addEdgeMode();
+            this._network.addEdgeMode();
         } else {
-            _network.disableEditMode();
+            this._network.disableEditMode();
             this.updateMindmap();
         }
     }
@@ -120,7 +118,7 @@ export class MicroserviceMindmap extends React.Component {
             edges: edges
         };
 
-        if (!_network) {
+        if (!this._network) {
             var options = {
                 nodes: {
                     borderWidth: 2,
@@ -140,14 +138,14 @@ export class MicroserviceMindmap extends React.Component {
                 }
             };
 
-            _network = new vis.Network(this.refs.vizcontainer, data, options);
+            this._network = new vis.Network(this.refs.vizcontainer, data, options);
 
             var boundFn = this.props.onSelectMicroserviceNode.bind(this);
 
-            _network.on("selectNode", boundFn);
-            _network.on("oncontext", this.props.onContextMenuOpen);
+            this._network.on("selectNode", boundFn);
+            this._network.on("oncontext", this.props.onContextMenuOpen);
         } else {
-            _network.setData(data);
+            this._network.setData(data);
         }
     }
 
@@ -160,5 +158,7 @@ export class MicroserviceMindmap extends React.Component {
         );
     }
 }
+
+MicroserviceMindmap._network = undefined;
 
 export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmap);

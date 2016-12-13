@@ -9,16 +9,31 @@ import { MicroserviceMindmap } from '../../main/javascript/components/microservi
 describe('<MicroserviceMindmap/>', function () {
 
     var networkOnSpy = sinon.spy();
+    var networkSetDataSpy = sinon.spy();
+    var networkAddEdgeModeSpy = sinon.spy();
+    var networkDisableEditModeSpy = sinon.spy();
 
     before(function() {
         // global is node.js' window
         global.vis = {
             DataSet: sinon.spy(),
             Network: sinon.stub().returns({
-                on: networkOnSpy
+                on: networkOnSpy,
+                setData: networkSetDataSpy,
+                addEdgeMode: networkAddEdgeModeSpy,
+                disableEditMode: networkDisableEditModeSpy
             })
         };
     });
+
+    afterEach(function() {
+        global.vis.DataSet.reset();
+        global.vis.Network.reset();
+        networkOnSpy.reset();
+        networkSetDataSpy.reset();
+        networkAddEdgeModeSpy.reset();
+        networkDisableEditModeSpy.reset();
+    })
 
     it('can be instantiated', function () {
 
@@ -73,6 +88,27 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledTwice(networkOnSpy);
         sinon.assert.calledWith(networkOnSpy, "selectNode", sinon.match.func);
         sinon.assert.calledWith(networkOnSpy, "oncontext"); // we did not define a handler function in this test!
+    });
+
+    it('only creates vis network once', function () {
+
+        const props = createProps();
+
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+
+        sinon.assert.calledTwice(global.vis.DataSet);
+        sinon.assert.calledOnce(global.vis.Network);
+
+        global.vis.DataSet.reset();
+        global.vis.Network.reset();
+
+        props.microservices.push({ id: "fart-service" });
+
+        wrapper.setProps(props);
+
+        sinon.assert.calledTwice(global.vis.DataSet);
+        sinon.assert.calledOnce(networkSetDataSpy);
+        sinon.assert.notCalled(global.vis.Network);
     });
 });
 
