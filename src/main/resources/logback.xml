@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- If the system property HOST_LOGDIR is set, the configuration assumes to run in a hosted environment. -->
+    <if condition='isDefined("HOST_LOGDIR")'>
+        <then>
+            <!-- Production -->
+            <include file="${catalina.base}/conf/app/logging.xml"/>
+        </then>
+        <else>
+            <!-- Development -->
+            <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+            <logger name="org.springframework" level="WARN"/>
+
+            <root level="INFO">
+                <appender-ref ref="CONSOLE"/>
+            </root>
+        </else>
+    </if>
+
+</configuration>
