@@ -54,7 +54,7 @@ public class MicroserviceRepository {
             final String applicationName = application.get(nodeApplicationName).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
             applicationNode.set("hosts", readHostInfos(application));
-            result.put(applicationName.toLowerCase(), applicationNode);
+            result.put(applicationName, applicationNode);
         });
         return result;
     }
