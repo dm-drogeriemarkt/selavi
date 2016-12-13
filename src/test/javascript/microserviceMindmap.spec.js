@@ -94,6 +94,7 @@ function createProps() {
 
     const props = {
         onSelectMicroserviceNode: sinon.spy(),
+        onAddLink: sinon.spy(),
         microservices: microservices
     };
 
