@@ -18,6 +18,11 @@ const mapDispatchToProps = (dispatch) => {
                 type: 'ADD_SERVICE',
             });
         },
+        onAddLink: function() {
+            dispatch({
+                type: 'ADD_LINK',
+            });
+        },
         onSubmit: function() {
             var request;
 
@@ -99,7 +104,7 @@ class MicroserviceMindmapPopup extends React.Component {
             case 'ADD_LINK':
                 return (
                     <div className="microserviceMenu">
-                        <div>Add Link for Service {this.props.addLinkConsumerId}: select consumed Service!</div>
+                        <div>Add Link Mode: Draw line between nodes!</div>
                         <div className="buttons">
                             <button onClick={this.props.onCancel}>Cancel</button>
                         </div>
@@ -111,6 +116,7 @@ class MicroserviceMindmapPopup extends React.Component {
                         <div>SeLaVi - Service Landscape Visualizer</div>
                         <div className="buttons">
                             <button onClick={this.props.onAddService}>Add Service</button>
+                            <button onClick={this.props.onAddLink}>Add Link</button>
                         </div>
                     </div>
                 );

@@ -7,7 +7,8 @@ import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
-        addLinkConsumerId: state.addLinkConsumerId
+        addLinkConsumerId: state.addLinkConsumerId,
+        menuMode: state.menuMode
     };
 };
 
@@ -15,17 +16,6 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onSelectMicroserviceNode: function (params) {
             if (this.props.addLinkConsumerId) {
-                var client = rest.wrap(mime);
-                client({
-                    path: '/services/' + this.props.addLinkConsumerId + '/relation',
-                    method: 'PUT',
-                    entity: params.nodes[0]
-                }).then(response => {
-                    dispatch({
-                        type: 'ADD_LINK_SET_CONSUMED_SERVICE',
-                        consumedServiceId: params.nodes[0]
-                    });
-                });
 
             } else {
                 dispatch({
@@ -59,9 +49,27 @@ const mapDispatchToProps = (dispatch) => {
                     contextMenuServiceId: undefined
                 });
             }
+        },
+        onAddLink(edgeData, callback) {
+            var client = rest.wrap(mime);
+            client({
+                path: '/services/' + edgeData.from + '/relation',
+                method: 'PUT',
+                entity: edgeData.to
+            }).then(response => {
+                dispatch({
+                    type: 'ADD_LINK_SET_CONSUMED_SERVICE',
+                    consumerId: edgeData.from,
+                    consumedServiceId: edgeData.to
+                });
+                callback(edgeData);
+            });
+
         }
     };
 };
+
+var _network = undefined;
 
 export class MicroserviceMindmap extends React.Component {
 
@@ -70,7 +78,12 @@ export class MicroserviceMindmap extends React.Component {
     }
 
     componentDidUpdate() {
-        this.updateMindmap();
+        if (this.props.menuMode === 'ADD_LINK') {
+            _network.addEdgeMode();
+        } else {
+            _network.disableEditMode();
+            this.updateMindmap();
+        }
     }
 
     updateMindmap() {
@@ -106,27 +119,36 @@ export class MicroserviceMindmap extends React.Component {
             nodes: nodes,
             edges: edges
         };
-        var options = {
-            nodes: {
-                borderWidth: 2,
-                shadow: true,
-                font: {color: "white"}
-            },
-            edges: {
-                width: 2,
-                shadow: true
-            },
-            layout: {
-                randomSeed: 2
-            }
-        };
 
-        var network = new vis.Network(this.refs.vizcontainer, data, options);
+        if (!_network) {
+            var options = {
+                nodes: {
+                    borderWidth: 2,
+                    shadow: true,
+                    font: {color: "white"}
+                },
+                edges: {
+                    width: 2,
+                    shadow: true
+                },
+                layout: {
+                    randomSeed: 2
+                },
+                manipulation: {
+                    enabled: false,
+                    addEdge: this.props.onAddLink.bind(this)
+                }
+            };
 
-        var boundFn = this.props.onSelectMicroserviceNode.bind(this);
+            _network = new vis.Network(this.refs.vizcontainer, data, options);
 
-        network.on("selectNode", boundFn);
-        network.on("oncontext", this.props.onContextMenuOpen);
+            var boundFn = this.props.onSelectMicroserviceNode.bind(this);
+
+            _network.on("selectNode", boundFn);
+            _network.on("oncontext", this.props.onContextMenuOpen);
+        } else {
+            _network.setData(data);
+        }
     }
 
     render() {
