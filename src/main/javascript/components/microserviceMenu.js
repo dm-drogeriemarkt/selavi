@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
-        addLinkConsumerId: state.addLinkConsumerId,
         addPropertyServiceId: state.addPropertyServiceId
     };
 };
@@ -105,7 +104,7 @@ class MicroserviceMenu extends React.Component {
             case 'ADD_PROPERTY':
                 return (
                     <div className="microserviceMenu">
-                        <div>Add Property for Service {this.props.addLinkConsumerId}</div>
+                        <div>Add Property for Service {this.props.addPropertyServiceId}</div>
                         <form onSubmit={this.props.onSubmit.bind(this)}>
                             <input type="text" ref="propertyId" placeholder="Property ID *" required></input>
                             <input type="text" ref="propertyValue" placeholder="Property Value *" required></input>

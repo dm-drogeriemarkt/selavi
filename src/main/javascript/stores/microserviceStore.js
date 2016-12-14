@@ -79,7 +79,6 @@ function updateStore(state = initialState, action) {
         case 'CANCEL_MENU_ACTION': {
             const newState = Object.assign({}, state, {
                 menuMode: undefined,
-                addLinkConsumerId: undefined,
                 addPropertyServiceId: undefined
             });
             return newState;

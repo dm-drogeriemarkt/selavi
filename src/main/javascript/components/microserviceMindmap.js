@@ -7,7 +7,6 @@ import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
-        addLinkConsumerId: state.addLinkConsumerId,
         menuMode: state.menuMode
     };
 };
@@ -15,14 +14,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onSelectMicroserviceNode: function (params) {
-            if (this.props.addLinkConsumerId) {
-
-            } else {
-                dispatch({
-                    type: 'MICROSERVICE_NODE_SELECTED',
-                    selectedServiceId: params.nodes[0]
-                });
-            }
+            dispatch({
+                type: 'MICROSERVICE_NODE_SELECTED',
+                selectedServiceId: params.nodes[0]
+            });
         },
         onContextMenuOpen: function (params) {
             params.event.preventDefault();
