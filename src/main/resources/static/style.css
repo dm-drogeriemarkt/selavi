@@ -65,7 +65,16 @@ th {
 
 .microserviceMenu .buttons {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    width: 10em;
+}
+
+.microserviceMenu .buttons button {
+    margin-bottom: 0.5em;
+}
+
+.microserviceMenu .buttons button:last-child {
+    margin-bottom: 0em;
 }
 
 .microserviceListEntry.selected {
