@@ -43,8 +43,14 @@ const mapDispatchToProps = (dispatch) => {
                     path: '/services',
                     method: 'POST',
                     entity: {
-                        id: this.refs.serviceId.value,
-                        label: this.refs.serviceId.value
+                        id: this.refs.inputServiceId.value,
+                        serviceId: this.refs.inputServiceId.value,
+                        description: this.refs.inputDescription.value,
+                        team: this.refs.inputTeam.value,
+                        documentationLink: this.refs.inputDocumentationLink.value,
+                        'microservice-url': this.refs.inputMicroserviceUrl.value,
+                        ipAddress: this.refs.inputIpAddress.value,
+                        networkZone: this.refs.inputNetworkZone.value
                     },
                     headers: {
                         'Content-Type': 'application/json'
@@ -79,7 +85,14 @@ class MicroserviceMindmapPopup extends React.Component {
                     <div className="microserviceMenu">
                         <div>Add Service</div>
                         <div className="inputBoxes">
-                            <input type="text" ref="serviceId" placeholder="Service ID"></input>
+                            <input type="text" ref="inputServiceId" placeholder="Service ID"></input>
+                            <input type="text" ref="inputLabel" placeholder="Label"></input>
+                            <input type="text" ref="inputDescription" placeholder="Description"></input>
+                            <input type="text" ref="inputTeam" placeholder="Team responsible for this service"></input>
+                            <input type="text" ref="inputDocumentationLink" placeholder="Link to documentation"></input>
+                            <input type="text" ref="inputMicroserviceUrl" placeholder="URL"></input>
+                            <input type="text" ref="inputIpAddress" placeholder="IP address"></input>
+                            <input type="text" ref="inputNetworkZone" placeholder="Network zone"></input>
                         </div>
                         <div className="buttons">
                             <button onClick={this.props.onSubmit.bind(this)}>Submit</button>

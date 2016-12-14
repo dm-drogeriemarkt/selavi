@@ -55,6 +55,14 @@ th {
     width: 25em;
 }
 
+.microserviceMenu .inputBoxes input {
+    margin-bottom: 0.5em;
+}
+
+.microserviceMenu .inputBoxes input:last-child {
+    margin-bottom: 0em;
+}
+
 .microserviceMenu .buttons {
     display: flex;
     flex-direction: row;
