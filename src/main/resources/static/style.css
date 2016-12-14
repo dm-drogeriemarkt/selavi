@@ -49,18 +49,28 @@ th {
     margin-bottom: 0em;
 }
 
-.microserviceMenu .inputBoxes {
+.microserviceMenu form {
     display: flex;
     flex-direction: column;
     width: 25em;
 }
 
-.microserviceMenu .inputBoxes input {
+.microserviceMenu form input {
     margin-bottom: 0.5em;
 }
 
-.microserviceMenu .inputBoxes input:last-child {
+.microserviceMenu form input:last-child {
     margin-bottom: 0em;
+}
+
+.microserviceMenu form .formButtons {
+    display: flex;
+    flex-direction: row;
+}
+
+.microserviceMenu form .formButtons input {
+    width: 10em;
+    margin-right: 0.5em;
 }
 
 .microserviceMenu .buttons {

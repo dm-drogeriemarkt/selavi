@@ -23,7 +23,9 @@ const mapDispatchToProps = (dispatch) => {
                 type: 'ADD_LINK',
             });
         },
-        onSubmit: function() {
+        onSubmit: function(event) {
+            event.preventDefault();
+
             var request;
 
             if (this.props.menuMode === 'ADD_PROPERTY') {
@@ -44,7 +46,7 @@ const mapDispatchToProps = (dispatch) => {
                     method: 'POST',
                     entity: {
                         id: this.refs.inputServiceId.value,
-                        serviceId: this.refs.inputServiceId.value,
+                        label: this.refs.inputLabel.value,
                         description: this.refs.inputDescription.value,
                         team: this.refs.inputTeam.value,
                         documentationLink: this.refs.inputDocumentationLink.value,
@@ -76,7 +78,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-class MicroserviceMindmapPopup extends React.Component {
+class MicroserviceMenu extends React.Component {
 
     render() {
         switch (this.props.menuMode) {
@@ -84,34 +86,34 @@ class MicroserviceMindmapPopup extends React.Component {
                 return (
                     <div className="microserviceMenu">
                         <div>Add Service</div>
-                        <div className="inputBoxes">
-                            <input type="text" ref="inputServiceId" placeholder="Service ID"></input>
-                            <input type="text" ref="inputLabel" placeholder="Label"></input>
+                        <form onSubmit={this.props.onSubmit.bind(this)}>
+                            <input type="text" ref="inputServiceId" placeholder="Service ID *" required></input>
+                            <input type="text" ref="inputLabel" placeholder="Label *" required></input>
                             <input type="text" ref="inputDescription" placeholder="Description"></input>
                             <input type="text" ref="inputTeam" placeholder="Team responsible for this service"></input>
                             <input type="text" ref="inputDocumentationLink" placeholder="Link to documentation"></input>
                             <input type="text" ref="inputMicroserviceUrl" placeholder="URL"></input>
                             <input type="text" ref="inputIpAddress" placeholder="IP address"></input>
                             <input type="text" ref="inputNetworkZone" placeholder="Network zone"></input>
-                        </div>
-                        <div className="buttons">
-                            <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
-                            <button onClick={this.props.onCancel}>Cancel</button>
-                        </div>
+                            <div className="formButtons">
+                                <input type="submit" value="Submit"></input>
+                                <input type="button" onClick={this.props.onCancel} value="Cancel"></input>
+                            </div>
+                        </form>
                     </div>
                 );
             case 'ADD_PROPERTY':
                 return (
                     <div className="microserviceMenu">
                         <div>Add Property for Service {this.props.addLinkConsumerId}</div>
-                        <div className="inputBoxes">
-                            <input type="text" ref="propertyId" placeholder="Property ID"></input>
-                            <input type="text" ref="propertyValue" placeholder="Property Value"></input>
-                        </div>
-                        <div className="buttons">
-                            <button onClick={this.props.onSubmit.bind(this)}>Submit</button>
-                            <button onClick={this.props.onCancel}>Cancel</button>
-                        </div>
+                        <form onSubmit={this.props.onSubmit.bind(this)}>
+                            <input type="text" ref="propertyId" placeholder="Property ID *" required></input>
+                            <input type="text" ref="propertyValue" placeholder="Property Value *" required></input>
+                            <div className="formButtons">
+                                <input type="submit" value="Submit"></input>
+                                <input type="button" onClick={this.props.onCancel} value="Cancel"></input>
+                            </div>
+                        </form>
                     </div>
                 );
             case 'ADD_LINK':
@@ -137,4 +139,4 @@ class MicroserviceMindmapPopup extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceMindmapPopup);
+export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceMenu);
