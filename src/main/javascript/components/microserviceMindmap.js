@@ -1,8 +1,8 @@
 const React = require('react');
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
 import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
+
+import { onSelectMicroserviceNode, onContextMenuOpen, onAddLink } from './../actions/microserviceMindmapActions'
 
 const mapStateToProps = (state) => {
     return {
@@ -11,60 +11,32 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onSelectMicroserviceNode: function (params) {
-            dispatch({
-                type: 'MICROSERVICE_NODE_SELECTED',
-                selectedServiceId: params.nodes[0]
-            });
-        },
-        onContextMenuOpen: function (params) {
-            params.event.preventDefault();
-
-            const nodeId = this.getNodeAt(params.pointer.DOM);
-
-            if (nodeId) {
-                // right click does not select node!
-                this.selectNodes([nodeId]);
-
-                dispatch({
-                    type: 'CONTEXT_MENU_OPEN',
-                    top: params.pointer.DOM.y,
-                    left: params.pointer.DOM.x,
-                    contextMenuServiceId: nodeId
-                });
-            } else {
-                this.unselectAll();
-
-                dispatch({
-                    type: 'CONTEXT_MENU_OPEN',
-                    top: -1,
-                    left: -1,
-                    contextMenuServiceId: undefined
-                });
-            }
-        },
-        onAddLink(edgeData, callback) {
-            var client = rest.wrap(mime);
-            client({
-                path: '/services/' + edgeData.from + '/relation',
-                method: 'PUT',
-                entity: edgeData.to
-            }).then(response => {
-                dispatch({
-                    type: 'ADD_LINK_SET_CONSUMED_SERVICE',
-                    consumerId: edgeData.from,
-                    consumedServiceId: edgeData.to
-                });
-                callback(edgeData);
-            });
-
-        }
-    };
+const mapDispatchToProps = {
+    onSelectMicroserviceNode,
+    onContextMenuOpen,
+    onAddLink
 };
 
 export class MicroserviceMindmap extends React.Component {
+
+    onContextMenuHandler(params) {
+        params.event.preventDefault();
+
+        const nodeId = this._network.getNodeAt(params.pointer.DOM);
+
+        if (nodeId) {
+            // right click does not select node!
+            this._network.selectNodes([nodeId]);
+        } else {
+            this._network.unselectAll();
+        }
+        this.props.onContextMenuOpen(params, nodeId);
+    }
+
+    onAddLinkHandler(edgeData, callback) {
+        callback(edgeData);
+        this.props.onAddLink(edgeData);
+    }
 
     componentDidMount() {
         this.updateMindmap();
@@ -129,16 +101,17 @@ export class MicroserviceMindmap extends React.Component {
                 },
                 manipulation: {
                     enabled: false,
-                    addEdge: this.props.onAddLink.bind(this)
+                    addEdge: this.onAddLinkHandler.bind(this)
                 }
             };
 
             this._network = new vis.Network(this.refs.vizcontainer, data, options);
 
-            var boundFn = this.props.onSelectMicroserviceNode.bind(this);
+            var boundOnSelectMicroserviceNode = this.props.onSelectMicroserviceNode.bind(this);
+            var boundOnContextMenuOpen = this.onContextMenuHandler.bind(this);
 
-            this._network.on("selectNode", boundFn);
-            this._network.on("oncontext", this.props.onContextMenuOpen);
+            this._network.on("selectNode", boundOnSelectMicroserviceNode);
+            this._network.on("oncontext", boundOnContextMenuOpen);
         } else {
             this._network.setData(data);
         }

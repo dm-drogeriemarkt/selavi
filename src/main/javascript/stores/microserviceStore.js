@@ -1,4 +1,5 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
@@ -89,4 +90,4 @@ function updateStore(state = initialState, action) {
 }
 
 // create & export redux store
-export default createStore(updateStore);
+export default createStore(updateStore, applyMiddleware(thunk));
