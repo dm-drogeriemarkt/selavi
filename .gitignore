@@ -3,3 +3,8 @@
 node_modules
 target
 src/main/resources/static/built/
+.classpath
+.factorypath
+.project
+.settings/
+
