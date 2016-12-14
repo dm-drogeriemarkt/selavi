@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.business.DefaultNodeContentFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -16,6 +19,8 @@ import java.util.Map;
 
 @Service
 public class MicroserviceRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
 
     // TODO: extract URL to config
     private static final String REGISTRY_URL = "http://example.com/eureka/apps";
@@ -31,7 +36,15 @@ public class MicroserviceRepository {
 
     public Map<String, ObjectNode> findAllServices() {
         final String nodeApplications = "applications";
-        final ResponseEntity<ObjectNode> responseEntity = requestServices();
+
+        ResponseEntity<ObjectNode> responseEntity;
+        try {
+            responseEntity = requestServices();
+        } catch (RestClientException ex) {
+            LOG.warn("Error fetching microservices from registry, returning empty map...", ex);
+            return Collections.emptyMap();
+        }
+
         final ObjectNode response = responseEntity.getBody();
         if (!response.hasNonNull(nodeApplications)) {
             return Collections.emptyMap();
