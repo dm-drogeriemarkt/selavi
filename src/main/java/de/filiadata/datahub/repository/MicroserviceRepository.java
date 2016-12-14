@@ -8,6 +8,7 @@ import de.filiadata.datahub.business.DefaultNodeContentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -27,15 +28,24 @@ public class MicroserviceRepository {
 
     private RestTemplate restTemplate;
     private DefaultNodeContentFactory defaultNodeContentFactory;
+    private Boolean offlineMode;
 
     @Autowired
-    public MicroserviceRepository(RestTemplate restTemplate, DefaultNodeContentFactory defaultNodeContentFactory) {
+    public MicroserviceRepository(RestTemplate restTemplate,
+                                  DefaultNodeContentFactory defaultNodeContentFactory,
+                                  @Value("${development.offline-mode:false}") String offlineMode) {
         this.restTemplate = restTemplate;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
+        this.offlineMode = Boolean.parseBoolean(offlineMode);
     }
 
     public Map<String, ObjectNode> findAllServices() {
         final String nodeApplications = "applications";
+
+        if (offlineMode) {
+            LOG.info("Dev mode: not fetching microservices from registry, returning empty map...");
+            return Collections.emptyMap();
+        }
 
         ResponseEntity<ObjectNode> responseEntity;
         try {
