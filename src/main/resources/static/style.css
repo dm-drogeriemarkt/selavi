@@ -97,7 +97,7 @@ th {
 }
 
 .microserviceListEntry.filterHit {
-    text-shadow: 2px 2px #15ff8d;
+    text-shadow: 0px 0px 5px #15ff8d;
 }
 
 .contextMenu {
