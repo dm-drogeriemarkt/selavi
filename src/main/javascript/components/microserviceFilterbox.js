@@ -11,7 +11,7 @@ const mapDispatchToProps = (dispatch) => {
         onType: function() {
             dispatch({
                 type: 'FILTERBOX_TYPE',
-                filterString: ''
+                filterString: this.refs.filterbox.value
             });
         }
     };
@@ -20,12 +20,8 @@ const mapDispatchToProps = (dispatch) => {
 class MicroserviceFilterbox extends React.Component {
     render() {
         return (
-            <div className="microserviceMenu">
-                <div>SeLaVi - Service Landscape Visualizer</div>
-                <div className="buttons">
-                    <button onClick={this.props.onAddService}>Add Service</button>
-                    <button onClick={this.props.onAddLink}>Add Link</button>
-                </div>
+            <div className="microserviceFilterbox">
+                <input ref="filterbox" placeholder="Filter services..." onInput={this.props.onType.bind(this)}></input>
             </div>
         );
     }

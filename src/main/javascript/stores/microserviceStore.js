@@ -85,6 +85,12 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'FILTERBOX_TYPE': {
+            const newState = Object.assign({}, state, {
+                filterString: action.filterString
+            });
+            return newState;
+        }
         default:
             return state;
     }

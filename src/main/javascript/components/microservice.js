@@ -3,7 +3,8 @@ const React = require('react');
 export default class Microservice extends React.Component {
     render() {
         var selected = this.props.selected ? "selected" : "";
-        var className = `microserviceListEntry ${selected}`;
+        var filterHit = this.props.filterHit ? "filterHit" : "";
+        var className = `microserviceListEntry ${selected} ${filterHit}`;
         return (
             <tr className={className}>
                 <td>{this.props.microservice.id}</td>

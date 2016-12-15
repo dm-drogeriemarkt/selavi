@@ -4,6 +4,7 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
 import {Provider} from "react-redux";
+import MicroserviceFilterBox from "./components/microserviceFilterbox";
 import MicroserviceList from "./components/microserviceList";
 import MicroservicePropertyList from "./components/microservicePropertyList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
@@ -36,6 +37,7 @@ class App extends React.Component {
             <div className="appcontainer">
                 <MicroserviceMindmap/>
                 <div className="microserviceRightPanel">
+                    <MicroserviceFilterBox/>
                     <MicroserviceList/>
                     <MicroserviceMenu/>
                     <MicroservicePropertyList/>

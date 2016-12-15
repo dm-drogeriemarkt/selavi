@@ -15,7 +15,7 @@ th {
     flex-direction: row;
 }
 
-.microserviceMindmap, .microserviceList, .microserviceMenu, .microservicePropertyList {
+.microserviceMindmap, .microserviceList, .microserviceMenu, .microservicePropertyList, .microserviceFilterbox {
     border-style: solid;
     border-radius: 0.5em;
     border-color: #5793ec;
@@ -87,9 +87,17 @@ th {
     margin-bottom: 0em;
 }
 
+.microserviceFilterbox {
+    padding: 0.5em;
+}
+
 .microserviceListEntry.selected {
     font-style: italic;
     font-weight: bold;
+}
+
+.microserviceListEntry.filterHit {
+    text-shadow: 2px 2px #15ff8d;
 }
 
 .contextMenu {
