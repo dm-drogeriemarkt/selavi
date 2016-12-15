@@ -10,7 +10,8 @@ const initialState = {
     contextMenuServiceId: undefined,
     addPropertyServiceId: undefined,
     contextMenuVisible: false,
-    menuMode: undefined
+    menuMode: undefined,
+    filterString: ''
 }
 
 // reducer function, creates a new state object from the previous state and the action
