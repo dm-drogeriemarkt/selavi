@@ -7,7 +7,8 @@ import { onSelectMicroserviceNode, onContextMenuOpen, onAddLink } from './../act
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
-        menuMode: state.menuMode
+        menuMode: state.menuMode,
+        filterString: state.filterString
     };
 };
 
@@ -42,8 +43,31 @@ export class MicroserviceMindmap extends React.Component {
         this.updateMindmap();
     }
 
-    componentDidUpdate() {
-        if (this.props.menuMode === 'ADD_LINK') {
+    componentDidUpdate(prevProps) {
+
+        if (this.props.filterString !== prevProps.filterString) {
+            // we are filtering, no need to update the graph itself
+
+            this.props.microservices.forEach(microservice => {
+                var filterHit = (this.props.filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(this.props.filterString.toLowerCase()) != -1) : false;
+
+                if (filterHit) {
+                    this._network.body.data.nodes.update([{
+                        id: microservice.id,
+                        shadow: {
+                            color: "#15ff8d"
+                        }
+                    }]);
+                } else {
+                    this._network.body.data.nodes.update([{
+                        id: microservice.id,
+                        shadow: {
+                            color: "grey"
+                        }
+                    }]);
+                }
+            }, this);
+        } else if (this.props.menuMode === 'ADD_LINK') {
             this._network.addEdgeMode();
         } else {
             this._network.disableEditMode();
