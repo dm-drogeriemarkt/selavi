@@ -43,13 +43,11 @@ export class MicroserviceMindmap extends React.Component {
         this.updateMindmap();
     }
 
-    componentDidUpdate(prevProps) {
-
-        if (this.props.filterString !== prevProps.filterString) {
-            // we are filtering, no need to update the graph itself
-
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.filterString !== this.props.filterString) {
+            // we are filtering, no need to re-draw the graph itself
             this.props.microservices.forEach(microservice => {
-                var filterHit = (this.props.filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(this.props.filterString.toLowerCase()) != -1) : false;
+                var filterHit = (nextProps.filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(nextProps.filterString.toLowerCase()) != -1) : false;
 
                 if (filterHit) {
                     this._network.body.data.nodes.update([{
@@ -67,12 +65,21 @@ export class MicroserviceMindmap extends React.Component {
                     }]);
                 }
             }, this);
-        } else if (this.props.menuMode === 'ADD_LINK') {
+
+            return false;
+        } else if (nextProps.menuMode === 'ADD_LINK') {
+            // we adding a connection between services, no need to re-draw the graph itself
             this._network.addEdgeMode();
-        } else {
-            this._network.disableEditMode();
-            this.updateMindmap();
+
+            return false;
         }
+
+        return true;
+    }
+
+    componentDidUpdate() {
+        this._network.disableEditMode();
+        this.updateMindmap();
     }
 
     updateMindmap() {
