@@ -110,6 +110,46 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledOnce(networkSetDataSpy);
         sinon.assert.notCalled(global.vis.Network);
     });
+
+    xit('adding a connection does not re-draw the graph', function () {
+
+        /*
+         TODO: fix this test
+
+         enzymes lifecycleExperimental feature, which triggers all react lifecycle methods
+         on shallow-rendered components, has different behaviour than 'real' react:
+
+         when a component implements shouldComponentUpdate(), and returns false, the components props
+         are NOT updated! react itself does update the props in this case, it simply does not call render()
+
+         possible fixes:
+          * dont use shallow rendering here. use jsdom or a 'real' browser (eg. phantomjs) to provide a DOM
+          * wait for enzyme to fix this issue
+         */
+
+        var props = createProps();
+
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+
+        global.vis.DataSet.reset();
+        global.vis.Network.reset();
+
+        props.menuMode = "ADD_LINK";
+        wrapper.setProps(props);
+
+        sinon.assert.calledOnce(networkAddEdgeModeSpy);
+        sinon.assert.notCalled(global.vis.DataSet);
+        sinon.assert.notCalled(networkSetDataSpy);
+        sinon.assert.notCalled(global.vis.Network);
+
+        delete props.menuMode;
+        wrapper.setProps(props);
+
+        sinon.assert.calledOnce(networkDisableEditModeSpy);
+        sinon.assert.notCalled(global.vis.DataSet);
+        sinon.assert.notCalled(networkSetDataSpy);
+        sinon.assert.notCalled(global.vis.Network);
+    });
 });
 
 function createProps() {

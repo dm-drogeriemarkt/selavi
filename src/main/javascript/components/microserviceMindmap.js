@@ -72,13 +72,17 @@ export class MicroserviceMindmap extends React.Component {
             this._network.addEdgeMode();
 
             return false;
+        } else if (this.props.menuMode === 'ADD_LINK' && !nextProps.menuMode) {
+            // we just added a connection between services, no need to re-draw the graph itself
+            this._network.disableEditMode();
+
+            return false;
         }
 
         return true;
     }
 
     componentDidUpdate() {
-        this._network.disableEditMode();
         this.updateMindmap();
     }
 
