@@ -31,6 +31,21 @@ class MicroserviceList extends React.Component {
         return (filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(filterString.toLowerCase()) === -1) : false;
     }
 
+    _getPropertyList(microservice) {
+        var propertyList = [];
+
+        for (var propertyName in microservice) {
+            if (!microservice.hasOwnProperty(propertyName)) continue;
+
+            var value = microservice[propertyName] + "";
+
+            propertyList.push(<ListItem key={microservice.id + '_' + propertyName}
+                                        primaryText={propertyName}
+                                        secondaryText={value}/>);
+        }
+        return propertyList;
+    }
+
     render() {
         var filterHits = [];
         var filteredOut = [];
@@ -57,6 +72,8 @@ class MicroserviceList extends React.Component {
 
                 var icon = microservice.isExternal ? (<CloudQueue/>) : (<Cloud/>)
 
+                var properties = this._getPropertyList(microservice);
+
                 return (
                     <ListItem selected={selected}
                               className="microserviceListEntry"
@@ -65,7 +82,8 @@ class MicroserviceList extends React.Component {
                               primaryText={microservice.id}
                               secondaryText={microservice['microservice-url']}
                               leftCheckbox={<Checkbox checked={selected} onCheck={(isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
-                              rightIcon={icon}/>
+                              nestedItems={properties}
+                              primaryTogglesNestedList={true}/>
                 )
             });
         return (
