@@ -29,6 +29,7 @@
         <lombok.version>1.16.10</lombok.version>
         <extended-actuator-health-endpoints.version>3.0.0</extended-actuator-health-endpoints.version>
         <logstash-logback-encoder.version>4.8</logstash-logback-encoder.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <dependencyManagement>
@@ -177,7 +178,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

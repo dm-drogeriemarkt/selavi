@@ -3,6 +3,7 @@ package de.filiadata.datahub.business;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.UnsupportedPropertyException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Before;
@@ -17,6 +18,7 @@ public class CustomPropertiesServiceUnitTest {
 
     private final ServicePropertiesRepository servicePropertiesRepository = mock(ServicePropertiesRepository.class);
     private final DefaultNodeContentFactory defaultNodeContentFactory = mock(DefaultNodeContentFactory.class);
+    private final BlacklistPropertyService blacklistPropertyService = mock(BlacklistPropertyService.class);
     private final ObjectMapper mapper = mock(ObjectMapper.class);
 
     private static final String SERVICE_NAME = "SeLaVie";
@@ -27,7 +29,7 @@ public class CustomPropertiesServiceUnitTest {
 
     @Before
     public void setUp() throws Exception {
-        service = new CustomPropertiesService(servicePropertiesRepository, defaultNodeContentFactory);
+        service = new CustomPropertiesService(servicePropertiesRepository, defaultNodeContentFactory, blacklistPropertyService);
     }
 
     @Test
@@ -162,5 +164,23 @@ public class CustomPropertiesServiceUnitTest {
         verify(objectNode, never()).remove(propertyNameLabel);
         verify(serviceProperties).setContent(objectNode.toString());
         verify(servicePropertiesRepository).save(serviceProperties);
+    }
+
+    @Test(expected = UnsupportedPropertyException.class)
+    public void changingABlacklistPropertyShouldFail() throws Exception {
+        final ObjectNode objectNode = mock(ObjectNode.class);
+        final Map<String, String> properties = new HashMap<>();
+        properties.put(PROPERTY_NAME, PROPERTY_VALUE);
+
+        when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(false);
+        when(defaultNodeContentFactory.create(SERVICE_NAME)).thenReturn(objectNode);
+        when(blacklistPropertyService.isBlacklistProperty(PROPERTY_NAME)).thenReturn(true);
+
+        // when
+        service.addSingleValueProperties(SERVICE_NAME, properties);
+
+        // then
+        verify(defaultNodeContentFactory).create(SERVICE_NAME);
+        verify(objectNode).put(PROPERTY_NAME, PROPERTY_VALUE);
     }
 }

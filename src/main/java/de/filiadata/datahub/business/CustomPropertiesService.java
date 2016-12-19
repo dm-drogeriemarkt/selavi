@@ -2,6 +2,7 @@ package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.UnsupportedPropertyException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.slf4j.Logger;
@@ -22,12 +23,15 @@ public class CustomPropertiesService {
     private static final String MANDATORY_PROPERTY_LABEL = "label";
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
+    private BlacklistPropertyService blacklistPropertyService;
 
     @Autowired
     public CustomPropertiesService(ServicePropertiesRepository servicePropertiesRepository,
-                                   DefaultNodeContentFactory defaultNodeContentFactory) {
+                                   DefaultNodeContentFactory defaultNodeContentFactory,
+                                   BlacklistPropertyService blacklistPropertyService) {
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
+        this.blacklistPropertyService = blacklistPropertyService;
     }
 
     public void addSingleValueProperties(String serviceName, Map<String, String> properties) {
@@ -97,7 +101,10 @@ public class CustomPropertiesService {
 
     private void addOrUpdateContentForServiceProperty(ObjectNode node, Map<String, String> property) {
         property.forEach((key, value) -> {
-            if (node.hasNonNull(key)) {
+            if (blacklistPropertyService.isBlacklistProperty(key)) {
+                LOG.info("Property '{}' is a property from the registry and must not be overwritten.", key);
+                throw new UnsupportedPropertyException();
+            } else if (node.hasNonNull(key)) {
                 node.set(key, JsonNodeFactory.instance.textNode(value));
             } else {
                 node.put(key, value);
