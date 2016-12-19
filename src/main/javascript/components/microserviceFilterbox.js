@@ -1,6 +1,9 @@
 const React = require('react');
 import { connect } from 'react-redux';
 
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import TextField from 'material-ui/TextField';
+
 const mapStateToProps = (state) => {
     return {
     };
@@ -8,10 +11,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onType: function() {
+        onType: function(eventProxy, value) {
             dispatch({
                 type: 'FILTERBOX_TYPE',
-                filterString: this.refs.filterbox.value
+                filterString: value
             });
         }
     };
@@ -20,9 +23,11 @@ const mapDispatchToProps = (dispatch) => {
 class MicroserviceFilterbox extends React.Component {
     render() {
         return (
-            <div className="microserviceFilterbox">
-                <input ref="filterbox" placeholder="Filter services..." onInput={this.props.onType.bind(this)}></input>
-            </div>
+            <Toolbar>
+                <ToolbarGroup firstChild={true} style={{marginLeft: "0.5em"}}>
+                    <TextField hintText="Filter services..." onChange={this.props.onType.bind(this)}></TextField>
+                </ToolbarGroup>
+            </Toolbar>
         );
     }
 }
