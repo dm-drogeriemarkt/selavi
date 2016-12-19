@@ -4,6 +4,8 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
 import {Provider} from "react-redux";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import MicroserviceFilterBox from "./components/microserviceFilterbox";
 import MicroserviceList from "./components/microserviceList";
 import MicroservicePropertyList from "./components/microservicePropertyList";
@@ -48,8 +50,10 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
+    <MuiThemeProvider>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </MuiThemeProvider>,
     document.getElementById('react')
 );

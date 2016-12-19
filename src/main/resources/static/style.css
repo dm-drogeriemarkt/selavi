@@ -91,6 +91,11 @@ th {
     padding: 0.5em;
 }
 
+.microserviceList {
+    border-radius: 0;
+    border-width: 2px;
+}
+
 .microserviceListEntry.selected {
     font-style: italic;
     font-weight: bold;

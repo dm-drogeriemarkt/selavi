@@ -1,7 +1,6 @@
 const React = require('react');
 import { connect } from 'react-redux';
-
-import Microservice from "./microservice";
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 const mapStateToProps = (state) => {
     return {
@@ -11,27 +10,55 @@ const mapStateToProps = (state) => {
     };
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSelectService: function(selectedRows) {
+
+            var selectedServiceId = (selectedRows && selectedRows.length === 1) ?
+                this.props.microservices[selectedRows[0]].id : undefined;
+
+            dispatch({
+                type: 'MICROSERVICE_NODE_SELECTED',
+                selectedServiceId: selectedServiceId
+            });
+        }
+    };
+};
+
 class MicroserviceList extends React.Component {
     render() {
         var microservices = this.props.microservices.map(microservice => {
             var selected = (this.props.selectedService === microservice.id);
             var filterHit = (this.props.filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(this.props.filterString.toLowerCase()) != -1) : false;
-            return <Microservice key={microservice.id} microservice={microservice} selected={selected} filterHit={filterHit} />
+
+            var filterHitClass = this.props.filterHit ? "filterHit" : "";
+            var className = `microserviceListEntry ${filterHitClass}`;
+
+            return (
+                <TableRow selected={selected} className={className} key={microservice.id}>
+                    <TableRowColumn>{microservice.id}</TableRowColumn>
+                    <TableRowColumn><a href={microservice['microservice-url']}>{microservice['microservice-url']}</a></TableRowColumn>
+                    <TableRowColumn>{microservice.isExternal + ""}</TableRowColumn>
+                </TableRow>
+            )
         });
         return (
             <div className="microserviceList">
-                <table >
-                    <tbody>
-                    <tr>
-                        <th>id</th>
-                        <th>url</th>
-                    </tr>
+                <Table onRowSelection={this.props.onSelectService.bind(this)}>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHeaderColumn>ID</TableHeaderColumn>
+                            <TableHeaderColumn>Url</TableHeaderColumn>
+                            <TableHeaderColumn>External?</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                     {microservices}
-                    </tbody>
-                </table>
+                    </TableBody>
+                </Table>
             </div>
         )
     }
 }
 
-export default connect(mapStateToProps) (MicroserviceList);
+export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceList);
