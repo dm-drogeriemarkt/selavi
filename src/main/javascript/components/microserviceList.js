@@ -2,9 +2,7 @@ const React = require('react');
 import { connect } from 'react-redux';
 import {List, ListItem} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
-import SubHeader from 'material-ui/SubHeader';
-import CloudQueue from 'material-ui/svg-icons/file/cloud-queue';
-import Cloud from 'material-ui/svg-icons/file/cloud';
+import Subheader from 'material-ui/Subheader';
 
 const mapStateToProps = (state) => {
     return {
@@ -32,16 +30,28 @@ class MicroserviceList extends React.Component {
     }
 
     _getPropertyList(microservice) {
-        var propertyList = [];
+        var propertyList = [<Subheader key={microservice.id + '_propHeader'}>Properties</Subheader>];
 
         for (var propertyName in microservice) {
             if (!microservice.hasOwnProperty(propertyName)) continue;
 
-            var value = microservice[propertyName] + "";
+            var value = JSON.stringify(microservice[propertyName]);
+            var nestedItems = [];
+
+            if (Array.isArray(microservice[propertyName])) {
+                microservice[propertyName].forEach((propValue, index) => {
+                    var nestedValue = JSON.stringify(propValue);
+
+                    nestedItems.push(<ListItem key={microservice.id + '_' + propertyName + '_' + index}
+                                               primaryText={nestedValue}/>);
+                });
+            }
 
             propertyList.push(<ListItem key={microservice.id + '_' + propertyName}
                                         primaryText={propertyName}
-                                        secondaryText={value}/>);
+                                        secondaryText={value}
+                                        nestedItems={nestedItems}
+                                        secondaryTextLines={2}/>);
         }
         return propertyList;
     }
@@ -70,8 +80,6 @@ class MicroserviceList extends React.Component {
                     style.color = "lightgrey"
                 }
 
-                var icon = microservice.isExternal ? (<CloudQueue/>) : (<Cloud/>)
-
                 var properties = this._getPropertyList(microservice);
 
                 return (
@@ -81,7 +89,7 @@ class MicroserviceList extends React.Component {
                               style={style}
                               primaryText={microservice.id}
                               secondaryText={microservice['microservice-url']}
-                              leftCheckbox={<Checkbox checked={selected} onCheck={(isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
+                              leftCheckbox={<Checkbox checked={selected} onCheck={(event, isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
                               nestedItems={properties}
                               primaryTogglesNestedList={true}/>
                 )
@@ -89,7 +97,7 @@ class MicroserviceList extends React.Component {
         return (
             <div className="microserviceList">
                 <List>
-                    <SubHeader>Services</SubHeader>
+                    <Subheader>Services</Subheader>
                     {microservices}
                 </List>
             </div>
