@@ -27,7 +27,8 @@ th {
 }
 
 .microserviceRightPanel {
-    width: 50em;
+    max-width: 40em;
+    flex-grow: 1;
     flex-direction: column;
 }
 
