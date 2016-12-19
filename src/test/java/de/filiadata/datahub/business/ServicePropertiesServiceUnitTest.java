@@ -7,7 +7,6 @@ import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Test;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
@@ -85,14 +84,14 @@ public class ServicePropertiesServiceUnitTest {
     @Test
     public void shouldDeletegateToCustomPropertiesServiceToDeleteProperties() throws Exception {
         // given
-        final List<String> propertyNames = Collections.emptyList();
         final String serviceName = "fooName";
+        String propertyName = "";
 
         // when
-        service.deleteProperties(serviceName, propertyNames);
+        service.deleteProperty(serviceName, propertyName);
 
         // then
-        verify(customPropertiesService).deleteProperty(serviceName, propertyNames);
+        verify(customPropertiesService).deleteProperty(serviceName, Collections.singletonList(propertyName));
     }
 
     @Test

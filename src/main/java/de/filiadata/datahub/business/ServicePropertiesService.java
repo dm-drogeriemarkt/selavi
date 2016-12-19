@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 @Service
@@ -63,7 +63,7 @@ public class ServicePropertiesService {
         customPropertiesService.addSingleValueProperties(serviceName, property);
     }
 
-    public void deleteProperties(String serviceName, List<String> propertyNames) {
-        customPropertiesService.deleteProperty(serviceName, propertyNames);
+    public void deleteProperty(String serviceName, String propertyName) {
+        customPropertiesService.deleteProperty(serviceName, Collections.singletonList(propertyName));
     }
 }

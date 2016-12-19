@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,9 +39,8 @@ public class ServiceController {
         servicePropertiesService.addProperties(serviceName, properties);
     }
 
-    // TODO: besser wäre: /{serviceName}/properties/{propertyName}
-    @RequestMapping(value = "/{serviceName}/properties", method = RequestMethod.DELETE)
-    public void deleteProperty(@PathVariable String serviceName, @RequestBody List<String> properyNames) {
-        servicePropertiesService.deleteProperties(serviceName, properyNames);
+    @RequestMapping(value = "/{serviceName}/properties/{propertyName}", method = RequestMethod.DELETE)
+    public void deleteProperty(@PathVariable String serviceName, @PathVariable String propertyName) {
+        servicePropertiesService.deleteProperty(serviceName, propertyName);
     }
 }
