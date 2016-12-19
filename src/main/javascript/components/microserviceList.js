@@ -1,6 +1,10 @@
 const React = require('react');
 import { connect } from 'react-redux';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {List, ListItem} from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import SubHeader from 'material-ui/SubHeader';
+import CloudQueue from 'material-ui/svg-icons/file/cloud-queue';
+import Cloud from 'material-ui/svg-icons/file/cloud';
 
 const mapStateToProps = (state) => {
     return {
@@ -12,14 +16,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSelectService: function(selectedRows) {
-
-            var selectedServiceId = (selectedRows && selectedRows.length === 1) ?
-                this.props.microservices[selectedRows[0]].id : undefined;
-
+        onSelectService: function(selectedServiceId, isInputChecked) {
             dispatch({
                 type: 'MICROSERVICE_NODE_SELECTED',
-                selectedServiceId: selectedServiceId
+                selectedServiceId: isInputChecked ? selectedServiceId : undefined
             });
         }
     };
@@ -43,8 +43,7 @@ class MicroserviceList extends React.Component {
             }
         });
 
-        var microservices =
-            filterHits.concat(filteredOut)
+        var microservices = filterHits.concat(filteredOut)
             .map(wrapper => {
                 var microservice = wrapper.microservice;
 
@@ -56,29 +55,25 @@ class MicroserviceList extends React.Component {
                     style.color = "lightgrey"
                 }
 
+                var icon = microservice.isExternal ? (<CloudQueue/>) : (<Cloud/>)
+
                 return (
-                    <TableRow selected={selected} className="microserviceListEntry" key={microservice.id} style={style}>
-                        <TableRowColumn>{microservice.id}</TableRowColumn>
-                        <TableRowColumn><a
-                            href={microservice['microservice-url']}>{microservice['microservice-url']}</a></TableRowColumn>
-                        <TableRowColumn>{microservice.isExternal + ""}</TableRowColumn>
-                    </TableRow>
+                    <ListItem selected={selected}
+                              className="microserviceListEntry"
+                              key={microservice.id}
+                              style={style}
+                              primaryText={microservice.id}
+                              secondaryText={microservice['microservice-url']}
+                              leftCheckbox={<Checkbox checked={selected} onCheck={(isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
+                              rightIcon={icon}/>
                 )
             });
         return (
             <div className="microserviceList">
-                <Table onRowSelection={this.props.onSelectService.bind(this)}>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHeaderColumn>ID</TableHeaderColumn>
-                            <TableHeaderColumn>Url</TableHeaderColumn>
-                            <TableHeaderColumn>External?</TableHeaderColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {microservices}
-                    </TableBody>
-                </Table>
+                <List>
+                    <SubHeader>Services</SubHeader>
+                    {microservices}
+                </List>
             </div>
         )
     }
