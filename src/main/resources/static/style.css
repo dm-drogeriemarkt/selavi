@@ -12,6 +12,11 @@ th {
 
 .appcontainer {
     display: flex;
+    flex-direction: column;
+}
+
+.appcontent {
+    display: flex;
     flex-direction: row;
 }
 

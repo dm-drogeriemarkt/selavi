@@ -40,11 +40,15 @@ class App extends React.Component {
     render() {
         return (
             <div className="appcontainer">
-                <MicroserviceMindmap/>
-                <div className="microserviceRightPanel">
+                <div className="appheader">
                     <MicroserviceFilterBox/>
-                    <MicroserviceList/>
-                    <MicroserviceMenu/>
+                </div>
+                <div className="appcontent">
+                    <MicroserviceMindmap/>
+                    <div className="microserviceRightPanel">
+                        <MicroserviceList/>
+                        <MicroserviceMenu/>
+                    </div>
                 </div>
             </div>
         )
