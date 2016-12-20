@@ -2,6 +2,7 @@ package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.ServiceAddException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class ServicePropertiesServiceUnitTest {
         verify(servicePropertiesRepository).save(any(ServiceProperties.class));
     }
 
-    @Test
+    @Test(expected = ServiceAddException.class)
     public void shouldNotSaveNewServiceIfItExists() throws Exception {
         // given
         final String serviceName = "someName";
@@ -63,9 +64,6 @@ public class ServicePropertiesServiceUnitTest {
 
         // when
         service.createNewServiceInfo(objectNode);
-
-        // then
-        verify(servicePropertiesRepository, never()).save(any(ServiceProperties.class));
     }
 
     @Test
