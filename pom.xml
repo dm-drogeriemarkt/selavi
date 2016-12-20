@@ -30,6 +30,8 @@
         <extended-actuator-health-endpoints.version>3.0.0</extended-actuator-health-endpoints.version>
         <logstash-logback-encoder.version>4.8</logstash-logback-encoder.version>
         <junit.version>4.12</junit.version>
+        <springfox-swagger2.version>2.6.1</springfox-swagger2.version>
+        <springfox-swagger-ui.version>2.6.1</springfox-swagger-ui.version>
     </properties>
 
     <dependencyManagement>
@@ -183,6 +185,18 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger-ui.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
