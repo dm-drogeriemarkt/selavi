@@ -55,7 +55,10 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "foo-service",
                 label: "foo-service",
-                color: "lightblue"
+                color: {
+                    background: "#bef24d",
+                    border: "#19c786"
+                }
             },
             {
                 id: "bar-consumer",
@@ -64,7 +67,10 @@ describe('<MicroserviceMindmap/>', function () {
                 consumes: [
                     "foo-service"
                 ],
-                color: "orange"
+                color: {
+                    background: "#f2d12d",
+                    border: "#f69805"
+                }
             }
         ]
 
