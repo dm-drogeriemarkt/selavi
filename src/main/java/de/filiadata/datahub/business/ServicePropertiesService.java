@@ -59,6 +59,10 @@ public class ServicePropertiesService {
         }
     }
 
+    public void deleteRelation(String serviceName, String relatedServiceName) {
+        consumerPropertiesService.removeRelation(serviceName, relatedServiceName);
+    }
+
     public void addProperties(String serviceName, Map<String, String> property) {
         customPropertiesService.addSingleValueProperties(serviceName, property);
     }

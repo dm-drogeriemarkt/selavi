@@ -1,14 +1,18 @@
 package de.filiadata.datahub.business;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.RelationRemoveException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 @Service
 public class ConsumerPropertiesService {
@@ -57,5 +61,50 @@ public class ConsumerPropertiesService {
         ArrayNode consumerNode = defaultNodeContentFactory.getMapper().createArrayNode();
         consumerNode.add(relatedServiceName);
         return consumerNode;
+    }
+
+    public void removeRelation(String serviceName, String relatedServiceName) {
+        if (StringUtils.isEmpty(relatedServiceName)) {
+            throw new RelationRemoveException();
+        }
+
+        final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
+        if (serviceProperties == null) {
+            throw new RelationRemoveException();
+        }
+
+        final ObjectNode existingServiceNode = convertJsonToNode(serviceProperties);
+        final ObjectNode modifiedConsumers = removeRelatedServiceNameNode(relatedServiceName, existingServiceNode);
+
+        serviceProperties.setContent(modifiedConsumers.toString());
+        servicePropertiesRepository.save(serviceProperties);
+    }
+
+    private ObjectNode convertJsonToNode(ServiceProperties serviceProperties) {
+        final ObjectMapper mapper = defaultNodeContentFactory.getMapper();
+        try {
+            return (ObjectNode) mapper.readTree(serviceProperties.getContent());
+        } catch (IOException e) {
+            throw new RelationRemoveException(e);
+        }
+    }
+
+    private ObjectNode removeRelatedServiceNameNode(String relatedServiceName, ObjectNode existingNode) {
+        final ObjectNode resultNode = defaultNodeContentFactory.getMapper().createObjectNode();
+        resultNode.setAll(existingNode);
+
+        final ArrayNode consumer = (ArrayNode) resultNode.get(CONSUMER_NODE_NAME);
+        for (Iterator<JsonNode> it = consumer.iterator(); it.hasNext(); ) {
+            final JsonNode node = it.next();
+            if (node.textValue().equals(relatedServiceName)) {
+                it.remove();
+            }
+        }
+
+        if (consumer.size() == 0) {
+            resultNode.remove(CONSUMER_NODE_NAME);
+        }
+
+        return resultNode;
     }
 }

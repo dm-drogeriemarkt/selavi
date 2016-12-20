@@ -3,6 +3,7 @@ package de.filiadata.datahub.business;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.RelationRemoveException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.hamcrest.Matchers;
@@ -96,5 +97,57 @@ public class ConsumerPropertiesServiceUnitTest {
         verify(objectNode).set(CONSUMER_NODE_NAME, arrayNode);
         verify(serviceProperties).setContent(objectNode.toString());
         verify(servicePropertiesRepository).save(serviceProperties);
+    }
+
+    @Test(expected = RelationRemoveException.class)
+    public void shouldThrowExceptionForNotExistingServiceName() throws Exception {
+        // given
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(null);
+
+        // when
+        service.removeRelation(SERVICE_NAME, RELATED_SERVICE_NAME);
+    }
+
+    @Test(expected = RelationRemoveException.class)
+    public void shouldThrowExceptionForEmptyRelatedServiceName() throws Exception {
+        // given
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(null);
+
+        // when
+        service.removeRelation(SERVICE_NAME, "");
+    }
+
+    @Test
+    public void shouldRemoveRelation() throws Exception {
+        // given
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectNode objectNode = objectMapper.createObjectNode();
+        final ObjectNode resultNode = objectMapper.createObjectNode();
+        final ArrayNode arrayNode = objectMapper.createArrayNode();
+        arrayNode.add("FOO");
+        arrayNode.add("BAZ");
+        objectNode.set(CONSUMER_NODE_NAME, arrayNode);
+
+        final ServiceProperties serviceProperties = mock(ServiceProperties.class);
+
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
+        when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
+        when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
+        when(mapper.createObjectNode()).thenReturn(resultNode);
+
+        // when
+        service.removeRelation(SERVICE_NAME, "FOO");
+
+        // then
+        assertThat(resultNode.size(), Matchers.is(1));
+
+        //when
+        service.removeRelation(SERVICE_NAME, "BAZ");
+
+        // then
+        assertThat(resultNode.hasNonNull(CONSUMER_NODE_NAME), Matchers.is(false));
+
+        verify(serviceProperties).setContent(resultNode.toString());
+        verify(servicePropertiesRepository, times(2)).save(serviceProperties);
     }
 }
