@@ -12,6 +12,7 @@ import MicroserviceList from "./components/microserviceList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceMenu from "./components/microserviceMenu";
 import MicroserviceSnackbar from "./components/microserviceSnackbar";
+import MicroserviceAddServiceDialog from "./components/microserviceAddServiceDialog";
 import store from "./stores/microserviceStore";
 
 // see http://www.material-ui.com/#/get-started/installation
@@ -53,6 +54,7 @@ class App extends React.Component {
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
+                    <MicroserviceAddServiceDialog/>
                 </div>
             </div>
         )

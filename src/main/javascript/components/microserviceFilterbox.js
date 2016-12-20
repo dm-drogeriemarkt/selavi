@@ -27,6 +27,11 @@ const mapDispatchToProps = (dispatch) => {
                 type: 'ADD_LINK',
             });
         },
+        onAddService: function() {
+            dispatch({
+                type: 'ADD_SERVICE',
+            });
+        },
         onCancel: function() {
             dispatch({
                 type: 'CANCEL_MENU_ACTION',
@@ -56,7 +61,7 @@ class MicroserviceFilterbox extends React.Component {
                 </ToolbarGroup>
                 <ToolbarGroup>
                     <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon /></IconButton>}>
-                        <MenuItem primaryText="Add Service" />
+                        <MenuItem primaryText="Add Service" onTouchTap={this.props.onAddService.bind(this)} />
                         {linkMenuItem}
                     </IconMenu>
                 </ToolbarGroup>
