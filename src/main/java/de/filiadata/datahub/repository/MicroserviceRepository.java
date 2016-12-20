@@ -24,20 +24,20 @@ public class MicroserviceRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
 
-    // TODO: extract URL to config
-    private static final String REGISTRY_URL = "http://example.com/eureka/apps";
-
     private RestTemplate restTemplate;
     private DefaultNodeContentFactory defaultNodeContentFactory;
     private Boolean offlineMode;
+    private String registryUrl;
 
     @Autowired
     public MicroserviceRepository(RestTemplate restTemplate,
                                   DefaultNodeContentFactory defaultNodeContentFactory,
-                                  @Value("${development.offline-mode:false}") String offlineMode) {
+                                  @Value("${development.offline-mode:false}") String offlineMode,
+                                  @Value("${registry.url}") String registryUrl) {
         this.restTemplate = restTemplate;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.offlineMode = Boolean.parseBoolean(offlineMode);
+        this.registryUrl = registryUrl;
     }
 
 
@@ -126,6 +126,6 @@ public class MicroserviceRepository {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
 
         final HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
-        return restTemplate.exchange(REGISTRY_URL, HttpMethod.GET, httpEntity, ObjectNode.class);
+        return restTemplate.exchange(registryUrl, HttpMethod.GET, httpEntity, ObjectNode.class);
     }
 }

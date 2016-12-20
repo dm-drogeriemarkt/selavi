@@ -1,6 +1,7 @@
 package de.filiadata.datahub;
 
 import com.google.common.cache.CacheBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -24,6 +25,9 @@ import java.util.concurrent.TimeUnit;
 @EnableSwagger2
 public class SelaviApplication extends SpringBootServletInitializer {
 
+    @Value("${cache.expireAfterWriteInMinutes}")
+    private Integer expireAfterWriteInMinutes;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SelaviApplication.class);
@@ -40,8 +44,7 @@ public class SelaviApplication extends SpringBootServletInitializer {
 
     @Bean
     public CacheManager cacheManager() {
-        final int minutesForExpiry = 10; // TODO: externalize into config
-        final CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().expireAfterWrite(minutesForExpiry, TimeUnit.MINUTES);
+        final CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder().expireAfterWrite(expireAfterWriteInMinutes, TimeUnit.MINUTES);
         final GuavaCacheManager guavaCacheManager = new GuavaCacheManager();
         guavaCacheManager.setAllowNullValues(false);
         guavaCacheManager.setCacheBuilder(cacheBuilder);
