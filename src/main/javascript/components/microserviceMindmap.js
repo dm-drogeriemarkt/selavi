@@ -18,7 +18,26 @@ const mapDispatchToProps = {
     onAddLink
 };
 
+const _colors = {
+    'MICROSERVICE': {
+        background: "#bef24d",
+        border: "#19c786"
+    },
+    'EXTERNAL': {
+        background: "#f2d12d",
+        border: "#f69805"
+    },
+    'GREY': {
+        background: "#f0f0f0",
+        border: "#c4c3c6"
+    }
+}
+
 export class MicroserviceMindmap extends React.Component {
+
+    _shouldFilterOut(microservice, filterString) {
+        return (filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(filterString.toLowerCase()) === -1) : false;
+    }
 
     onContextMenuHandler(params) {
         params.event.preventDefault();
@@ -47,21 +66,17 @@ export class MicroserviceMindmap extends React.Component {
         if (nextProps.filterString !== this.props.filterString) {
             // we are filtering, no need to re-draw the graph itself
             this.props.microservices.forEach(microservice => {
-                var filterHit = (nextProps.filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(nextProps.filterString.toLowerCase()) != -1) : false;
-
-                if (filterHit) {
+                if (this._shouldFilterOut(microservice, nextProps.filterString)) {
                     this._network.body.data.nodes.update([{
                         id: microservice.id,
-                        shadow: {
-                            color: "#15ff8d"
-                        }
+                        color: _colors.GREY,
+                        font: { color: "#c4c3c6" }
                     }]);
                 } else {
                     this._network.body.data.nodes.update([{
                         id: microservice.id,
-                        shadow: {
-                            color: "grey"
-                        }
+                        color: microservice.isExternal ? _colors.EXTERNAL : _colors.MICROSERVICE,
+                        font: { color: "#000000" }
                     }]);
                 }
             }, this);
@@ -89,9 +104,9 @@ export class MicroserviceMindmap extends React.Component {
     updateMindmap() {
         var microservices = this.props.microservices.map(microservice => {
             if (microservice.isExternal) {
-                microservice.color = "orange";
+                microservice.color = _colors.EXTERNAL;
             } else {
-                microservice.color = "lightblue";
+                microservice.color = _colors.MICROSERVICE;
             }
             return microservice;
         });
@@ -124,12 +139,10 @@ export class MicroserviceMindmap extends React.Component {
             var options = {
                 nodes: {
                     borderWidth: 2,
-                    shadow: true,
-                    font: {color: "white"}
+                    shape: "box"
                 },
                 edges: {
-                    width: 2,
-                    shadow: true
+                    width: 2
                 },
                 layout: {
                     randomSeed: 2
