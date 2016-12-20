@@ -1,6 +1,7 @@
 package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.ServiceAddException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.slf4j.Logger;
@@ -41,9 +42,10 @@ public class ServicePropertiesService {
 
     public void createNewServiceInfo(ObjectNode dto) {
         String serviceName = dto.get("id").textValue();
-        if (!servicePropertiesRepository.exists(serviceName)) {
-            servicePropertiesRepository.save(new ServiceProperties(serviceName, dto.toString()));
+        if (servicePropertiesRepository.exists(serviceName)) {
+            throw new ServiceAddException();
         }
+        servicePropertiesRepository.save(new ServiceProperties(serviceName, dto.toString()));
     }
 
     public void addRelation(String serviceName, String relatedServiceName) {
