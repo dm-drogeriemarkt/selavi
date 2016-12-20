@@ -11,6 +11,7 @@ import MicroserviceFilterBox from "./components/microserviceFilterbox";
 import MicroserviceList from "./components/microserviceList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceMenu from "./components/microserviceMenu";
+import MicroserviceSnackbar from "./components/microserviceSnackbar";
 import store from "./stores/microserviceStore";
 
 // see http://www.material-ui.com/#/get-started/installation
@@ -49,6 +50,9 @@ class App extends React.Component {
                         <MicroserviceList/>
                         <MicroserviceMenu/>
                     </div>
+                </div>
+                <div className="appfooter">
+                    <MicroserviceSnackbar/>
                 </div>
             </div>
         )
