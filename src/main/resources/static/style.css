@@ -25,9 +25,10 @@ th {
     flex-direction: row;
 }
 
-.microserviceMindmap, .microserviceList, .microserviceMenu, .microservicePropertyList, .microserviceFilterbox {
+.microserviceMindmap, .microserviceList, .microserviceMenu, .microserviceFilterbox {
     border-style: solid;
-    border-radius: 0.5em;
+    border-radius: 0;
+    border-width: 2px;
     border-color: #5793ec;
     margin: 0.5em;
 }
@@ -40,10 +41,6 @@ th {
     max-width: 40em;
     flex-grow: 1;
     flex-direction: column;
-}
-
-.microservicePropertyList {
-    padding: 0.5em;
 }
 
 .microserviceMenu {
@@ -103,8 +100,6 @@ th {
 }
 
 .microserviceList {
-    border-radius: 0;
-    border-width: 2px;
 }
 
 .microserviceListEntry.selected {
