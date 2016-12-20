@@ -38,9 +38,16 @@ th {
 }
 
 .microserviceRightPanel {
-    max-width: 40em;
-    flex-grow: 1;
     flex-direction: column;
+}
+
+.microserviceList {
+    width: 350px;
+    transition: width 300ms ease-in-out;
+}
+
+.microserviceList.wide {
+    width: 650px;
 }
 
 .microserviceMenu {

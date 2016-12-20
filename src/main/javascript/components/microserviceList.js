@@ -56,6 +56,14 @@ class MicroserviceList extends React.Component {
         return propertyList;
     }
 
+    _onNestedListToggle(listItem) {
+        if (listItem.state.open) {
+            this.refs.microserviceList.classList.add("wide");
+        } else {
+            this.refs.microserviceList.classList.remove("wide");
+        }
+    }
+
     render() {
         var filterHits = [];
         var filteredOut = [];
@@ -91,11 +99,12 @@ class MicroserviceList extends React.Component {
                               secondaryText={microservice['microservice-url']}
                               leftCheckbox={<Checkbox checked={selected} onCheck={(event, isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
                               nestedItems={properties}
+                              onNestedListToggle={this._onNestedListToggle.bind(this)}
                               primaryTogglesNestedList={true}/>
                 )
             });
         return (
-            <div className="microserviceList">
+            <div className="microserviceList" ref="microserviceList">
                 <List>
                     <Subheader>Services</Subheader>
                     {microservices}
