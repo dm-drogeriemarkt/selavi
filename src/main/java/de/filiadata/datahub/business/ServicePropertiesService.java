@@ -52,7 +52,7 @@ public class ServicePropertiesService {
             consumerPropertiesService.createAndSaveNewProperties(serviceName, relatedServiceName);
         } else {
             try {
-                consumerPropertiesService.updateExistingProperties(serviceName, relatedServiceName);
+                consumerPropertiesService.addConsumedService(serviceName, relatedServiceName);
             } catch (IOException e) {
                 LOG.warn("Update of service properties failed.", e);
             }

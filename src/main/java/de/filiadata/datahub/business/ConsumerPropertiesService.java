@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.RelationAddException;
 import de.filiadata.datahub.business.semanticexceptions.RelationRemoveException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
@@ -29,7 +30,7 @@ public class ConsumerPropertiesService {
         this.defaultNodeContentFactory = defaultNodeContentFactory;
     }
 
-    public ServiceProperties updateExistingProperties(String serviceName, String relatedServiceName) throws IOException {
+    public ServiceProperties addConsumedService(String serviceName, String relatedServiceName) throws IOException {
         final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
         final ObjectMapper mapper = defaultNodeContentFactory.getMapper();
         final ObjectNode existingNode = (ObjectNode) mapper.readTree(serviceProperties.getContent());
@@ -37,6 +38,10 @@ public class ConsumerPropertiesService {
         boolean consumerNodeExists = existingNode.hasNonNull(CONSUMER_NODE_NAME);
         if (consumerNodeExists) {
             final ArrayNode existingConsumerNode = (ArrayNode) existingNode.get(CONSUMER_NODE_NAME);
+            if (relationExists(existingConsumerNode, relatedServiceName)) {
+                throw new RelationAddException();
+            }
+
             existingConsumerNode.add(relatedServiceName);
             serviceProperties.setContent(existingNode.toString());
             return servicePropertiesRepository.save(serviceProperties);
@@ -46,6 +51,16 @@ public class ConsumerPropertiesService {
         existingNode.set(CONSUMER_NODE_NAME, newConsumerNode);
         serviceProperties.setContent(existingNode.toString());
         return servicePropertiesRepository.save(serviceProperties);
+    }
+
+    private boolean relationExists(ArrayNode arrayNode, String relatedServiceName) {
+        for (Iterator<JsonNode> it = arrayNode.iterator(); it.hasNext(); ) {
+            JsonNode node = it.next();
+            if (node.textValue().equals(relatedServiceName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public ServiceProperties createAndSaveNewProperties(String serviceName, String relatedServiceName) {

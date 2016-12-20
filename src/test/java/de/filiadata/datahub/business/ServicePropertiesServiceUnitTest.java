@@ -121,6 +121,6 @@ public class ServicePropertiesServiceUnitTest {
         service.addRelation(serviceName, relatedServiceName);
 
         // then
-        verify(consumerPropertiesService).updateExistingProperties(serviceName, relatedServiceName);
+        verify(consumerPropertiesService).addConsumedService(serviceName, relatedServiceName);
     }
 }

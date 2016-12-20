@@ -3,6 +3,7 @@ package de.filiadata.datahub.business;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.RelationAddException;
 import de.filiadata.datahub.business.semanticexceptions.RelationRemoveException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
@@ -54,11 +55,11 @@ public class ConsumerPropertiesServiceUnitTest {
     }
 
     @Test
-    public void updateExistingShouldUpdateConsumerNodeIfItExists() throws Exception {
+    public void shouldUpdateConsumerNodeIfItExists() throws Exception {
         // given
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);
         final ObjectNode objectNode = mock(ObjectNode.class);
-        final ArrayNode arrayNode = mock(ArrayNode.class);
+        final ArrayNode arrayNode = new ObjectMapper().createArrayNode();
 
         when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
         when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
@@ -67,13 +68,31 @@ public class ConsumerPropertiesServiceUnitTest {
         when(objectNode.get(CONSUMER_NODE_NAME)).thenReturn(arrayNode);
 
         // when
-        service.updateExistingProperties(SERVICE_NAME, RELATED_SERVICE_NAME);
+        service.addConsumedService(SERVICE_NAME, RELATED_SERVICE_NAME);
 
         // then
-        verify(arrayNode).add(RELATED_SERVICE_NAME);
+        assertThat(arrayNode.size(), Matchers.is(1));
         verify(serviceProperties).setContent(objectNode.toString());
         verify(servicePropertiesRepository).save(serviceProperties);
         verify(objectNode, never()).set(CONSUMER_NODE_NAME, arrayNode);
+    }
+
+    @Test(expected = RelationAddException.class)
+    public void shouldFailIfSameRelationIsAddedTwice() throws Exception {
+        // given
+        final ObjectNode objectNode = mock(ObjectNode.class);
+        final ServiceProperties serviceProperties = mock(ServiceProperties.class);
+        final ArrayNode arrayNode = new ObjectMapper().createArrayNode();
+        arrayNode.add("FOO");
+
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
+        when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
+        when(objectNode.hasNonNull(CONSUMER_NODE_NAME)).thenReturn(true);
+        when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
+        when(objectNode.get(CONSUMER_NODE_NAME)).thenReturn(arrayNode);
+
+        // when
+        service.addConsumedService(SERVICE_NAME, "FOO");
     }
 
     @Test
@@ -90,7 +109,7 @@ public class ConsumerPropertiesServiceUnitTest {
         when(mapper.createArrayNode()).thenReturn(arrayNode);
 
         // when
-        service.updateExistingProperties(SERVICE_NAME, RELATED_SERVICE_NAME);
+        service.addConsumedService(SERVICE_NAME, RELATED_SERVICE_NAME);
 
         // then
         verify(arrayNode).add(RELATED_SERVICE_NAME);
