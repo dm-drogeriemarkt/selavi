@@ -1,7 +1,7 @@
 package de.filiadata.datahub.business;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.PropertyAddException;
 import de.filiadata.datahub.business.semanticexceptions.UnsupportedPropertyException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
@@ -13,7 +13,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CustomPropertiesService {
@@ -34,16 +33,18 @@ public class CustomPropertiesService {
         this.blacklistPropertyService = blacklistPropertyService;
     }
 
-    public void addSingleValueProperties(String serviceName, Map<String, String> properties) {
+    public void addSingleValueProperties(String serviceName, ObjectNode property) {
         boolean isPersistedNode = servicePropertiesRepository.exists(serviceName);
         if (!isPersistedNode) {
-            final ServiceProperties newServiceProperties = createNewServiceProperty(serviceName, properties);
+            final ServiceProperties newServiceProperties = createNewServiceProperty(serviceName, property);
             servicePropertiesRepository.save(newServiceProperties);
         } else {
-            final ServiceProperties updatedServiceProperties = updateExistingServiceProperty(serviceName, properties);
-            if (updatedServiceProperties != null) {
-                servicePropertiesRepository.save(updatedServiceProperties);
+            final ServiceProperties updatedServiceProperties = updateExistingServiceProperty(serviceName, property);
+            if (updatedServiceProperties == null) {
+                throw new PropertyAddException();
             }
+
+            servicePropertiesRepository.save(updatedServiceProperties);
         }
     }
 
@@ -76,18 +77,18 @@ public class CustomPropertiesService {
         }
     }
 
-    private ServiceProperties createNewServiceProperty(String serviceName, Map<String, String> properties) {
+    private ServiceProperties createNewServiceProperty(String serviceName, ObjectNode property) {
         final ObjectNode node = defaultNodeContentFactory.create(serviceName);
-        addOrUpdateContentForServiceProperty(node, properties);
+        addOrUpdateContentForServiceProperty(node, property);
         return new ServiceProperties(serviceName, node.toString());
     }
 
-    private ServiceProperties updateExistingServiceProperty(String serviceName, Map<String, String> properties) {
+    private ServiceProperties updateExistingServiceProperty(String serviceName, ObjectNode property) {
         try {
             final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
             final ObjectNode node = (ObjectNode) defaultNodeContentFactory.getMapper().readTree(serviceProperties.getContent());
 
-            addOrUpdateContentForServiceProperty(node, properties);
+            addOrUpdateContentForServiceProperty(node, property);
             serviceProperties.setContent(node.toString());
 
             return serviceProperties;
@@ -99,16 +100,14 @@ public class CustomPropertiesService {
         return null;
     }
 
-    private void addOrUpdateContentForServiceProperty(ObjectNode node, Map<String, String> property) {
-        property.forEach((key, value) -> {
-            if (blacklistPropertyService.isBlacklistProperty(key)) {
-                LOG.info("Property '{}' is a property from the registry and must not be overwritten.", key);
+    private void addOrUpdateContentForServiceProperty(ObjectNode node, ObjectNode property) {
+        property.fieldNames().forEachRemaining(name -> {
+            if (blacklistPropertyService.isBlacklistProperty(name)) {
+                LOG.info("Property '{}' is a property from the registry and must not be overwritten.", name);
                 throw new UnsupportedPropertyException();
-            } else if (node.hasNonNull(key)) {
-                node.set(key, JsonNodeFactory.instance.textNode(value));
-            } else {
-                node.put(key, value);
             }
+
+            node.set(name, property.get(name));
         });
     }
 }

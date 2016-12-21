@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/services")
@@ -61,8 +60,8 @@ public class ServiceController {
 
     @ApiOperation(value = "Add a new property or update an existing. Properties internal properties are not allowed to be set.")
     @RequestMapping(value = "/{serviceName}/properties", method = RequestMethod.PUT)
-    public void addProperty(@PathVariable String serviceName, @RequestBody Map<String, String> properties) {
-        servicePropertiesService.addProperties(serviceName, properties);
+    public void addProperty(@PathVariable String serviceName, @RequestBody ObjectNode property) {
+        servicePropertiesService.addProperties(serviceName, property);
     }
 
     @ApiOperation(value = "Remove a property from the specific service.")

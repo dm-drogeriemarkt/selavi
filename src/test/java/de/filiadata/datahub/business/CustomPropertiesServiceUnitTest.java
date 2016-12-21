@@ -1,8 +1,9 @@
 package de.filiadata.datahub.business;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.filiadata.datahub.business.semanticexceptions.PropertyAddException;
 import de.filiadata.datahub.business.semanticexceptions.UnsupportedPropertyException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
@@ -10,7 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -35,27 +38,27 @@ public class CustomPropertiesServiceUnitTest {
     @Test
     public void addNonExistingPropertyShouldPersistNewEntry() throws Exception {
         // given
-        final ObjectNode objectNode = mock(ObjectNode.class);
-        final Map<String, String> properties = new HashMap<>();
-        properties.put(PROPERTY_NAME, PROPERTY_VALUE);
+        ObjectNode resultNode = mock(ObjectNode.class);
+        ObjectNode propertyNode = new ObjectMapper().createObjectNode();
+        propertyNode.set(PROPERTY_NAME, JsonNodeFactory.instance.textNode(PROPERTY_VALUE));
 
         when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(false);
-        when(defaultNodeContentFactory.create(SERVICE_NAME)).thenReturn(objectNode);
+        when(defaultNodeContentFactory.create(SERVICE_NAME)).thenReturn(resultNode);
 
 
         // when
-        service.addSingleValueProperties(SERVICE_NAME, properties);
+        service.addSingleValueProperties(SERVICE_NAME, propertyNode);
 
         // then
         verify(defaultNodeContentFactory).create(SERVICE_NAME);
-        verify(objectNode).put(PROPERTY_NAME, PROPERTY_VALUE);
+        verify(resultNode).set(PROPERTY_NAME, propertyNode.get(PROPERTY_NAME));
     }
 
     @Test
     public void addExistingPropertyToPersistedEntryShouldUpdateEntry() throws Exception {
         // given
-        final Map<String, String> properties = new HashMap<>();
-        properties.put(PROPERTY_NAME, PROPERTY_VALUE);
+        final ObjectNode propertyNode = new ObjectMapper().createObjectNode();
+        propertyNode.set(PROPERTY_NAME, JsonNodeFactory.instance.textNode(PROPERTY_VALUE));
 
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);
         final String existingPropertiesContent = "";
@@ -69,22 +72,23 @@ public class CustomPropertiesServiceUnitTest {
         when(objectNode.hasNonNull(PROPERTY_NAME)).thenReturn(true);
 
         // when
-        service.addSingleValueProperties(SERVICE_NAME, properties);
+        service.addSingleValueProperties(SERVICE_NAME, propertyNode);
 
         // then
         verify(servicePropertiesRepository).findById(SERVICE_NAME);
         verify(defaultNodeContentFactory).getMapper();
         verify(serviceProperties).getContent();
-        verify(objectNode).set(eq(PROPERTY_NAME), any(JsonNode.class));
+        verify(objectNode).set(PROPERTY_NAME, propertyNode.get(PROPERTY_NAME));
     }
 
-    @Test
+    @Test(expected = PropertyAddException.class)
     public void invalidJsonFromLoadedServicePropertiesShouldAbortTheUpdate() throws Exception {
         // given
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);
         final String existingPropertiesContent = "";
-        final Map<String, String> properties = new HashMap<>();
-        properties.put(PROPERTY_NAME, PROPERTY_VALUE);
+        final ObjectNode propertyNode = new ObjectMapper().createObjectNode();
+        propertyNode.set(PROPERTY_NAME, JsonNodeFactory.instance.textNode(PROPERTY_VALUE));
+
 
         when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(true);
         when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
@@ -93,7 +97,7 @@ public class CustomPropertiesServiceUnitTest {
         when(mapper.readTree(existingPropertiesContent)).thenThrow(new IOException("Unit Test ..."));
 
         // when
-        service.addSingleValueProperties(SERVICE_NAME, properties);
+        service.addSingleValueProperties(SERVICE_NAME, propertyNode);
 
         // then
         verify(servicePropertiesRepository, never()).save(any(ServiceProperties.class));
@@ -169,18 +173,18 @@ public class CustomPropertiesServiceUnitTest {
     @Test(expected = UnsupportedPropertyException.class)
     public void changingABlacklistPropertyShouldFail() throws Exception {
         final ObjectNode objectNode = mock(ObjectNode.class);
-        final Map<String, String> properties = new HashMap<>();
-        properties.put(PROPERTY_NAME, PROPERTY_VALUE);
+        final ObjectNode propertyNode = new ObjectMapper().createObjectNode();
+        propertyNode.set(PROPERTY_NAME, JsonNodeFactory.instance.textNode(PROPERTY_VALUE));
 
         when(servicePropertiesRepository.exists(SERVICE_NAME)).thenReturn(false);
         when(defaultNodeContentFactory.create(SERVICE_NAME)).thenReturn(objectNode);
         when(blacklistPropertyService.isBlacklistProperty(PROPERTY_NAME)).thenReturn(true);
 
         // when
-        service.addSingleValueProperties(SERVICE_NAME, properties);
+        service.addSingleValueProperties(SERVICE_NAME, propertyNode);
 
         // then
         verify(defaultNodeContentFactory).create(SERVICE_NAME);
-        verify(objectNode).put(PROPERTY_NAME, PROPERTY_VALUE);
+        verify(objectNode).set(PROPERTY_NAME, propertyNode.get(PROPERTY_NAME));
     }
 }

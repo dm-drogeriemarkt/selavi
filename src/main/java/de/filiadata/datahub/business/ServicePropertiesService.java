@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 @Service
 public class ServicePropertiesService {
@@ -62,7 +61,7 @@ public class ServicePropertiesService {
         consumerPropertiesService.removeRelation(serviceName, relatedServiceName);
     }
 
-    public void addProperties(String serviceName, Map<String, String> property) {
+    public void addProperties(String serviceName, ObjectNode property) {
         customPropertiesService.addSingleValueProperties(serviceName, property);
     }
 

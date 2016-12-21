@@ -1,10 +1,11 @@
 package de.filiadata.datahub.business;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Test;
 
 import java.util.Collections;
-import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -34,13 +35,13 @@ public class ServicePropertiesServiceUnitTest {
     public void shouldDeletegateToCustomPropertiesServiceToAddOrUpdateProperties() throws Exception {
         // given
         final String serviceName = "serviceName";
-        final Map<String, String> properties = Collections.emptyMap();
+        final ObjectNode propertyNode = new ObjectMapper().createObjectNode();
 
         // when
-        service.addProperties(serviceName, properties);
+        service.addProperties(serviceName, propertyNode);
 
         // then
-        verify(customPropertiesService).addSingleValueProperties(serviceName, properties);
+        verify(customPropertiesService).addSingleValueProperties(serviceName, propertyNode);
     }
 
     @Test
