@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch) => {
         },
         onSubmit: function() {
             var request = {
-                path: document.location.toString() + 'services',
+                path: '/selavi/services',
                 method: 'POST',
                 entity: {
                     id: this.refs.inputServiceId.getValue(),
@@ -42,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
 
             var client = rest.wrap(mime);
             client(request).then(response => {
-                client({path: document.location.toString() + 'services'}).then(response => {
+                client({path: '/selavi/services'}).then(response => {
                     dispatch({
                         type: 'FETCH_MICROSERVICES_SUCCESS',
                         response: response

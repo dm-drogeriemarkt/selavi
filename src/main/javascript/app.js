@@ -31,7 +31,7 @@ class App extends React.Component {
     componentDidMount() {
 
         var client = rest.wrap(mime);
-        client({path: document.location.toString() + 'services'}).then(response => {
+        client({path: '/selavi/services'}).then(response => {
             store.dispatch({
                 type: 'FETCH_MICROSERVICES_SUCCESS',
                 response: response

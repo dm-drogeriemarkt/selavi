@@ -30,7 +30,7 @@ export function onAddLink(edgeData) {
     return function (dispatch) {
         var client = rest.wrap(mime);
         client({
-            path: document.location.toString() + 'services/' + edgeData.from + '/relation',
+            path: '/selavi/services/' + edgeData.from + '/relation',
             method: 'PUT',
             entity: edgeData.to
         }).then(response => {
