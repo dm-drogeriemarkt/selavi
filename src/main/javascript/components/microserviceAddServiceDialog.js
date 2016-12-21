@@ -22,9 +22,8 @@ const mapDispatchToProps = (dispatch) => {
             });
         },
         onSubmit: function() {
-
             var request = {
-                path: '/services',
+                path: document.location.toString() + 'services',
                 method: 'POST',
                 entity: {
                     id: this.refs.inputServiceId.getValue(),
@@ -43,7 +42,7 @@ const mapDispatchToProps = (dispatch) => {
 
             var client = rest.wrap(mime);
             client(request).then(response => {
-                client({path: '/services'}).then(response => {
+                client({path: document.location.toString() + 'services'}).then(response => {
                     dispatch({
                         type: 'FETCH_MICROSERVICES_SUCCESS',
                         response: response
@@ -56,26 +55,53 @@ const mapDispatchToProps = (dispatch) => {
 
 class MicroserviceAddServiceDialog extends React.Component {
 
-    _isInvalid() {
-        // TODO: validation
-        return false;
+    constructor(props) {
+        super(props);
+        this.state = {validationMessages: {}};
+    }
+
+    _handleOnSubmit() {
+        if (this._validate()) {
+            this.props.onSubmit.apply(this);
+        }
+    }
+
+    _handleOnCancel() {
+        this.setState({validationMessages: {}});
+        this.props.onCancel();
+    }
+
+    _validate() {
+
+        var validationMessages = {};
+        var isValid = true;
+
+        if (!this.refs.inputServiceId.getValue()) {
+            validationMessages.inputServiceId = "Field is required!";
+            isValid = false;
+        }
+
+        if (!this.refs.inputLabel.getValue()) {
+            validationMessages.inputLabel = "Field is required!";
+            isValid = false;
+        }
+
+        this.setState({validationMessages: validationMessages});
+        return isValid;
     }
 
     render() {
-
-        var isInvalid = this._isInvalid();
 
         const actions = [
             <FlatButton
                 label="Cancel"
                 primary={true}
-                onTouchTap={this.props.onCancel.bind(this)}
+                onTouchTap={this._handleOnCancel.bind(this)}
             />,
             <FlatButton
                 label="Submit"
                 primary={true}
-                disabled={isInvalid}
-                onTouchTap={this.props.onSubmit.bind(this)}
+                onTouchTap={this._handleOnSubmit.bind(this)}
             />,
         ];
 
@@ -89,11 +115,13 @@ class MicroserviceAddServiceDialog extends React.Component {
                 open={isOpen}>
                 <TextField ref="inputServiceId"
                            floatingLabelText="Service ID *"
-                           hintText="eg. &quot;ZOE&quot;" ></TextField>
+                           hintText="eg. &quot;ZOE&quot;"
+                           errorText={this.state.validationMessages.inputServiceId}></TextField>
                 <TextField style={{ marginLeft: "1em" }}
                            ref="inputLabel"
                            floatingLabelText="Label *"
-                           hintText="eg. &quot;ZOE&quot;" ></TextField><br />
+                           hintText="eg. &quot;ZOE&quot;"
+                           errorText={this.state.validationMessages.inputLabel}></TextField><br />
 
                 <TextField ref="inputDescription"
                            floatingLabelText="Description"
