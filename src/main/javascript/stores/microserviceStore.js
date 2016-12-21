@@ -44,11 +44,11 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
-        case 'ADD_PROPERTY': {
+        case 'EDIT_SERVICE': {
             const newState = Object.assign({}, state, {
                 addPropertyServiceId: state.contextMenuServiceId,
                 contextMenuServiceId: undefined,
-                menuMode: 'ADD_PROPERTY'
+                menuMode: 'EDIT_SERVICE'
             });
             return newState;
         }

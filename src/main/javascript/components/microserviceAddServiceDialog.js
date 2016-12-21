@@ -10,7 +10,9 @@ import FlatButton from 'material-ui/FlatButton';
 
 const mapStateToProps = (state) => {
     return {
-        menuMode: state.menuMode
+        menuMode: state.menuMode,
+        addPropertyServiceId: state.addPropertyServiceId,
+        microservices: state.microservices
     };
 };
 
@@ -23,8 +25,6 @@ const mapDispatchToProps = (dispatch) => {
         },
         onSubmit: function() {
             var request = {
-                path: '/selavi/services',
-                method: 'POST',
                 entity: {
                     id: this.refs.inputServiceId.getValue(),
                     label: this.refs.inputLabel.getValue(),
@@ -38,6 +38,14 @@ const mapDispatchToProps = (dispatch) => {
                 headers: {
                     'Content-Type': 'application/json'
                 }
+            }
+
+            if (this.props.menuMode === "EDIT_SERVICE") {
+                request.path = '/selavi/services/' + this.props.addPropertyServiceId + '/properties';
+                request.method = 'PUT';
+            } else if (this.props.menuMode === "ADD_SERVICE") {
+                request.path = '/selavi/services';
+                request.method = 'POST';
             }
 
             var client = rest.wrap(mime);
@@ -105,47 +113,66 @@ class MicroserviceAddServiceDialog extends React.Component {
             />,
         ];
 
-        var isOpen = (this.props.menuMode === "ADD_SERVICE");
+        var isOpen = false;
+        var microservice = {};
+        var title = "";
+
+        if (this.props.menuMode === "ADD_SERVICE") {
+            isOpen = true;
+            title = "Add Service";
+        } else if (this.props.menuMode === "EDIT_SERVICE") {
+            isOpen = true;
+            title = "Edit Service";
+            microservice = this.props.microservices.filter((microservice) => microservice.id === this.props.addPropertyServiceId)[0];
+        }
 
         return (
             <Dialog
-                title="Add Service"
+                title={title}
                 actions={actions}
                 modal={true}
                 open={isOpen}>
                 <TextField ref="inputServiceId"
                            floatingLabelText="Service ID *"
                            hintText="eg. &quot;ZOE&quot;"
-                           errorText={this.state.validationMessages.inputServiceId}></TextField>
+                           errorText={this.state.validationMessages.inputServiceId}
+                           defaultValue={microservice.id}></TextField>
                 <TextField style={{ marginLeft: "1em" }}
                            ref="inputLabel"
                            floatingLabelText="Label *"
                            hintText="eg. &quot;ZOE&quot;"
-                           errorText={this.state.validationMessages.inputLabel}></TextField><br />
+                           errorText={this.state.validationMessages.inputLabel}
+                           defaultValue={microservice.label}></TextField><br />
 
                 <TextField ref="inputDescription"
                            floatingLabelText="Description"
-                           hintText="eg. &quot;ZKDB Online Echtzeitfähig&quot;"></TextField>
+                           hintText="eg. &quot;ZKDB Online Echtzeitfähig&quot;"
+                           defaultValue={microservice.description}></TextField>
                 <TextField style={{ marginLeft: "1em" }}
                            ref="inputTeam"
                            floatingLabelText="Team responsible for this service"
-                           hintText="eg. &quot;ZOE-Team&quot;"></TextField><br />
+                           hintText="eg. &quot;ZOE-Team&quot;"
+                           defaultValue={microservice.team}></TextField><br />
 
                 <TextField ref="inputDocumentationLink"
                            floatingLabelText="Link to documentation"
-                           hintText="eg. &quot;https://wiki.dm.de/ZOE&quot;"></TextField>
+                           hintText="eg. &quot;https://wiki.dm.de/ZOE&quot;"
+                           defaultValue={microservice.documentationLink}></TextField>
                 <TextField style={{ marginLeft: "1em" }}
                            ref="inputMicroserviceUrl"
                            floatingLabelText="URL"
-                           hintText="eg. &quot;https://zoe.dm.de&quot;"></TextField><br />
+                           hintText="eg. &quot;https://zoe.dm.de&quot;"
+                           defaultValue={microservice['microservice-url']}></TextField><br />
 
                 <TextField ref="inputIpAddress"
                            floatingLabelText="IP address"
-                           hintText="eg. &quot;172.23.68.213&quot;"></TextField>
+                           hintText="eg. &quot;172.23.68.213&quot;"
+                           defaultValue={microservice.ipAddress}></TextField>
                 <TextField style={{ marginLeft: "1em" }}
                            ref="inputNetworkZone"
                            floatingLabelText="Network zone"
-                           hintText="eg. &quot;LAN&quot;"></TextField>
+                           hintText="eg. &quot;LAN&quot;"
+                           defaultValue={microservice.networkZone}></TextField>
             </Dialog>
         );
     }

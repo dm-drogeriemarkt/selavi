@@ -14,7 +14,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onAddProperty: function() {
             dispatch({
-                type: 'ADD_PROPERTY'
+                type: 'EDIT_SERVICE'
             });
         }
     };
@@ -29,7 +29,7 @@ class MicroserviceMindmapContextMenu extends React.Component {
         if (this.props.contextMenuServiceId) {
             return (
                 <nav style={style} className="contextMenu">
-                    <button onClick={this.props.onAddProperty}>Add Property</button>
+                    <button onClick={this.props.onAddProperty}>Edit Service</button>
                 </nav>
             );
         } else {

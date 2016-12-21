@@ -27,7 +27,7 @@ const mapDispatchToProps = (dispatch) => {
 
             var request;
 
-            if (this.props.menuMode === 'ADD_PROPERTY') {
+            if (this.props.menuMode === 'EDIT_SERVICE') {
                 var entity = {};
                 entity[this.refs.propertyId.value] = this.refs.propertyValue.value;
 
@@ -101,7 +101,7 @@ class MicroserviceMenu extends React.Component {
                         </form>
                     </div>
                 );
-            case 'ADD_PROPERTY':
+            case 'EDIT_SERVICE':
                 return (
                     <div className="microserviceMenu">
                         <div>Add Property for Service {this.props.addPropertyServiceId}</div>
