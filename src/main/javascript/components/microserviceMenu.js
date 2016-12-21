@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch) => {
                 entity[this.refs.propertyId.value] = this.refs.propertyValue.value;
 
                 request = {
-                    path: '/services/' + this.props.addPropertyServiceId + '/properties',
+                    path: document.location.toString() + 'services/' + this.props.addPropertyServiceId + '/properties',
                     method: 'PUT',
                     entity: entity,
                     headers: {
@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch) => {
                 }
             } else if (this.props.menuMode === 'ADD_SERVICE') {
                 request = {
-                    path: '/services',
+                    path: document.location.toString() + 'services',
                     method: 'POST',
                     entity: {
                         id: this.refs.inputServiceId.value,
@@ -61,7 +61,7 @@ const mapDispatchToProps = (dispatch) => {
 
             var client = rest.wrap(mime);
             client(request).then(response => {
-                client({path: '/services'}).then(response => {
+                client({path: document.location.toString() + 'services'}).then(response => {
                     dispatch({
                         type: 'FETCH_MICROSERVICES_SUCCESS',
                         response: response
