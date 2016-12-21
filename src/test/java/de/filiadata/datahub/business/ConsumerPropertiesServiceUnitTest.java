@@ -169,4 +169,44 @@ public class ConsumerPropertiesServiceUnitTest {
         verify(serviceProperties).setContent(resultNode.toString());
         verify(servicePropertiesRepository, times(2)).save(serviceProperties);
     }
+
+    @Test(expected = RelationRemoveException.class)
+    public void shouldFailIfRelationToRemoveDoesNotExist() throws Exception {
+        // given
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectNode objectNode = objectMapper.createObjectNode();
+        final ObjectNode resultNode = objectMapper.createObjectNode();
+        final ArrayNode arrayNode = objectMapper.createArrayNode();
+        objectNode.set(CONSUMER_NODE_NAME, arrayNode);
+
+        final ServiceProperties serviceProperties = mock(ServiceProperties.class);
+
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
+        when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
+        when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
+        when(mapper.createObjectNode()).thenReturn(resultNode);
+
+        // when
+        service.removeRelation(SERVICE_NAME, "FOO");
+    }
+
+    @Test(expected = RelationAddException.class)
+    public void shouldFailIfRelationPointsToSameService() throws Exception {
+        // given
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final ObjectNode objectNode = objectMapper.createObjectNode();
+        final ObjectNode resultNode = objectMapper.createObjectNode();
+        final ArrayNode arrayNode = objectMapper.createArrayNode();
+        objectNode.set(CONSUMER_NODE_NAME, arrayNode);
+
+        final ServiceProperties serviceProperties = mock(ServiceProperties.class);
+
+        when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
+        when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
+        when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
+        when(mapper.createObjectNode()).thenReturn(resultNode);
+
+        // when
+        service.addConsumedService(SERVICE_NAME, SERVICE_NAME);
+    }
 }

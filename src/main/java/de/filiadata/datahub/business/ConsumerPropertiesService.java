@@ -42,6 +42,10 @@ public class ConsumerPropertiesService {
                 throw new RelationAddException();
             }
 
+            if (serviceName.equals(relatedServiceName)) {
+                throw new RelationAddException();
+            }
+
             existingConsumerNode.add(relatedServiceName);
             serviceProperties.setContent(existingNode.toString());
             return servicePropertiesRepository.save(serviceProperties);
@@ -109,6 +113,10 @@ public class ConsumerPropertiesService {
         resultNode.setAll(existingNode);
 
         final ArrayNode consumer = (ArrayNode) resultNode.get(CONSUMER_NODE_NAME);
+        if (consumer.size() == 0) {
+            throw new RelationRemoveException();
+        }
+
         for (Iterator<JsonNode> it = consumer.iterator(); it.hasNext(); ) {
             final JsonNode node = it.next();
             if (node.textValue().equals(relatedServiceName)) {
