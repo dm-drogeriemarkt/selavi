@@ -32,6 +32,12 @@ public class ServiceController {
         servicePropertiesService.createNewServiceInfo(dto);
     }
 
+    @ApiOperation(value = "Delete a service node. Only manually added and not from the registry loaded are allowed to delete.")
+    @RequestMapping(value = "/{serviceName}", method = RequestMethod.DELETE)
+    public void deleteService(@PathVariable String serviceName) {
+        servicePropertiesService.deleteService(serviceName);
+    }
+
     /**
      * @deprecated, use {@link #addNewRelation(String, String)} instead
      */

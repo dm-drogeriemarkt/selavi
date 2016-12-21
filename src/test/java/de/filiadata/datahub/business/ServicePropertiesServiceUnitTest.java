@@ -1,9 +1,5 @@
 package de.filiadata.datahub.business;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.filiadata.datahub.business.semanticexceptions.ServiceAddException;
-import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Test;
 
@@ -17,53 +13,21 @@ public class ServicePropertiesServiceUnitTest {
     private final ServicePropertiesRepository servicePropertiesRepository = mock(ServicePropertiesRepository.class);
     private final ConsumerPropertiesService consumerPropertiesService = mock(ConsumerPropertiesService.class);
     private final CustomPropertiesService customPropertiesService = mock(CustomPropertiesService.class);
+    private final ServiceAddDeleteService serviceAddDeleteService = mock(ServiceAddDeleteService.class);
     private final PropertiesContentProviderService propertiesContentProviderService = mock(PropertiesContentProviderService.class);
     private final ServicePropertiesService service = new ServicePropertiesService(propertiesContentProviderService,
             servicePropertiesRepository,
             consumerPropertiesService,
-            customPropertiesService);
+            customPropertiesService,
+            serviceAddDeleteService);
 
     @Test
     public void shouldDelegateToContentProvider() throws Exception {
-
         // when
         service.getServicesWithContent();
 
         // then
         verify(propertiesContentProviderService).getAllServicesWithContent();
-    }
-
-    @Test
-    public void shouldPersistNewServiceIfItDoesNotExist() throws Exception {
-        // given
-        final String serviceName = "serviceName";
-        final ObjectNode objectNode = mock(ObjectNode.class);
-        final JsonNode idNode = mock(JsonNode.class);
-
-        when(servicePropertiesRepository.exists(serviceName)).thenReturn(false);
-        when(objectNode.get("id")).thenReturn(idNode);
-        when(idNode.textValue()).thenReturn(serviceName);
-
-        // when
-        service.createNewServiceInfo(objectNode);
-
-        // then
-        verify(servicePropertiesRepository).save(any(ServiceProperties.class));
-    }
-
-    @Test(expected = ServiceAddException.class)
-    public void shouldNotSaveNewServiceIfItExists() throws Exception {
-        // given
-        final String serviceName = "someName";
-        final ObjectNode objectNode = mock(ObjectNode.class);
-        final JsonNode idNode = mock(JsonNode.class);
-
-        when(servicePropertiesRepository.exists(serviceName)).thenReturn(true);
-        when(objectNode.get("id")).thenReturn(idNode);
-        when(idNode.textValue()).thenReturn(serviceName);
-
-        // when
-        service.createNewServiceInfo(objectNode);
     }
 
     @Test

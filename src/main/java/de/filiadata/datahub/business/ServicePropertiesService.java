@@ -1,8 +1,6 @@
 package de.filiadata.datahub.business;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.filiadata.datahub.business.semanticexceptions.ServiceAddException;
-import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +20,20 @@ public class ServicePropertiesService {
     private ServicePropertiesRepository servicePropertiesRepository;
     private ConsumerPropertiesService consumerPropertiesService;
     private CustomPropertiesService customPropertiesService;
+    private ServiceAddDeleteService serviceAddDeleteService;
     private PropertiesContentProviderService propertiesContentProviderService;
 
     @Autowired
     public ServicePropertiesService(PropertiesContentProviderService propertiesContentProviderService,
                                     ServicePropertiesRepository servicePropertiesRepository,
                                     ConsumerPropertiesService consumerPropertiesService,
-                                    CustomPropertiesService customPropertiesService) {
+                                    CustomPropertiesService customPropertiesService,
+                                    ServiceAddDeleteService serviceAddDeleteService) {
         this.propertiesContentProviderService = propertiesContentProviderService;
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.consumerPropertiesService = consumerPropertiesService;
         this.customPropertiesService = customPropertiesService;
+        this.serviceAddDeleteService = serviceAddDeleteService;
     }
 
     public Collection<ObjectNode> getServicesWithContent() {
@@ -41,11 +42,7 @@ public class ServicePropertiesService {
 
 
     public void createNewServiceInfo(ObjectNode dto) {
-        String serviceName = dto.get("id").textValue();
-        if (servicePropertiesRepository.exists(serviceName)) {
-            throw new ServiceAddException();
-        }
-        servicePropertiesRepository.save(new ServiceProperties(serviceName, dto.toString()));
+        serviceAddDeleteService.createNewServiceInfo(dto);
     }
 
     public void addRelation(String serviceName, String relatedServiceName) {
@@ -71,5 +68,9 @@ public class ServicePropertiesService {
 
     public void deleteProperty(String serviceName, String propertyName) {
         customPropertiesService.deleteProperty(serviceName, Collections.singletonList(propertyName));
+    }
+
+    public void deleteService(String serviceName) {
+        serviceAddDeleteService.deleteService(serviceName);
     }
 }
