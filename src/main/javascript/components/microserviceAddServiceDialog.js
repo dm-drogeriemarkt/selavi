@@ -7,6 +7,7 @@ const mime = require('rest/interceptor/mime');
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import Toggle from 'material-ui/Toggle';
 
 const mapStateToProps = (state) => {
     return {
@@ -33,7 +34,8 @@ const mapDispatchToProps = (dispatch) => {
                     documentationLink: this.refs.inputDocumentationLink.getValue(),
                     'microservice-url': this.refs.inputMicroserviceUrl.getValue(),
                     ipAddress: this.refs.inputIpAddress.getValue(),
-                    networkZone: this.refs.inputNetworkZone.getValue()
+                    networkZone: this.refs.inputNetworkZone.getValue(),
+                    isExternal: this.refs.inputIsExternal.isToggled()
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -172,7 +174,13 @@ class MicroserviceAddServiceDialog extends React.Component {
                            ref="inputNetworkZone"
                            floatingLabelText="Network zone"
                            hintText="eg. &quot;LAN&quot;"
-                           defaultValue={microservice.networkZone}></TextField>
+                           defaultValue={microservice.networkZone}></TextField><br />
+
+                <Toggle ref="inputIsExternal"
+                        label="External service (eg., not a microservice)"
+                        defaultToggled={microservice.isExternal}
+                        style={{marginTop: "2em", maxWidth: "23em"}}/>
+
             </Dialog>
         );
     }
