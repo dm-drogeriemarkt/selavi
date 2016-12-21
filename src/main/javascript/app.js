@@ -10,7 +10,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MicroserviceFilterBox from "./components/microserviceFilterbox";
 import MicroserviceList from "./components/microserviceList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
-import MicroserviceMenu from "./components/microserviceMenu";
 import MicroserviceSnackbar from "./components/microserviceSnackbar";
 import MicroserviceAddServiceDialog from "./components/microserviceAddServiceDialog";
 import store from "./stores/microserviceStore";
@@ -49,7 +48,6 @@ class App extends React.Component {
                     <MicroserviceMindmap/>
                     <div className="microserviceRightPanel">
                         <MicroserviceList/>
-                        <MicroserviceMenu/>
                     </div>
                 </div>
                 <div className="appfooter">
