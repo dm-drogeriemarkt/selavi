@@ -121,13 +121,10 @@ public class ConsumerPropertiesService {
             final JsonNode node = it.next();
             if (node.textValue().equals(relatedServiceName)) {
                 it.remove();
+                return resultNode;
             }
         }
 
-        if (consumer.size() == 0) {
-            resultNode.remove(CONSUMER_NODE_NAME);
-        }
-
-        return resultNode;
+        throw new RelationRemoveException();
     }
 }

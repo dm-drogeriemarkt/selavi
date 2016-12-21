@@ -164,7 +164,7 @@ public class ConsumerPropertiesServiceUnitTest {
         service.removeRelation(SERVICE_NAME, "BAZ");
 
         // then
-        assertThat(resultNode.hasNonNull(CONSUMER_NODE_NAME), Matchers.is(false));
+        assertThat(resultNode.hasNonNull(CONSUMER_NODE_NAME), Matchers.is(true));
 
         verify(serviceProperties).setContent(resultNode.toString());
         verify(servicePropertiesRepository, times(2)).save(serviceProperties);
