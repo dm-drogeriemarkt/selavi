@@ -87,17 +87,37 @@ class MicroserviceAddServiceDialog extends React.Component {
                 actions={actions}
                 modal={true}
                 open={isOpen}>
-                <TextField ref="inputServiceId" hintText="Service ID *" required></TextField>
-                <TextField style={{ marginLeft: "1em" }} ref="inputLabel" hintText="Label *" required></TextField><br />
+                <TextField ref="inputServiceId"
+                           floatingLabelText="Service ID *"
+                           hintText="eg. &quot;ZOE&quot;" ></TextField>
+                <TextField style={{ marginLeft: "1em" }}
+                           ref="inputLabel"
+                           floatingLabelText="Label *"
+                           hintText="eg. &quot;ZOE&quot;" ></TextField><br />
 
-                <TextField ref="inputDescription" hintText="Description"></TextField>
-                <TextField style={{ marginLeft: "1em" }} ref="inputTeam" hintText="Team responsible for this service"></TextField><br />
+                <TextField ref="inputDescription"
+                           floatingLabelText="Description"
+                           hintText="eg. &quot;ZKDB Online Echtzeitfähig&quot;"></TextField>
+                <TextField style={{ marginLeft: "1em" }}
+                           ref="inputTeam"
+                           floatingLabelText="Team responsible for this service"
+                           hintText="eg. &quot;ZOE-Team&quot;"></TextField><br />
 
-                <TextField ref="inputDocumentationLink" hintText="Link to documentation"></TextField>
-                <TextField style={{ marginLeft: "1em" }} ref="inputMicroserviceUrl" hintText="URL"></TextField><br />
+                <TextField ref="inputDocumentationLink"
+                           floatingLabelText="Link to documentation"
+                           hintText="eg. &quot;https://wiki.dm.de/ZOE&quot;"></TextField>
+                <TextField style={{ marginLeft: "1em" }}
+                           ref="inputMicroserviceUrl"
+                           floatingLabelText="URL"
+                           hintText="eg. &quot;https://zoe.dm.de&quot;"></TextField><br />
 
-                <TextField ref="inputIpAddress" hintText="IP address"></TextField>
-                <TextField style={{ marginLeft: "1em" }} ref="inputNetworkZone" hintText="Network zone"></TextField>
+                <TextField ref="inputIpAddress"
+                           floatingLabelText="IP address"
+                           hintText="eg. &quot;172.23.68.213&quot;"></TextField>
+                <TextField style={{ marginLeft: "1em" }}
+                           ref="inputNetworkZone"
+                           floatingLabelText="Network zone"
+                           hintText="eg. &quot;LAN&quot;"></TextField>
             </Dialog>
         );
     }
