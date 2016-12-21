@@ -8,13 +8,13 @@ export function onSelectMicroserviceNode(params) {
     };
 }
 
-export function onContextMenuOpen(params, nodeId) {
-    if (nodeId) {
+export function onContextMenuOpen(params) {
+    if (params.nodeId) {
         return {
             type: 'CONTEXT_MENU_OPEN',
-            top: params.pointer.DOM.y,
-            left: params.pointer.DOM.x,
-            contextMenuServiceId: nodeId
+            top: params.top,
+            left: params.left,
+            contextMenuServiceId: params.nodeId
         };
     } else {
         return {

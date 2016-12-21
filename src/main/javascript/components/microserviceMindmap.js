@@ -50,7 +50,12 @@ export class MicroserviceMindmap extends React.Component {
         } else {
             this._network.unselectAll();
         }
-        this.props.onContextMenuOpen(params, nodeId);
+
+        this.props.onContextMenuOpen({
+            top: this.refs.vizcontainer.offsetTop + params.pointer.DOM.y,
+            left: this.refs.vizcontainer.offsetLeft + params.pointer.DOM.x,
+            nodeId: nodeId
+        });
     }
 
     onAddLinkHandler(edgeData, callback) {
