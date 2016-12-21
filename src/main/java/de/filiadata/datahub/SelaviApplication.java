@@ -10,6 +10,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.builders.PathSelectors;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @EnableCaching
 @EnableSwagger2
+@EnableDiscoveryClient
 public class SelaviApplication extends SpringBootServletInitializer {
 
     @Value("${cache.expireAfterWriteInMinutes}")
