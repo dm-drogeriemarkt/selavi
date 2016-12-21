@@ -52,8 +52,8 @@ export class MicroserviceMindmap extends React.Component {
         }
 
         this.props.onContextMenuOpen({
-            top: this.refs.vizcontainer.offsetTop + params.pointer.DOM.y,
-            left: this.refs.vizcontainer.offsetLeft + params.pointer.DOM.x,
+            top: params.event.clientY,
+            left: params.event.clientX,
             nodeId: nodeId
         });
     }
