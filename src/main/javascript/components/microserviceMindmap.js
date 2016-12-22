@@ -65,6 +65,14 @@ export class MicroserviceMindmap extends React.Component {
 
     componentDidMount() {
         this.updateMindmap();
+        window.addEventListener("resize", this._resize.bind(this));
+    }
+
+    _resize() {
+        if (this._network) {
+            this._network.setSize("100%", (this.refs.microserviceMindmap.offsetHeight - 4) + "px");
+            this._network.redraw();
+        }
     }
 
     shouldComponentUpdate(nextProps) {
@@ -142,6 +150,7 @@ export class MicroserviceMindmap extends React.Component {
 
         if (!this._network) {
             var options = {
+                autoResize: false,
                 nodes: {
                     borderWidth: 2,
                     shape: "box"
@@ -167,12 +176,13 @@ export class MicroserviceMindmap extends React.Component {
             this._network.on("oncontext", boundOnContextMenuOpen);
         } else {
             this._network.setData(data);
+            this._resize();
         }
     }
 
     render() {
         return (
-            <div className="microserviceMindmap">
+            <div className="microserviceMindmap" ref="microserviceMindmap">
                 <MicroserviceMindmapContextMenu/>
                 <div ref="vizcontainer"></div>
             </div>
