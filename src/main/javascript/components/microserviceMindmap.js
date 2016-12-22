@@ -69,7 +69,7 @@ export class MicroserviceMindmap extends React.Component {
     }
 
     _resize() {
-        if (this._network) {
+        if (this._network && this.refs.microserviceMindmap) {
             this._network.setSize("100%", (this.refs.microserviceMindmap.offsetHeight - 4) + "px");
             this._network.redraw();
         }

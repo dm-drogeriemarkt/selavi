@@ -13,6 +13,8 @@ describe('<MicroserviceMindmap/>', function () {
     var networkAddEdgeModeSpy = sinon.spy();
     var networkDisableEditModeSpy = sinon.spy();
 
+    var windowAddEventListenerSpy = sinon.spy();
+
     before(function() {
         // global is node.js' window
         global.vis = {
@@ -24,6 +26,9 @@ describe('<MicroserviceMindmap/>', function () {
                 disableEditMode: networkDisableEditModeSpy
             })
         };
+        global.window = {
+            addEventListener: windowAddEventListenerSpy
+        }
     });
 
     afterEach(function() {
@@ -94,6 +99,8 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledTwice(networkOnSpy);
         sinon.assert.calledWith(networkOnSpy, "selectNode", sinon.match.func);
         sinon.assert.calledWith(networkOnSpy, "oncontext"); // we did not define a handler function in this test!
+
+        sinon.assert.calledWith(windowAddEventListenerSpy, "resize", sinon.match.func);
     });
 
     it('only creates vis network once', function () {
