@@ -141,8 +141,7 @@ export class MicroserviceMindmap extends React.Component {
             el.consumes.forEach(function (consumer) {
                 edgeArray.push({
                     from: el.id,
-                    to: consumer,
-                    arrows: "to"
+                    to: consumer
                 });
             });
         });
@@ -163,7 +162,8 @@ export class MicroserviceMindmap extends React.Component {
                     shape: "box"
                 },
                 edges: {
-                    width: 2
+                    width: 2,
+                    arrows: "to"
                 },
                 layout: {
                     randomSeed: 2
@@ -178,7 +178,7 @@ export class MicroserviceMindmap extends React.Component {
                         avoidOverlap: 0.25
                     },
                     // speed at which simulation stops. the lower the value, the longer the nodes keep floating around
-                    minVelocity: 2
+                    minVelocity: 2.5
                 }
             };
 
