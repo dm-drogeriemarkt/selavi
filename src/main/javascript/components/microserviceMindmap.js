@@ -173,8 +173,10 @@ export class MicroserviceMindmap extends React.Component {
                 },
                 physics: {
                     barnesHut: {
+                        // how much are nodes allowed to overlap? 1 = maximum, 0 = minimum distance
                         avoidOverlap: 0.25
                     },
+                    // speed at which simulation stops. the lower the value, the longer the nodes keep floating around
                     minVelocity: 2
                 }
             };
