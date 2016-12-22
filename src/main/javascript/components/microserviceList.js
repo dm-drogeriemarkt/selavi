@@ -63,14 +63,14 @@ class MicroserviceList extends React.Component {
 
     _onNestedListToggle(listItem) {
         if (listItem.state.open) {
-            this.refs.microserviceList.parentElement.classList.add("wide");
+            this.refs.microserviceList.classList.add("wide");
         } else {
-            this.refs.microserviceList.parentElement.classList.remove("wide");
+            this.refs.microserviceList.classList.remove("wide");
         }
     }
 
     componentDidMount() {
-        this.refs.microserviceList.parentElement.addEventListener("transitionend", this.props.onNestedListToggle.bind(this));
+        this.refs.microserviceList.addEventListener("transitionend", this.props.onNestedListToggle.bind(this));
     }
 
     render() {

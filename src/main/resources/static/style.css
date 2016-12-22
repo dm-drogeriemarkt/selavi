@@ -27,7 +27,7 @@ th {
     flex-direction: row;
 }
 
-.microserviceMindmap, .microserviceFilterbox, .microserviceRightPanel {
+.microserviceMindmap, .microserviceFilterbox, .microserviceList {
     border-style: solid;
     border-radius: 0;
     border-width: 2px;
@@ -39,18 +39,14 @@ th {
     flex-grow: 2;
 }
 
-.microserviceRightPanel {
+.microserviceList {
     overflow-x: scroll;
     overflow-y: visible;
     width: 350px;
     transition: width 300ms ease-in-out;
 }
 
-.microserviceList {
-
-}
-
-.microserviceRightPanel.wide {
+.microserviceList.wide {
     width: 650px;
 }
 
@@ -108,9 +104,6 @@ th {
 
 .microserviceFilterbox {
     padding: 0.5em;
-}
-
-.microserviceList {
 }
 
 .microserviceListEntry.selected {

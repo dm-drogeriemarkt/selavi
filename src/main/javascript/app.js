@@ -46,9 +46,7 @@ class App extends React.Component {
                 </div>
                 <div className="appcontent">
                     <MicroserviceMindmap/>
-                    <div className="microserviceRightPanel">
-                        <MicroserviceList/>
-                    </div>
+                    <MicroserviceList/>
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
