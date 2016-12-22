@@ -31,6 +31,8 @@ const mapDispatchToProps = (dispatch) => {
                     label: this.refs.inputLabel.getValue(),
                     description: this.refs.inputDescription.getValue(),
                     team: this.refs.inputTeam.getValue(),
+                    dmOwner: this.refs.inputDmOwner.getValue(),
+                    fdOwner: this.refs.inputFdOwner.getValue(),
                     documentationLink: this.refs.inputDocumentationLink.getValue(),
                     'microservice-url': this.refs.inputMicroserviceUrl.getValue(),
                     ipAddress: this.refs.inputIpAddress.getValue(),
@@ -96,6 +98,16 @@ class MicroserviceAddServiceDialog extends React.Component {
             isValid = false;
         }
 
+        if (!this.refs.inputTeam.getValue()) {
+            validationMessages.inputTeam = "Field is required!";
+            isValid = false;
+        }
+
+        if (!this.refs.inputFdOwner.getValue()) {
+            validationMessages.inputFdOwner = "Field is required!";
+            isValid = false;
+        }
+
         this.setState({validationMessages: validationMessages});
         return isValid;
     }
@@ -152,9 +164,21 @@ class MicroserviceAddServiceDialog extends React.Component {
                            defaultValue={microservice.description}></TextField>
                 <TextField style={{ marginLeft: "1em" }}
                            ref="inputTeam"
-                           floatingLabelText="Team responsible for this service"
+                           floatingLabelText="Development Team"
                            hintText="eg. &quot;ZOE-Team&quot;"
+                           errorText={this.state.validationMessages.inputTeam}
                            defaultValue={microservice.team}></TextField><br />
+
+                <TextField ref="inputDmOwner"
+                           floatingLabelText="dm-Owner"
+                           hintText="eg. &quot;Erik Altmann&quot;"
+                           defaultValue={microservice.dmOwner}></TextField>
+                <TextField style={{ marginLeft: "1em" }}
+                           ref="inputFdOwner"
+                           floatingLabelText="Filiadata-Owner"
+                           hintText="eg. &quot;Erik Altmann&quot;"
+                           errorText={this.state.validationMessages.inputFdOwner}
+                           defaultValue={microservice.fdOwner}></TextField><br />
 
                 <TextField ref="inputDocumentationLink"
                            floatingLabelText="Link to documentation"
