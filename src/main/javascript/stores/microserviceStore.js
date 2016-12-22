@@ -11,7 +11,8 @@ const initialState = {
     addPropertyServiceId: undefined,
     contextMenuVisible: false,
     menuMode: undefined,
-    filterString: ''
+    filterString: '',
+    microserviceListResizeCount: 0
 }
 
 // reducer function, creates a new state object from the previous state and the action
@@ -88,6 +89,12 @@ function updateStore(state = initialState, action) {
         case 'FILTERBOX_TYPE': {
             const newState = Object.assign({}, state, {
                 filterString: action.filterString
+            });
+            return newState;
+        }
+        case 'MICROSERVICE_LIST_RESIZE': {
+            const newState = Object.assign({}, state, {
+                microserviceListResizeCount: ((state.microserviceListResizeCount + 1) % 1000)
             });
             return newState;
         }

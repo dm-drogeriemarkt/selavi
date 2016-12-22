@@ -19,6 +19,11 @@ const mapDispatchToProps = (dispatch) => {
                 type: 'MICROSERVICE_NODE_SELECTED',
                 selectedServiceId: isInputChecked ? selectedServiceId : undefined
             });
+        },
+        onNestedListToggle: function() {
+            dispatch({
+                type: 'MICROSERVICE_LIST_RESIZE'
+            });
         }
     };
 };
@@ -62,6 +67,10 @@ class MicroserviceList extends React.Component {
         } else {
             this.refs.microserviceList.classList.remove("wide");
         }
+    }
+
+    componentDidMount() {
+        this.refs.microserviceList.addEventListener("transitionend", this.props.onNestedListToggle.bind(this));
     }
 
     render() {

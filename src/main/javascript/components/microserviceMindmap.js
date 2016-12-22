@@ -8,7 +8,8 @@ const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
         menuMode: state.menuMode,
-        filterString: state.filterString
+        filterString: state.filterString,
+        microserviceListResizeCount: state.microserviceListResizeCount
     };
 };
 
@@ -76,7 +77,12 @@ export class MicroserviceMindmap extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.filterString !== this.props.filterString) {
+        if (nextProps.microserviceListResizeCount !== this.props.microserviceListResizeCount) {
+            // service list was resized, no need to re-draw the graph itself
+            this._resize();
+
+            return false;
+        } else if (nextProps.filterString !== this.props.filterString) {
             // we are filtering, no need to re-draw the graph itself
             this.props.microservices.forEach(microservice => {
                 if (this._shouldFilterOut(microservice, nextProps.filterString)) {
