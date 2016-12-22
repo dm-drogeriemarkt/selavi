@@ -170,6 +170,12 @@ export class MicroserviceMindmap extends React.Component {
                 manipulation: {
                     enabled: false,
                     addEdge: this.onAddLinkHandler.bind(this)
+                },
+                physics: {
+                    barnesHut: {
+                        avoidOverlap: 0.25
+                    },
+                    minVelocity: 2
                 }
             };
 
