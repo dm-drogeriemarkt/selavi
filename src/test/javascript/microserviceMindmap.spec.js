@@ -82,7 +82,8 @@ describe('<MicroserviceMindmap/>', function () {
         const expectedEdges = [
             {
                 from: "bar-consumer",
-                to: "foo-service"
+                to: "foo-service",
+                arrows: "to"
             }
         ]
 

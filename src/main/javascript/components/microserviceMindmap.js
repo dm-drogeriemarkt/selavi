@@ -141,7 +141,8 @@ export class MicroserviceMindmap extends React.Component {
             el.consumes.forEach(function (consumer) {
                 edgeArray.push({
                     from: el.id,
-                    to: consumer
+                    to: consumer,
+                    arrows: "to"
                 });
             });
         });
