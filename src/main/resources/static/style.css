@@ -40,15 +40,17 @@ th {
 }
 
 .microserviceRightPanel {
-    overflow: scroll;
-}
-
-.microserviceList {
+    overflow-x: scroll;
+    overflow-y: visible;
     width: 350px;
     transition: width 300ms ease-in-out;
 }
 
-.microserviceList.wide {
+.microserviceList {
+
+}
+
+.microserviceRightPanel.wide {
     width: 650px;
 }
 
