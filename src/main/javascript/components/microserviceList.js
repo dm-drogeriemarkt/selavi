@@ -93,8 +93,17 @@ class MicroserviceList extends React.Component {
 
                 var style = {};
 
+                var primaryText;
+
                 if (wrapper.filteredOut) {
                     style.color = "lightgrey"
+                    primaryText = <span>{microservice.id} &#x0272A;</span>
+                } else {
+                    if (microservice.isExternal) {
+                        primaryText = <span>{microservice.id} <span style={{color: "#f69805"}}>&#x0272A;</span></span>
+                    } else {
+                        primaryText = <span>{microservice.id} <span style={{color: "#19c786"}}>&#x0272A;</span></span>
+                    }
                 }
 
                 var properties = this._getPropertyList(microservice);
@@ -104,7 +113,7 @@ class MicroserviceList extends React.Component {
                               className="microserviceListEntry"
                               key={microservice.id}
                               style={style}
-                              primaryText={microservice.id}
+                              primaryText={primaryText}
                               secondaryText={microservice['microservice-url']}
                               leftCheckbox={<Checkbox checked={selected} onCheck={(event, isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
                               nestedItems={properties}
