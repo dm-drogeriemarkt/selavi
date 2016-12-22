@@ -13,6 +13,7 @@ th {
 .appcontainer {
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 
 .appheader {
@@ -25,7 +26,7 @@ th {
     flex-direction: row;
 }
 
-.microserviceMindmap, .microserviceList, .microserviceMenu, .microserviceFilterbox {
+.microserviceMindmap, .microserviceFilterbox, .microserviceRightPanel {
     border-style: solid;
     border-radius: 0;
     border-width: 2px;
@@ -38,7 +39,7 @@ th {
 }
 
 .microserviceRightPanel {
-    flex-direction: column;
+    overflow: scroll;
 }
 
 .microserviceList {
