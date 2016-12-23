@@ -4,7 +4,7 @@ import React from 'react';
 import chai from 'chai';
 import { shallow } from 'enzyme';
 
-import { MicroserviceMindmap } from '../../main/javascript/components/microserviceMindmap';
+import { MicroserviceMindmap } from '../../../main/javascript/components/microserviceMindmap';
 
 describe('<MicroserviceMindmap/>', function () {
 

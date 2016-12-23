@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 
 import { onSelectMicroserviceNode, onContextMenuOpen, onAddLink } from './../actions/microserviceMindmapActions'
+import { shouldFilterOut } from './../shared/filterUtils'
 
 const mapStateToProps = (state) => {
     return {
@@ -35,10 +36,6 @@ const _colors = {
 }
 
 export class MicroserviceMindmap extends React.Component {
-
-    _shouldFilterOut(microservice, filterString) {
-        return (filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(filterString.toLowerCase()) === -1) : false;
-    }
 
     onContextMenuHandler(params) {
         params.event.preventDefault();
@@ -85,7 +82,7 @@ export class MicroserviceMindmap extends React.Component {
         } else if (nextProps.filterString !== this.props.filterString) {
             // we are filtering, no need to re-draw the graph itself
             this.props.microservices.forEach(microservice => {
-                if (this._shouldFilterOut(microservice, nextProps.filterString)) {
+                if (shouldFilterOut(microservice, nextProps.filterString)) {
                     this._network.body.data.nodes.update([{
                         id: microservice.id,
                         color: _colors.GREY,

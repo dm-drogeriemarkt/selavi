@@ -4,6 +4,8 @@ import {List, ListItem} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 
+import { shouldFilterOut } from './../shared/filterUtils'
+
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
@@ -29,10 +31,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 class MicroserviceList extends React.Component {
-
-    _shouldFilterOut(microservice, filterString) {
-        return (filterString && microservice.label) ? (microservice.label.toLowerCase().indexOf(filterString.toLowerCase()) === -1) : false;
-    }
 
     _getPropertyList(microservice) {
         var propertyList = [<Subheader key={microservice.id + '_propHeader'}>Properties</Subheader>];
@@ -78,7 +76,7 @@ class MicroserviceList extends React.Component {
         var filteredOut = [];
 
         this.props.microservices.forEach(microservice => {
-            if (this._shouldFilterOut(microservice, this.props.filterString)) {
+            if (shouldFilterOut(microservice, this.props.filterString)) {
                 filteredOut.push({microservice: microservice, filteredOut: true})
             } else {
                 filterHits.push({microservice: microservice});
