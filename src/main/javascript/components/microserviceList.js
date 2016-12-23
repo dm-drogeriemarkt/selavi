@@ -4,7 +4,7 @@ import {List, ListItem} from 'material-ui/List';
 import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 
-import { shouldFilterOut } from './../shared/filterUtils'
+import { shouldFilterOut, isFilterHit } from './../shared/filterUtils'
 
 const mapStateToProps = (state) => {
     return {
@@ -32,7 +32,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class MicroserviceList extends React.Component {
 
-    _getPropertyList(microservice) {
+    _getPropertyList(microservice, filterString) {
         var propertyList = [<Subheader key={microservice.id + '_propHeader'}>Properties</Subheader>];
 
         for (var propertyName in microservice) {
@@ -50,10 +50,17 @@ class MicroserviceList extends React.Component {
                 });
             }
 
+            var style = {};
+
+            if (isFilterHit(propertyName, microservice[propertyName], filterString)) {
+                style = { backgroundColor: "rgb(0, 188, 212)" }
+            }
+
             propertyList.push(<ListItem key={microservice.id + '_' + propertyName}
                                         primaryText={propertyName}
                                         secondaryText={value}
                                         nestedItems={nestedItems}
+                                        style={style}
                                         secondaryTextLines={2}/>);
         }
         return propertyList;
@@ -104,7 +111,7 @@ class MicroserviceList extends React.Component {
                     }
                 }
 
-                var properties = this._getPropertyList(microservice);
+                var properties = this._getPropertyList(microservice, this.props.filterString);
 
                 return (
                     <ListItem selected={selected}
