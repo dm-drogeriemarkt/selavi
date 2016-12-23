@@ -8,6 +8,8 @@ import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 
+import MicroserviceCountLabel from './microserviceCountLabel'
+
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode
@@ -55,6 +57,9 @@ class MicroserviceFilterbox extends React.Component {
             <Toolbar>
                 <ToolbarGroup>
                     <ToolbarTitle text="SeLaVi - Service Landscape Visualizer" />
+                </ToolbarGroup>
+                <ToolbarGroup>
+                    <MicroserviceCountLabel/>
                 </ToolbarGroup>
                 <ToolbarGroup>
                     <TextField hintText="Filter services..." onChange={this.props.onType.bind(this)}></TextField>
