@@ -1,9 +1,8 @@
 const React = require('react');
 import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
-
-import { onSelectMicroserviceNode, onContextMenuOpen, onAddLink } from './../actions/microserviceMindmapActions'
-import { shouldFilterOut } from './../shared/filterUtils'
+import {onSelectMicroserviceNode, onContextMenuOpen, onAddLink} from "./../actions/microserviceMindmapActions";
+import {shouldFilterOut} from "./../shared/filterUtils";
 
 const mapStateToProps = (state) => {
     return {
@@ -56,6 +55,15 @@ export class MicroserviceMindmap extends React.Component {
         });
     }
 
+    onClickHandler() {
+
+        this.props.onContextMenuOpen({
+            top: -1,
+            left: -1,
+            nodeId: undefined
+        });
+    }
+
     onAddLinkHandler(edgeData, callback) {
         callback(edgeData);
         this.props.onAddLink(edgeData);
@@ -86,13 +94,13 @@ export class MicroserviceMindmap extends React.Component {
                     this._network.body.data.nodes.update([{
                         id: microservice.id,
                         color: _colors.GREY,
-                        font: { color: "#c4c3c6" }
+                        font: {color: "#c4c3c6"}
                     }]);
                 } else {
                     this._network.body.data.nodes.update([{
                         id: microservice.id,
                         color: microservice.isExternal ? _colors.EXTERNAL : _colors.MICROSERVICE,
-                        font: { color: "#000000" }
+                        font: {color: "#000000"}
                     }]);
                 }
             }, this);
@@ -183,9 +191,13 @@ export class MicroserviceMindmap extends React.Component {
 
             var boundOnSelectMicroserviceNode = this.props.onSelectMicroserviceNode.bind(this);
             var boundOnContextMenuOpen = this.onContextMenuHandler.bind(this);
+            var boundOnClick = this.onClickHandler.bind(this);
 
             this._network.on("selectNode", boundOnSelectMicroserviceNode);
             this._network.on("oncontext", boundOnContextMenuOpen);
+            this._network.on("click", boundOnClick);
+            this._network.on("select", boundOnClick);
+            this._network.on("dragStart", boundOnClick);
         } else {
             this._network.setData(data);
             this._resize();
