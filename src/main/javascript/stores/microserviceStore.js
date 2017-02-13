@@ -9,6 +9,8 @@ const initialState = {
     contextMenuLeft: -1,
     contextMenuServiceId: undefined,
     addPropertyServiceId: undefined,
+    deleteServiceId: undefined,
+    deleteServiceErrorMessage: undefined,
     contextMenuVisible: false,
     menuMode: undefined,
     filterString: '',
@@ -53,6 +55,20 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'DELETE_SERVICE': {
+            const newState = Object.assign({}, state, {
+                deleteServiceId: state.contextMenuServiceId,
+                contextMenuServiceId: undefined,
+                menuMode: 'DELETE_SERVICE'
+            });
+            return newState;
+        }
+        case 'DELETE_SERVICE_FAILED': {
+            const newState = Object.assign({}, state, {
+                deleteServiceErrorMessage: action.message
+            });
+            return newState;
+        }
         case 'ADD_LINK_SET_CONSUMED_SERVICE': {
             // TODO: can we just fetch all the services from the backend again instead of merging here?
             var consumedServiceIndex = state.microservices.findIndex((node) => node.id === action.consumerId);
@@ -82,7 +98,8 @@ function updateStore(state = initialState, action) {
         case 'CANCEL_MENU_ACTION': {
             const newState = Object.assign({}, state, {
                 menuMode: undefined,
-                addPropertyServiceId: undefined
+                addPropertyServiceId: undefined,
+                deleteServiceErrorMessage: undefined
             });
             return newState;
         }

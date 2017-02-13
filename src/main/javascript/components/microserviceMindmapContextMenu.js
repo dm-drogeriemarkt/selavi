@@ -1,4 +1,5 @@
 const React = require('react');
+
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
@@ -16,6 +17,11 @@ const mapDispatchToProps = (dispatch) => {
             dispatch({
                 type: 'EDIT_SERVICE'
             });
+        },
+        onDeleteService: function() {
+            dispatch({
+                type: 'DELETE_SERVICE'
+            });
         }
     };
 };
@@ -30,6 +36,7 @@ class MicroserviceMindmapContextMenu extends React.Component {
             return (
                 <nav style={style} className="contextMenu">
                     <button onClick={this.props.onAddProperty}>Edit Service</button>
+                    <button onClick={this.props.onDeleteService}>Delete Service</button>
                 </nav>
             );
         } else {
