@@ -40,18 +40,28 @@ export class MicroserviceMindmap extends React.Component {
         params.event.preventDefault();
 
         const nodeId = this._network.getNodeAt(params.pointer.DOM);
+        var edgeFromId, edgeToId;
 
         if (nodeId) {
             // right click does not select node!
             this._network.selectNodes([nodeId]);
         } else {
             this._network.unselectAll();
+
+            const edgeId = this._network.getEdgeAt(params.pointer.DOM);
+            if (edgeId) {
+                const edgeFromToIds = this._network.getConnectedNodes(edgeId);
+                edgeFromId = edgeFromToIds[0];
+                edgeToId = edgeFromToIds[1];
+            }
         }
 
         this.props.onContextMenuOpen({
             top: params.event.clientY,
             left: params.event.clientX,
-            nodeId: nodeId
+            nodeId: nodeId,
+            edgeFromId: edgeFromId,
+            edgeToId: edgeToId
         });
     }
 

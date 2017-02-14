@@ -8,6 +8,8 @@ const initialState = {
     contextMenuTop: -1,
     contextMenuLeft: -1,
     contextMenuServiceId: undefined,
+    contextMenuFromId: undefined,
+    contextMenuToId: undefined,
     addPropertyServiceId: undefined,
     deleteServiceId: undefined,
     deleteServiceErrorMessage: undefined,
@@ -37,7 +39,9 @@ function updateStore(state = initialState, action) {
             const newState = Object.assign({}, state, {
                 contextMenuTop: action.top,
                 contextMenuLeft: action.left,
-                contextMenuServiceId: action.contextMenuServiceId
+                contextMenuServiceId: action.contextMenuServiceId,
+                contextMenuFromId: action.contextMenuFromId,
+                contextMenuToId: action.contextMenuToId,
             });
             return newState;
         }
@@ -60,6 +64,16 @@ function updateStore(state = initialState, action) {
                 deleteServiceId: state.contextMenuServiceId,
                 contextMenuServiceId: undefined,
                 menuMode: 'DELETE_SERVICE'
+            });
+            return newState;
+        }
+        case 'DELETE_LINK': {
+            const newState = Object.assign({}, state, {
+                deleteLinkFromId: state.contextMenuFromId,
+                deleteLinkToId: state.contextMenuToId,
+                contextMenuFromId: undefined,
+                contextMenuToId: undefined,
+                menuMode: 'DELETE_LINK'
             });
             return newState;
         }
