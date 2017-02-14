@@ -175,8 +175,6 @@ describe('<MicroserviceMindmap/>', function () {
         const wrapper = shallow(<MicroserviceMindmap {...props}/>);
         wrapper.instance().forceUpdate();
 
-        console.log(props.onContextMenuOpen.id)
-
         chai.expect(wrapper.type()).to.equal('div');
 
         chai.expect(clickEventHandler).to.be.a('function');
