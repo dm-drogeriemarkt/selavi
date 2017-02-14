@@ -48,7 +48,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-class MicroserviceDeleteServiceDialog extends React.Component {
+export class MicroserviceDeleteServiceDialog extends React.Component {
 
     render() {
 
