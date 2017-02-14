@@ -1,13 +1,11 @@
 const React = require('react');
 import { connect } from 'react-redux';
 
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
-const errorCode = require('rest/interceptor/errorCode');
-
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Snackbar from 'material-ui/Snackbar';
+
+import {onCancel, onSubmit} from './../actions/microserviceDeleteServiceDialogActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -17,38 +15,16 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onCancel: function() {
-            dispatch({
-                type: 'CANCEL_MENU_ACTION',
-            });
-        },
-        onSubmit: function() {
-            var request = {
-                path: '/selavi/services/' + this.props.deleteServiceId,
-                method: 'DELETE'
-            }
-
-            var client = rest.wrap(mime).wrap(errorCode);
-            client(request).then(response => {
-                client({path: '/selavi/services'}).then(response => {
-                    dispatch({
-                        type: 'FETCH_MICROSERVICES_SUCCESS',
-                        response: response
-                    });
-                });
-            }, response => {
-                dispatch({
-                    type: 'DELETE_SERVICE_FAILED',
-                    message: response.entity.message
-                });
-            });
-        }
-    };
+const mapDispatchToProps = {
+    onCancel,
+    onSubmit
 };
 
 export class MicroserviceDeleteServiceDialog extends React.Component {
+
+    onSubmit() {
+        this.props.onSubmit(this.props.deleteServiceId);
+    }
 
     render() {
 
@@ -61,7 +37,7 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
             <FlatButton
                 label="Submit"
                 primary={true}
-                onTouchTap={this.props.onSubmit.bind(this)}
+                onTouchTap={this.onSubmit.bind(this)}
             />,
         ];
 
