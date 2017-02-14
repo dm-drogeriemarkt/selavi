@@ -10,15 +10,22 @@ describe('<MicroserviceMindmap/>', function () {
     var networkOnSpy = sinon.spy(function (event, handler) {
         if (event === 'click') {
             clickEventHandler = handler;
+        } else if (event === 'oncontext') {
+            oncontextEventHandler = handler;
         }
     });
     var networkSetDataSpy = sinon.spy();
     var networkAddEdgeModeSpy = sinon.spy();
     var networkDisableEditModeSpy = sinon.spy();
+    var networkGetNodeAtSpy = sinon.stub();
+    var networkSelectNodesSpy = sinon.spy();
+    var networkUnselectAllSpy = sinon.spy();
+    var networkGetEdgeAtSpy = sinon.stub();
+    var networkGetConnectedNodes = sinon.stub();
 
     var windowAddEventListenerSpy = sinon.spy();
 
-    var clickEventHandler;
+    var clickEventHandler, oncontextEventHandler;
 
     before(function () {
         // global is node.js' window
@@ -28,7 +35,12 @@ describe('<MicroserviceMindmap/>', function () {
                 on: networkOnSpy,
                 setData: networkSetDataSpy,
                 addEdgeMode: networkAddEdgeModeSpy,
-                disableEditMode: networkDisableEditModeSpy
+                disableEditMode: networkDisableEditModeSpy,
+                getNodeAt: networkGetNodeAtSpy,
+                selectNodes: networkSelectNodesSpy,
+                unselectAll: networkUnselectAllSpy,
+                getEdgeAt: networkGetEdgeAtSpy,
+                getConnectedNodes: networkGetConnectedNodes
             })
         };
 
@@ -44,6 +56,11 @@ describe('<MicroserviceMindmap/>', function () {
         networkSetDataSpy.reset();
         networkAddEdgeModeSpy.reset();
         networkDisableEditModeSpy.reset();
+        networkGetNodeAtSpy.reset();
+        networkSelectNodesSpy.reset();
+        networkUnselectAllSpy.reset();
+        networkGetEdgeAtSpy.reset();
+        networkGetConnectedNodes.reset();
     })
 
     it('can be instantiated', function () {
@@ -167,10 +184,92 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.notCalled(global.vis.Network);
     });
 
-    it('testing eventhandlers', function () {
+    it('opens context menu on right-click on a service, and selects the service', function () {
 
         var props = createProps();
 
+        const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+        wrapper.instance().forceUpdate();
+
+        chai.expect(wrapper.type()).to.equal('div');
+
+        chai.expect(oncontextEventHandler).to.be.a('function');
+
+        const domPointer = 'i_am_a_top_left_value_pair';
+
+        const eventParams = {
+            pointer: {
+                DOM: domPointer
+            },
+            event: {
+                preventDefault: sinon.spy(),
+                clientY: 'clientY',
+                clientX: 'clientX'
+            }
+        }
+
+        networkGetNodeAtSpy.withArgs(domPointer).returns('my_node_id');
+
+        oncontextEventHandler(eventParams);
+
+        sinon.assert.calledOnce(props.onContextMenuOpen);
+        sinon.assert.calledWith(props.onContextMenuOpen, {
+            top: 'clientY',
+            left: 'clientX',
+            nodeId: 'my_node_id',
+            edgeFromId: undefined,
+            edgeToId: undefined
+        });
+
+        sinon.assert.calledOnce(networkSelectNodesSpy);
+        sinon.assert.calledWith(networkSelectNodesSpy, ['my_node_id']);
+    });
+
+    it('opens context menu on right-click on a link, and unselects all services', function () {
+
+        var props = createProps();
+
+        const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+        wrapper.instance().forceUpdate();
+
+        chai.expect(wrapper.type()).to.equal('div');
+
+        chai.expect(oncontextEventHandler).to.be.a('function');
+
+        const domPointer = 'i_am_a_top_left_value_pair';
+
+        const eventParams = {
+            pointer: {
+                DOM: domPointer
+            },
+            event: {
+                preventDefault: sinon.spy(),
+                clientY: 'clientY',
+                clientX: 'clientX'
+            }
+        }
+
+        networkGetNodeAtSpy.withArgs(domPointer).returns(undefined);
+        networkGetEdgeAtSpy.withArgs(domPointer).returns('my_link_id');
+        networkGetConnectedNodes.withArgs('my_link_id').returns(['my_from_id', 'my_to_id']);
+
+        oncontextEventHandler(eventParams);
+
+        sinon.assert.calledOnce(props.onContextMenuOpen);
+        sinon.assert.calledWith(props.onContextMenuOpen, {
+            top: 'clientY',
+            left: 'clientX',
+            nodeId: undefined,
+            edgeFromId: 'my_from_id',
+            edgeToId: 'my_to_id'
+        });
+
+        sinon.assert.calledOnce(networkUnselectAllSpy);
+    });
+
+    it('closes context menu on left-click', function () {
+
+        var props = createProps();
 
         const wrapper = shallow(<MicroserviceMindmap {...props}/>);
         wrapper.instance().forceUpdate();
@@ -187,7 +286,7 @@ describe('<MicroserviceMindmap/>', function () {
             left: -1,
             nodeId: undefined
         });
-    })
+    });
 });
 
 function createProps() {
