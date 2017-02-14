@@ -11,6 +11,8 @@ const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
         deleteServiceId: state.deleteServiceId,
+        deleteLinkFromId: state.deleteLinkFromId,
+        deleteLinkToId: state.deleteLinkToId,
         deleteServiceErrorMessage: state.deleteServiceErrorMessage
     };
 };
@@ -23,7 +25,14 @@ const mapDispatchToProps = {
 export class MicroserviceDeleteServiceDialog extends React.Component {
 
     onSubmit() {
-        this.props.onSubmit(this.props.deleteServiceId);
+        const params = {
+            type: this.props.menuMode,
+            deleteServiceId: this.props.deleteServiceId,
+            deleteLinkFromId: this.props.deleteLinkFromId,
+            deleteLinkToId: this.props.deleteLinkToId
+        }
+
+        this.props.onSubmit(params);
     }
 
     render() {
@@ -41,8 +50,16 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
             />,
         ];
 
-        const isOpen = (this.props.menuMode === 'DELETE_SERVICE');
-        const title = 'Confirm deletion of service with id ' + this.props.deleteServiceId;
+        var isOpen = false;
+        var title = '';
+
+        if (this.props.menuMode === 'DELETE_SERVICE') {
+            isOpen = true;
+            title = 'Confirm deletion of service with id ' + this.props.deleteServiceId;
+        } else if (this.props.menuMode === 'DELETE_LINK') {
+            isOpen = true;
+            title = 'Confirm deletion of link between services ' + this.props.deleteLinkFromId + ' and ' + this.props.deleteLinkToId;
+        }
 
         const isErrorMessageOpen = (isOpen && !!this.props.deleteServiceErrorMessage);
         const errorMessage = '' + this.props.deleteServiceErrorMessage;

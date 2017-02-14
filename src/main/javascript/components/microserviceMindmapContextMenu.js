@@ -6,7 +6,9 @@ const mapStateToProps = (state) => {
     return {
         top: state.contextMenuTop,
         left: state.contextMenuLeft,
-        contextMenuServiceId: state.contextMenuServiceId
+        contextMenuServiceId: state.contextMenuServiceId,
+        contextMenuFromId: state.contextMenuFromId,
+        contextMenuToId: state.contextMenuToId
     };
 };
 
@@ -21,6 +23,11 @@ const mapDispatchToProps = (dispatch) => {
         onDeleteService: function() {
             dispatch({
                 type: 'DELETE_SERVICE'
+            });
+        },
+        onDeleteLink: function() {
+            dispatch({
+                type: 'DELETE_LINK'
             });
         }
     };
@@ -37,6 +44,12 @@ class MicroserviceMindmapContextMenu extends React.Component {
                 <nav style={style} className="contextMenu">
                     <button onClick={this.props.onAddProperty}>Edit Service</button>
                     <button onClick={this.props.onDeleteService}>Delete Service</button>
+                </nav>
+            );
+        } else if (this.props.contextMenuFromId && this.props.contextMenuToId) {
+            return (
+                <nav style={style} className="contextMenu">
+                    <button onClick={this.props.onDeleteLink}>Delete Link</button>
                 </nav>
             );
         } else {

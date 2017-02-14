@@ -8,11 +8,16 @@ export function onCancel() {
     };
 }
 
-export function onSubmit(deleteServiceId) {
+export function onSubmit(params) {
     return function (dispatch) {
         var request = {
-            path: '/selavi/services/' + deleteServiceId,
             method: 'DELETE'
+        }
+
+        if (params.type === 'DELETE_SERVICE') {
+            request.path = '/selavi/services/' + params.deleteServiceId;
+        } else if (params.type === 'DELETE_LINK') {
+            request.path = '/selavi/services/' + params.deleteLinkFromId + '/relations/' + params.deleteLinkToId;
         }
 
         var client = rest.wrap(mime).wrap(errorCode);

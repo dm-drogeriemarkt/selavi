@@ -14,14 +14,27 @@ export function onContextMenuOpen(params) {
             type: 'CONTEXT_MENU_OPEN',
             top: params.top,
             left: params.left,
-            contextMenuServiceId: params.nodeId
+            contextMenuServiceId: params.nodeId,
+            contextMenuFromId: undefined,
+            contextMenuToId: undefined
+        };
+    } else if (params.edgeFromId && params.edgeToId){
+        return {
+            type: 'CONTEXT_MENU_OPEN',
+            top: params.top,
+            left: params.left,
+            contextMenuServiceId: undefined,
+            contextMenuFromId: params.edgeFromId,
+            contextMenuToId: params.edgeToId
         };
     } else {
         return {
             type: 'CONTEXT_MENU_OPEN',
             top: -1,
             left: -1,
-            contextMenuServiceId: undefined
+            contextMenuServiceId: undefined,
+            contextMenuFromId: undefined,
+            contextMenuToId: undefined
         };
     }
 }
