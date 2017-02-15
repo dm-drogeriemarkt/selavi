@@ -37,6 +37,9 @@
     "exclude": [
       "src/test/javascript/**/*.spec.js"
     ],
+    "include": [
+      "src/main/javascript/**/*.js"
+    ],
     "reporter": [
       "lcov"
     ],
