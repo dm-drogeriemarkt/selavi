@@ -16,7 +16,9 @@ const initialState = {
     contextMenuVisible: false,
     menuMode: undefined,
     filterString: '',
-    microserviceListResizeCount: 0
+    microserviceListResizeCount: 0,
+    // TODO: either remove this when its not needed anymore, or maybe use react-router to handle url
+    debugMode: (document.location.search === '?debug')
 }
 
 // reducer function, creates a new state object from the previous state and the action

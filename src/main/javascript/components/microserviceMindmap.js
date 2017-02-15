@@ -9,7 +9,8 @@ const mapStateToProps = (state) => {
         microservices: state.microservices,
         menuMode: state.menuMode,
         filterString: state.filterString,
-        microserviceListResizeCount: state.microserviceListResizeCount
+        microserviceListResizeCount: state.microserviceListResizeCount,
+        debugMode: state.debugMode
     };
 };
 
@@ -196,6 +197,12 @@ export class MicroserviceMindmap extends React.Component {
                     minVelocity: 2.5
                 }
             };
+
+            if (this.props.debugMode) {
+                options.configure = {
+                    enabled: true
+                }
+            }
 
             this._network = new vis.Network(this.refs.vizcontainer, data, options);
 
