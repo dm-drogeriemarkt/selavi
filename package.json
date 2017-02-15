@@ -40,6 +40,6 @@
     "reporter": [
       "lcov"
     ],
-    "report-dir": "./target"
+    "report-dir": "target"
   }
 }
