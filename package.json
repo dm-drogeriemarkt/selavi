@@ -16,7 +16,7 @@
   "scripts": {
     "watch": "webpack --watch -d",
     "test": "mocha -w src/test/javascript/setup.js src/test/javascript/**/*.spec.js",
-    "testCI": "mocha src/test/javascript/setup.js src/test/javascript/**/*.spec.js"
+    "testCI": "nyc mocha src/test/javascript/setup.js src/test/javascript/**/*.spec.js"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
@@ -28,7 +28,17 @@
     "chai": "^3.5.0",
     "enzyme": "^2.7.1",
     "mocha": "^3.2.0",
+    "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
     "sinon": "^1.17.6"
+  },
+  "nyc": {
+    "exclude": [
+      "src/test/javascript/**/*.spec.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "report-dir": "./target"
   }
 }
