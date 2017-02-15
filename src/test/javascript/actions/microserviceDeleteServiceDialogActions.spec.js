@@ -5,7 +5,7 @@ import chai from 'chai';
 
 import { onCancel, onSubmit } from '../../../main/javascript/actions/microserviceDeleteServiceDialogActions';
 
-describe('filterUtils', function () {
+describe('microserviceDeleteServiceDialogActions', function () {
     describe('onCancel', function() {
         it('dispatches CANCEL_MENU_ACTION', function() {
             const result = onCancel();
@@ -14,7 +14,7 @@ describe('filterUtils', function () {
         });
     });
 
-    describe('microserviceDeleteServiceDialogActions', function() {
+    describe('onSubmit', function() {
         var thenHandler, errorHandler, clientStub;
 
         before(function() {
