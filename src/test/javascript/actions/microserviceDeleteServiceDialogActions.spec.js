@@ -14,23 +14,38 @@ describe('filterUtils', function () {
         });
     });
 
-    describe('onSubmit', function() {
-        it('makes backed delete request, fetches services from backend on success, and dispatches FETCH_MICROSERVICES_SUCCESS event', function() {
-            var thenHandler;
+    describe('microserviceDeleteServiceDialogActions', function() {
+        var thenHandler, errorHandler, clientStub;
 
-            const thenSpy = function(handler) {
-                thenHandler = handler;
+        before(function() {
+            const thenSpy = function(handlerParam, errorHandlerParam) {
+                thenHandler = handlerParam;
+                errorHandler = errorHandlerParam;
             }
-            const clientStub = sinon.stub().returns({
+            clientStub = sinon.stub().returns({
                 then: sinon.spy(thenSpy)
             });
             const wrapStub = {
                 wrap: sinon.stub().returns(clientStub)
             }
 
-            // TODO: not sure why 'rest' doesn't need to be stubbed, see if maybe it implements the same api as sinon (returns method)
-            rest.wrap.returns(wrapStub);
+            sinon.stub(rest, 'wrap').returns(wrapStub);
+        });
 
+        afterEach(function() {
+            clientStub.reset();
+
+            // cleanup, make sure tests don't interfere with each other
+            thenHandler = undefined;
+            errorHandler = undefined;
+            rest.wrap.reset()
+        })
+
+        after(function() {
+            rest.wrap.restore();
+        });
+
+        it('makes backed delete request, fetches services from backend on success, and dispatches FETCH_MICROSERVICES_SUCCESS event', function() {
             const dispatchSpy = sinon.spy();
 
             const submitFn = onSubmit({
@@ -54,22 +69,6 @@ describe('filterUtils', function () {
         });
 
         it('makes backed delete request and dispatches DELETE_SERVICE_FAILED event on error', function() {
-            var thenHandler, errorHandler;
-
-            const thenSpy = function(handlerParam, errorHandlerParam) {
-                thenHandler = handlerParam;
-                errorHandler = errorHandlerParam;
-            }
-            const clientStub = sinon.stub().returns({
-                then: sinon.spy(thenSpy)
-            });
-            const wrapStub = {
-                wrap: sinon.stub().returns(clientStub)
-            }
-
-            // TODO: not sure why 'rest' doesn't need to be stubbed, see if maybe it implements the same api as sinon (returns method)
-            rest.wrap.returns(wrapStub);
-
             const dispatchSpy = sinon.spy();
 
             const submitFn = onSubmit({
