@@ -32,15 +32,5 @@
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
     "sinon": "^1.17.6"
-  },
-  "nyc": {
-
-
-
-    "reporter": [
-      "lcov"
-    ],
-    "report-dir": "./target"
-
   }
 }
