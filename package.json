@@ -34,15 +34,13 @@
     "sinon": "^1.17.6"
   },
   "nyc": {
-    "exclude": [
-      "src/test/javascript/**/*.spec.js"
-    ],
-    "include": [
-      "src/main/javascript/**/*.js"
-    ],
+
+
+
     "reporter": [
       "lcov"
     ],
-    "report-dir": "target"
+    "report-dir": "./target"
+
   }
 }
