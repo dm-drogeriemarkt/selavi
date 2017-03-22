@@ -31,7 +31,7 @@ Run the spring boot runner form IDEA with the VM options:
 
 ### Testing the Application
 
-
+    $ mvn clean verify -Dspring.profiles.active=development-h2
 
 ## Spring Profile
 | Name | Description |
