@@ -37,6 +37,17 @@ th {
 
 .microserviceMindmap {
     flex-grow: 2;
+    display: flex;
+}
+
+.vizContainer {
+    flex-grow: 5;
+}
+
+.debugContainer {
+    overflow: scroll;
+    max-height: 89%;
+    width: 20em;
 }
 
 .microserviceList {

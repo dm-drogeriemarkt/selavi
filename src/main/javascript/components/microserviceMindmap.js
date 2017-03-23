@@ -202,7 +202,8 @@ export class MicroserviceMindmap extends React.Component {
 
             if (this.props.debugMode) {
                 options.configure = {
-                    enabled: true
+                    enabled: true,
+                    container: this.refs.debugcontainer
                 }
             }
 
@@ -227,7 +228,8 @@ export class MicroserviceMindmap extends React.Component {
         return (
             <div className="microserviceMindmap" ref="microserviceMindmap">
                 <MicroserviceMindmapContextMenu/>
-                <div ref="vizcontainer"></div>
+                {this.props.debugMode && <div ref="debugcontainer" className="debugContainer"></div>}
+                <div ref="vizcontainer" className="vizContainer"></div>
             </div>
         );
     }
