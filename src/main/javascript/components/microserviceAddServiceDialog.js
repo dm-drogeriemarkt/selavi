@@ -88,25 +88,26 @@ class MicroserviceAddServiceDialog extends React.Component {
         var validationMessages = {};
         var isValid = true;
 
-        if (!this.refs.inputServiceId.getValue()) {
-            validationMessages.inputServiceId = "Field is required!";
-            isValid = false;
-        }
-
-        if (!this.refs.inputLabel.getValue()) {
-            validationMessages.inputLabel = "Field is required!";
-            isValid = false;
-        }
-
-        if (!this.refs.inputTeam.getValue()) {
-            validationMessages.inputTeam = "Field is required!";
-            isValid = false;
-        }
-
-        if (!this.refs.inputFdOwner.getValue()) {
-            validationMessages.inputFdOwner = "Field is required!";
-            isValid = false;
-        }
+        // TODO: make validation dynamic
+        // if (!this.refs.inputServiceId.getValue()) {
+        //     validationMessages.inputServiceId = "Field is required!";
+        //     isValid = false;
+        // }
+        //
+        // if (!this.refs.inputLabel.getValue()) {
+        //     validationMessages.inputLabel = "Field is required!";
+        //     isValid = false;
+        // }
+        //
+        // if (!this.refs.inputTeam.getValue()) {
+        //     validationMessages.inputTeam = "Field is required!";
+        //     isValid = false;
+        // }
+        //
+        // if (!this.refs.inputFdOwner.getValue()) {
+        //     validationMessages.inputFdOwner = "Field is required!";
+        //     isValid = false;
+        // }
 
         this.setState({validationMessages: validationMessages});
         return isValid;
@@ -140,71 +141,49 @@ class MicroserviceAddServiceDialog extends React.Component {
             microservice = this.props.microservices.filter((microservice) => microservice.id === this.props.addPropertyServiceId)[0];
         }
 
+        let textFields = [];
+        let toggles = [];
+
+        for (var key in microservice) {
+            if (typeof(microservice[key]) === "string") {
+                const rightcolumn = ((textFields.length - 1) % 3 === 0);
+
+                let style;
+                if (rightcolumn) {
+                    style = { marginLeft: "1em" };
+                }
+
+                textFields.push(<TextField key={"add_edit_dialog_" + key}
+                                           style={style}
+                                           ref={"input_" + key}
+                                           floatingLabelText={key}
+                                           hintText={key}
+                                           errorText={this.state.validationMessages[key]}
+                                           defaultValue={microservice[key]}></TextField>);
+
+                if (rightcolumn) {
+                    textFields.push(<br key={"add_edit_dialog_br_" + textFields.length}/>);
+                }
+
+            } else if (typeof(microservice[key]) === "boolean") {
+
+                toggles.push(<Toggle ref={"input_" + key}
+                                     label={key}
+                                     defaultToggled={microservice[key]}
+                                     style={{marginTop: "2em", maxWidth: "23em"}}/>)
+            }
+
+
+        }
+
         return (
             <Dialog
                 title={title}
                 actions={actions}
                 modal={true}
                 open={isOpen}>
-                <TextField ref="inputServiceId"
-                           floatingLabelText="Service ID *"
-                           hintText="eg. &quot;ZOE&quot;"
-                           errorText={this.state.validationMessages.inputServiceId}
-                           defaultValue={microservice.id}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputLabel"
-                           floatingLabelText="Label *"
-                           hintText="eg. &quot;ZOE&quot;"
-                           errorText={this.state.validationMessages.inputLabel}
-                           defaultValue={microservice.label}></TextField><br />
-
-                <TextField ref="inputDescription"
-                           floatingLabelText="Description"
-                           hintText="eg. &quot;ZKDB Online Echtzeitfähig&quot;"
-                           defaultValue={microservice.description}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputTeam"
-                           floatingLabelText="Development Team"
-                           hintText="eg. &quot;ZOE-Team&quot;"
-                           errorText={this.state.validationMessages.inputTeam}
-                           defaultValue={microservice.team}></TextField><br />
-
-                <TextField ref="inputDmOwner"
-                           floatingLabelText="dm-Owner"
-                           hintText="eg. &quot;Erik Altmann&quot;"
-                           defaultValue={microservice.dmOwner}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputFdOwner"
-                           floatingLabelText="Filiadata-Owner"
-                           hintText="eg. &quot;Erik Altmann&quot;"
-                           errorText={this.state.validationMessages.inputFdOwner}
-                           defaultValue={microservice.fdOwner}></TextField><br />
-
-                <TextField ref="inputDocumentationLink"
-                           floatingLabelText="Link to documentation"
-                           hintText="eg. &quot;https://wiki.dm.de/ZOE&quot;"
-                           defaultValue={microservice.documentationLink}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputMicroserviceUrl"
-                           floatingLabelText="URL"
-                           hintText="eg. &quot;https://zoe.dm.de&quot;"
-                           defaultValue={microservice['microservice-url']}></TextField><br />
-
-                <TextField ref="inputIpAddress"
-                           floatingLabelText="IP address"
-                           hintText="eg. &quot;172.23.68.213&quot;"
-                           defaultValue={microservice.ipAddress}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputNetworkZone"
-                           floatingLabelText="Network zone"
-                           hintText="eg. &quot;LAN&quot;"
-                           defaultValue={microservice.networkZone}></TextField><br />
-
-                <Toggle ref="inputIsExternal"
-                        label="External service (eg., not a microservice)"
-                        defaultToggled={microservice.isExternal}
-                        style={{marginTop: "2em", maxWidth: "23em"}}/>
-
+                {textFields}
+                {toggles}
             </Dialog>
         );
     }
