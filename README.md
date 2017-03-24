@@ -39,3 +39,17 @@ Run the spring boot runner form IDEA with the VM options:
 | local | all to localhost  |
 | development-h2 | use H2 database|
 | development-mysql | use local installed MySQL databse |
+
+## Watch mode (automatically re-build frontend sources when a file changes)
+
+Run the spring boot app (see above), then run webpack in watch mode:
+
+    $ node_modules/webpack/bin/webpack.js --watch
+    
+Now, as soon as a Javascript source file changes, the webpack bundle is re-build and deployed 
+
+## Watch mode (frontend tests)
+
+    $ npm run test
+    
+Launches the frontend test runner in watch mode, eg. re-running the tests automatically when a source (or test) file changes
