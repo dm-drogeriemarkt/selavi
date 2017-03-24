@@ -83,10 +83,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "foo-service",
                 label: "foo-service",
-                color: {
-                    background: "#bef24d",
-                    border: "#19c786"
-                }
+                group: "microservice"
             },
             {
                 id: "bar-consumer",
@@ -95,10 +92,7 @@ describe('<MicroserviceMindmap/>', function () {
                 consumes: [
                     "foo-service"
                 ],
-                color: {
-                    background: "#f2d12d",
-                    border: "#f69805"
-                }
+                group: "external"
             }
         ]
 
@@ -118,6 +112,8 @@ describe('<MicroserviceMindmap/>', function () {
         chai.expect(global.vis.Network.args[0][2].nodes.borderWidth).to.equal(2);
         chai.expect(global.vis.Network.args[0][2].edges.width).to.equal(2);
         chai.expect(global.vis.Network.args[0][2].layout.randomSeed).to.equal(2);
+        chai.expect(global.vis.Network.args[0][2].groups.microservice.color.background).to.equal("#bef24d");
+        chai.expect(global.vis.Network.args[0][2].groups.external.color.background).to.equal("#f2d12d");
 
         sinon.assert.callCount(networkOnSpy, 5);
         sinon.assert.calledWith(networkOnSpy, "selectNode", sinon.match.func);
