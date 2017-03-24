@@ -40,6 +40,26 @@ class App extends React.Component {
     }
 
     render() {
+
+        const microserviceAddServiceDialogProps = {
+            textFields: {
+                "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", default: "", required: false},
+                "label": {label: "", hint: "", default: "", required: false},
+                "description": {label: "", hint: "", default: "", required: false},
+                "team": {label: "", hint: "", default: "", required: false},
+                "dmOwner": {label: "", hint: "", default: "", required: false},
+                "fdOwner": {label: "", hint: "", default: "", required: false},
+                "documentationLink": {label: "", hint: "", default: "", required: false},
+                "microserviceUrl": {label: "", hint: "", default: "", required: false},
+                "ipAddress": {label: "", hint: "", default: "", required: false},
+                "networkZone": {label: "", hint: "", default: "", required: false},
+                "isExternal": {label: "", hint: "", default: "", required: false}
+            },
+            toggles: [
+                {id:"isExternal", label:"", default: true}
+            ]
+        }
+
         return (
             <div className="appcontainer">
                 <div className="appheader">
