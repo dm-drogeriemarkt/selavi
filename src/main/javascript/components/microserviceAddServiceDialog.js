@@ -67,7 +67,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-class MicroserviceAddServiceDialog extends React.Component {
+export class MicroserviceAddServiceDialog extends React.Component {
 
     constructor(props) {
         super(props);
@@ -143,10 +143,10 @@ class MicroserviceAddServiceDialog extends React.Component {
         var microservice = {};
         var title = "";
 
-        if (this.props.menuMode === "ADD_SERVICE") {
+        if (this.props.menuMode === this.props.addMenuMode) {
             isOpen = true;
             title = "Add Service";
-        } else if (this.props.menuMode === "EDIT_SERVICE") {
+        } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
             title = "Edit Service";
             microservice = this.props.microservices.filter((microservice) => microservice.id === this.props.addPropertyServiceId)[0];
