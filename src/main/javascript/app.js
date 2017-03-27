@@ -41,24 +41,22 @@ class App extends React.Component {
 
     render() {
 
-        const microserviceAddServiceDialogProps = {
-            textFields: {
-                "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", default: "", required: false},
-                "label": {label: "", hint: "", default: "", required: false},
-                "description": {label: "", hint: "", default: "", required: false},
-                "team": {label: "", hint: "", default: "", required: false},
-                "dmOwner": {label: "", hint: "", default: "", required: false},
-                "fdOwner": {label: "", hint: "", default: "", required: false},
-                "documentationLink": {label: "", hint: "", default: "", required: false},
-                "microserviceUrl": {label: "", hint: "", default: "", required: false},
-                "ipAddress": {label: "", hint: "", default: "", required: false},
-                "networkZone": {label: "", hint: "", default: "", required: false},
-                "isExternal": {label: "", hint: "", default: "", required: false}
-            },
-            toggles: [
-                {id:"isExternal", label:"", default: true}
-            ]
-        }
+        const textFields = {
+            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: false},
+            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: false},
+            "description": {label: "Description", hint: "eg. &quot;ZKDB Online Echtzeitfähig&quot;", required: false},
+            "team": {label: "Development Team", hint: "eg. &quot;ZOE-Team&quot;", required: false},
+            "dmOwner": {label: "dm-Owner", hint: "eg. &quot;Erik Altmann&quot;", required: false},
+            "fdOwner": {label: "Filiadata-Owner", hint: "eg. &quot;Erik Altmann&quot;", required: false},
+            "documentationLink": {label: "Link to documentation", hint: "eg. &quot;https://wiki.dm.de/ZOE&quot;", required: false},
+            "microserviceUrl": {label: "URL", hint: "eg. &quot;https://zoe.dm.de&quot;", required: false},
+            "ipAddress": {label: "IP address", hint: "eg. &quot;172.23.68.213&quot;", required: false},
+            "networkZone": {label: "Network zone", hint: "eg. &quot;LAN&quot;", required: false}
+        };
+
+        const toggles = {
+            "isExternal": {label: "External service (eg., not a microservice)"}
+        };
 
         return (
             <div className="appcontainer">
@@ -71,7 +69,7 @@ class App extends React.Component {
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
-                    <MicroserviceAddServiceDialog/>
+                    <MicroserviceAddServiceDialog textFields={textFields} toggles={toggles}/>
                     <MicroserviceDeleteServiceDialog/>
                 </div>
             </div>

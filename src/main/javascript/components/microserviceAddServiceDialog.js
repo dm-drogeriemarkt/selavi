@@ -113,6 +113,27 @@ class MicroserviceAddServiceDialog extends React.Component {
         return isValid;
     }
 
+    _addTextField(options) {
+        const rightcolumn = ((options.textFields.length - 1) % 3 === 0);
+
+        let style;
+        if (rightcolumn) {
+            style = { marginLeft: "1em" };
+        }
+
+        options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
+                                           style={style}
+                                           ref={"input_" + options.key}
+                                           floatingLabelText={options.label}
+                                           hintText={options.hint}
+                                           errorText={this.state.validationMessages[options.key]}
+                                           defaultValue={options.value}></TextField>);
+
+        if (rightcolumn) {
+            options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
+        }
+    }
+
     render() {
 
         const actions = [
@@ -144,36 +165,63 @@ class MicroserviceAddServiceDialog extends React.Component {
         let textFields = [];
         let toggles = [];
 
-        for (var key in microservice) {
+        let editableProperties = Object.keys(microservice);
+        
+        for (var key in this.props.textFields) {
+            let textField = this.props.textFields[key];
+
+            let value = "";
             if (typeof(microservice[key]) === "string") {
-                const rightcolumn = ((textFields.length - 1) % 3 === 0);
+                value = microservice[key];
 
-                let style;
-                if (rightcolumn) {
-                    style = { marginLeft: "1em" };
-                }
+                editableProperties.splice(editableProperties.indexOf(key), 1);
+            }
 
-                textFields.push(<TextField key={"add_edit_dialog_" + key}
-                                           style={style}
-                                           ref={"input_" + key}
-                                           floatingLabelText={key}
-                                           hintText={key}
-                                           errorText={this.state.validationMessages[key]}
-                                           defaultValue={microservice[key]}></TextField>);
+            this._addTextField({
+                textFields: textFields,
+                key: key,
+                label: textField.label,
+                hint: textField.hint,
+                value: value
+            });
+        }
 
-                if (rightcolumn) {
-                    textFields.push(<br key={"add_edit_dialog_br_" + textFields.length}/>);
-                }
+        for (var key in this.props.toggles) {
+            let toggle = this.props.toggles[key];
 
+            let value = false;
+            if (typeof(microservice[key]) === "boolean") {
+                value = microservice[key];
+
+                editableProperties.splice(editableProperties.indexOf(key), 1);
+            }
+
+            toggles.push(<Toggle key={"add_edit_dialog_" + key}
+                                 ref={"input_" + key}
+                                 label={toggle.label}
+                                 defaultToggled={value}
+                                 style={{marginTop: "2em", maxWidth: "23em"}}/>)
+        }
+
+        for (var idx in editableProperties) {
+            const key = editableProperties[idx];
+
+            if (typeof(microservice[key]) === "string") {
+                this._addTextField({
+                    textFields: textFields,
+                    key: key,
+                    label: key,
+                    hint: key,
+                    value: microservice[key]
+                });
             } else if (typeof(microservice[key]) === "boolean") {
-
                 toggles.push(<Toggle ref={"input_" + key}
                                      label={key}
                                      defaultToggled={microservice[key]}
                                      style={{marginTop: "2em", maxWidth: "23em"}}/>)
+            } else {
+                console.log("unkown property type for key \"" + key + "\" with value \"" + microservice[key] + "\"");
             }
-
-
         }
 
         return (
