@@ -90,26 +90,14 @@ class MicroserviceAddServiceDialog extends React.Component {
         var validationMessages = {};
         var isValid = true;
 
-        // TODO: make validation dynamic
-        // if (!this.refs.inputServiceId.getValue()) {
-        //     validationMessages.inputServiceId = "Field is required!";
-        //     isValid = false;
-        // }
-        //
-        // if (!this.refs.inputLabel.getValue()) {
-        //     validationMessages.inputLabel = "Field is required!";
-        //     isValid = false;
-        // }
-        //
-        // if (!this.refs.inputTeam.getValue()) {
-        //     validationMessages.inputTeam = "Field is required!";
-        //     isValid = false;
-        // }
-        //
-        // if (!this.refs.inputFdOwner.getValue()) {
-        //     validationMessages.inputFdOwner = "Field is required!";
-        //     isValid = false;
-        // }
+        for (var key in this.props.textFields) {
+            if (this.props.textFields[key].required) {
+                if (!this.refs["input_" + key].getValue()) {
+                    validationMessages[key] = "Field is required!";
+                    isValid = false;
+                }
+            }
+        }
 
         this.setState({validationMessages: validationMessages});
         return isValid;

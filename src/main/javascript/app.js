@@ -42,12 +42,12 @@ class App extends React.Component {
     render() {
 
         const textFields = {
-            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: false},
-            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: false},
+            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
+            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true},
             "description": {label: "Description", hint: "eg. &quot;ZKDB Online Echtzeitfähig&quot;", required: false},
-            "team": {label: "Development Team", hint: "eg. &quot;ZOE-Team&quot;", required: false},
+            "team": {label: "Development Team *", hint: "eg. &quot;ZOE-Team&quot;", required: true},
             "dmOwner": {label: "dm-Owner", hint: "eg. &quot;Erik Altmann&quot;", required: false},
-            "fdOwner": {label: "Filiadata-Owner", hint: "eg. &quot;Erik Altmann&quot;", required: false},
+            "fdOwner": {label: "Filiadata-Owner *", hint: "eg. &quot;Erik Altmann&quot;", required: true},
             "documentationLink": {label: "Link to documentation", hint: "eg. &quot;https://wiki.dm.de/ZOE&quot;", required: false},
             "microserviceUrl": {label: "URL", hint: "eg. &quot;https://zoe.dm.de&quot;", required: false},
             "ipAddress": {label: "IP address", hint: "eg. &quot;172.23.68.213&quot;", required: false},
