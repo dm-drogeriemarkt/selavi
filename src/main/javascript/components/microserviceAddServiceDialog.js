@@ -25,20 +25,22 @@ const mapDispatchToProps = (dispatch) => {
             });
         },
         onSubmit: function() {
+            let entity = {};
+
+            for (var key in this.refs) {
+                if (key.substr(0, 6) === "input_") {
+                    if (this.refs[key] instanceof TextField) {
+                        entity[key.substr(6)] = this.refs[key].getValue();
+                    } else if (this.refs[key] instanceof Toggle) {
+                        entity[key.substr(6)] = this.refs[key].isToggled();
+                    } else {
+                        console.log("unkown input type " + this.refs[key]);
+                    }
+                }
+            }
+
             var request = {
-                entity: {
-                    id: this.refs.inputServiceId.getValue(),
-                    label: this.refs.inputLabel.getValue(),
-                    description: this.refs.inputDescription.getValue(),
-                    team: this.refs.inputTeam.getValue(),
-                    dmOwner: this.refs.inputDmOwner.getValue(),
-                    fdOwner: this.refs.inputFdOwner.getValue(),
-                    documentationLink: this.refs.inputDocumentationLink.getValue(),
-                    'microservice-url': this.refs.inputMicroserviceUrl.getValue(),
-                    ipAddress: this.refs.inputIpAddress.getValue(),
-                    networkZone: this.refs.inputNetworkZone.getValue(),
-                    isExternal: this.refs.inputIsExternal.isToggled()
-                },
+                entity: entity,
                 headers: {
                     'Content-Type': 'application/json'
                 }
