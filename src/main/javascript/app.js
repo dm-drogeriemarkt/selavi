@@ -69,7 +69,11 @@ class App extends React.Component {
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
-                    <MicroserviceAddServiceDialog textFields={textFields} toggles={toggles}/>
+                    <MicroserviceAddServiceDialog textFields={textFields}
+                                                  toggles={toggles}
+                                                  baseUrl="/selavi/services"
+                                                  addMenuMode="ADD_SERVICE"
+                                                  editMenuMode="EDIT_SERVICE"/>
                     <MicroserviceDeleteServiceDialog/>
                 </div>
             </div>

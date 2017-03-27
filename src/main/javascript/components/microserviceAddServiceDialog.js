@@ -46,11 +46,11 @@ const mapDispatchToProps = (dispatch) => {
                 }
             }
 
-            if (this.props.menuMode === "EDIT_SERVICE") {
-                request.path = '/selavi/services/' + this.props.addPropertyServiceId + '/properties';
+            if (this.props.menuMode === this.props.editMenuMode) {
+                request.path = this.props.baseUrl + '/' + this.props.addPropertyServiceId + '/properties';
                 request.method = 'PUT';
-            } else if (this.props.menuMode === "ADD_SERVICE") {
-                request.path = '/selavi/services';
+            } else if (this.props.menuMode === this.props.addMenuMode) {
+                request.path = this.props.baseUrl;
                 request.method = 'POST';
             }
 
