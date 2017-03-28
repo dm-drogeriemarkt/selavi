@@ -40,7 +40,7 @@ public class ServiceController {
     @ApiOperation(value = "Add a new relation between two services.")
     @RequestMapping(value = "/{serviceName}/relations", method = RequestMethod.POST)
     public void addNewRelation(@PathVariable String serviceName, @RequestBody ObjectNode relatedServiceName) {
-        servicePropertiesService.addRelation(serviceName, relatedServiceName.get("target").toString());
+        servicePropertiesService.addRelation(serviceName, relatedServiceName.get("target").textValue());
     }
 
     @ApiOperation(value = "Delete a relation between two services. If the last relation ist removed, the 'consumes' property will also removed.")
