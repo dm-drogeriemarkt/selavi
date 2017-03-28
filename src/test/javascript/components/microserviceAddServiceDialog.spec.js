@@ -27,15 +27,14 @@ describe('<MicroserviceAddServiceDialog/>', function () {
     it('renders text fields for fields in selected service, and sets their default values', function () {
 
         let props = createProps();
-        props.microservices.push(        {
+        props.entity =        {
             id: "bar-consumer",
             label: "bar-consumer",
             isExternal: true,
             consumes: [
                 "foo-service"
             ]
-        });
-        props.addPropertyServiceId = 'bar-consumer';
+        };
         props.menuMode = 'MY_MENU_MODE';
         props.editMenuMode = 'MY_MENU_MODE';
 
@@ -55,15 +54,14 @@ describe('<MicroserviceAddServiceDialog/>', function () {
             "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
             "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
         }
-        props.microservices.push({
+        props.entity =        {
             id: "bar-consumer",
             label: "bar-consumer",
             isExternal: true,
             consumes: [
                 "foo-service"
             ]
-        });
-        props.addPropertyServiceId = 'bar-consumer';
+        };
         props.menuMode = 'MY_MENU_MODE';
         props.editMenuMode = 'MY_MENU_MODE';
 
@@ -82,8 +80,7 @@ function createProps() {
         menuMode: undefined,
         textFields: undefined,
         toggles: undefined,
-        microservices: [],
-        addPropertyServiceId: undefined,
+        entity: undefined,
         menuMode: undefined,
         editMenuMode: undefined
     };

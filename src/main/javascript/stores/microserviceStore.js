@@ -28,7 +28,8 @@ function updateStore(state = initialState, action) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
-                menuMode: undefined
+                menuMode: undefined,
+                entity: undefined
             });
             return newState;
         }
@@ -57,13 +58,14 @@ function updateStore(state = initialState, action) {
         case 'ADD_RELATION': {
             const newState = Object.assign({}, state, {
                 menuMode: 'ADD_RELATION',
-                addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations/" + action.consumedServiceId
+                entity: {"target": action.consumedServiceId},
+                addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations"
             });
             return newState;
         }
         case 'EDIT_SERVICE': {
             const newState = Object.assign({}, state, {
-                addPropertyServiceId: state.contextMenuServiceId,
+                entity: state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0],
                 contextMenuServiceId: undefined,
                 menuMode: 'EDIT_SERVICE',
                 addEditDialogFormAction: "/selavi/services/" + state.contextMenuServiceId + "/properties"

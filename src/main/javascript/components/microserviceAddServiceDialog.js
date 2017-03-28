@@ -12,8 +12,7 @@ import Toggle from 'material-ui/Toggle';
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
-        addPropertyServiceId: state.addPropertyServiceId,
-        microservices: state.microservices,
+        entity: state.entity,
         addEditDialogFormAction: state.addEditDialogFormAction
     };
 };
@@ -45,7 +44,7 @@ const mapDispatchToProps = (dispatch) => {
                 headers: {
                     'Content-Type': 'application/json'
                 }
-            }
+            };
 
             if (this.props.menuMode === this.props.editMenuMode) {
                 request.path = this.props.addEditDialogFormAction;
@@ -141,7 +140,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
         ];
 
         var isOpen = false;
-        var microservice = {};
+        var microservice = this.props.entity || {};
         var title = "";
 
         if (this.props.menuMode === this.props.addMenuMode) {
@@ -150,7 +149,6 @@ export class MicroserviceAddServiceDialog extends React.Component {
         } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
             title = "Edit Service";
-            microservice = this.props.microservices.filter((microservice) => microservice.id === this.props.addPropertyServiceId)[0];
         }
 
         let textFields = [];
