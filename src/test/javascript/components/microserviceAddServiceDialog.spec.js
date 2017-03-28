@@ -41,8 +41,6 @@ describe('<MicroserviceAddServiceDialog/>', function () {
 
         const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
 
-        console.log(wrapper.find('TextField').at(0));
-
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("id");
         chai.expect(wrapper.find('TextField').at(0).props().defaultValue).to.equal("bar-consumer");
