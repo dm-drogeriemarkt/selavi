@@ -41,7 +41,7 @@ class App extends React.Component {
 
     render() {
 
-        const textFields = {
+        const serviceTextFields = {
             "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
             "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true},
             "description": {label: "Description", hint: "eg. &quot;ZKDB Online Echtzeitfähig&quot;", required: false},
@@ -54,8 +54,12 @@ class App extends React.Component {
             "networkZone": {label: "Network zone", hint: "eg. &quot;LAN&quot;", required: false}
         };
 
-        const toggles = {
+        const serviceToggles = {
             "isExternal": {label: "External service (eg., not a microservice)"}
+        };
+
+        const relationTextFields = {
+            "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: true},
         };
 
         return (
@@ -69,11 +73,13 @@ class App extends React.Component {
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
-                    <MicroserviceAddServiceDialog textFields={textFields}
-                                                  toggles={toggles}
-                                                  baseUrl="/selavi/services"
+                    <MicroserviceAddServiceDialog textFields={serviceTextFields}
+                                                  toggles={serviceToggles}
                                                   addMenuMode="ADD_SERVICE"
                                                   editMenuMode="EDIT_SERVICE"/>
+                    <MicroserviceAddServiceDialog textFields={relationTextFields}
+                                                  addMenuMode="ADD_RELATION"
+                                                  editMenuMode="_TODO_UNDEFINED_"/>
                     <MicroserviceDeleteServiceDialog/>
                 </div>
             </div>

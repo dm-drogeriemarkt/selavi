@@ -17,6 +17,7 @@ const initialState = {
     menuMode: undefined,
     filterString: '',
     microserviceListResizeCount: 0,
+    addEditDialogFormAction: undefined,
     // TODO: either remove this when its not needed anymore, or maybe use react-router to handle url
     debugMode: (document.location.search === '?debug')
 }
@@ -53,11 +54,19 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'ADD_RELATION': {
+            const newState = Object.assign({}, state, {
+                menuMode: 'ADD_RELATION',
+                addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations/" + action.consumedServiceId
+            });
+            return newState;
+        }
         case 'EDIT_SERVICE': {
             const newState = Object.assign({}, state, {
                 addPropertyServiceId: state.contextMenuServiceId,
                 contextMenuServiceId: undefined,
-                menuMode: 'EDIT_SERVICE'
+                menuMode: 'EDIT_SERVICE',
+                addEditDialogFormAction: "/selavi/services/" + state.contextMenuServiceId + "/properties"
             });
             return newState;
         }
@@ -107,7 +116,8 @@ function updateStore(state = initialState, action) {
         }
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
-                menuMode: 'ADD_SERVICE'
+                menuMode: 'ADD_SERVICE',
+                addEditDialogFormAction: "/selavi/services"
             });
             return newState;
         }

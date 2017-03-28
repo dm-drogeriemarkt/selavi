@@ -37,17 +37,8 @@ public class ServiceController {
         servicePropertiesService.deleteService(serviceName);
     }
 
-    /**
-     * @deprecated, use {@link #addNewRelation(String, String)} instead
-     */
-    @ApiOperation(value = "DEPRECATED, use /services/{serviceName}/relations/{relatedServiceName} with PUT instead.")
-    @RequestMapping(value = "/{serviceName}/relation", method = RequestMethod.PUT)
-    public void addRelation(@PathVariable String serviceName, @RequestBody String relatedServiceName) {
-        servicePropertiesService.addRelation(serviceName, relatedServiceName);
-    }
-
     @ApiOperation(value = "Add a new relation between two services.")
-    @RequestMapping(value = "/{serviceName}/relations/{relatedServiceName}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{serviceName}/relations/{relatedServiceName}", method = RequestMethod.POST)
     public void addNewRelation(@PathVariable String serviceName, @PathVariable String relatedServiceName) {
         servicePropertiesService.addRelation(serviceName, relatedServiceName);
     }

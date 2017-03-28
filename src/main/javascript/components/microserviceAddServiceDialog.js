@@ -13,7 +13,8 @@ const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
         addPropertyServiceId: state.addPropertyServiceId,
-        microservices: state.microservices
+        microservices: state.microservices,
+        addEditDialogFormAction: state.addEditDialogFormAction
     };
 };
 
@@ -47,10 +48,10 @@ const mapDispatchToProps = (dispatch) => {
             }
 
             if (this.props.menuMode === this.props.editMenuMode) {
-                request.path = this.props.baseUrl + '/' + this.props.addPropertyServiceId + '/properties';
+                request.path = this.props.addEditDialogFormAction;
                 request.method = 'PUT';
             } else if (this.props.menuMode === this.props.addMenuMode) {
-                request.path = this.props.baseUrl;
+                request.path = this.props.addEditDialogFormAction;
                 request.method = 'POST';
             }
 
@@ -136,7 +137,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 label="Submit"
                 primary={true}
                 onTouchTap={this._handleOnSubmit.bind(this)}
-            />,
+            />
         ];
 
         var isOpen = false;
