@@ -42,8 +42,6 @@ public class BitbucketService {
         parameters.put("repo", repo);
 
         return getTopCommitters(link.expand(parameters).getHref());
-
-
     }
 
     public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url) {
