@@ -61,7 +61,7 @@ public class ServicePropertiesServiceUnitTest {
     public void shouldDelegateToConsumerServiceToCreateNewRelation() throws Exception {
         // given
         final String serviceName = "ultraServiceName";
-        final String relatedServiceName = "relatedServiceName";
+        final ObjectNode relatedServiceName = new ObjectMapper().createObjectNode();
 
         when(servicePropertiesRepository.exists(serviceName)).thenReturn(false);
 
@@ -76,7 +76,7 @@ public class ServicePropertiesServiceUnitTest {
     public void shouldDelegateToConsumerServiceToUpdateRelations() throws Exception {
         // given
         final String serviceName = "ultraServiceName";
-        final String relatedServiceName = "relatedServiceName";
+        final ObjectNode relatedServiceName = new ObjectMapper().createObjectNode();
 
         when(servicePropertiesRepository.exists(serviceName)).thenReturn(true);
 

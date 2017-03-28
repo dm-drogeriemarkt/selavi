@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 
 @Service
 public class ConsumerPropertiesService {
@@ -30,44 +31,48 @@ public class ConsumerPropertiesService {
         this.defaultNodeContentFactory = defaultNodeContentFactory;
     }
 
-    public ServiceProperties addConsumedService(String serviceName, String relatedServiceName) throws IOException {
+    public ServiceProperties addConsumedService(String serviceName, ObjectNode relationProperties) throws IOException {
         final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
         final ObjectMapper mapper = defaultNodeContentFactory.getMapper();
         final ObjectNode existingNode = (ObjectNode) mapper.readTree(serviceProperties.getContent());
 
         boolean consumerNodeExists = existingNode.hasNonNull(CONSUMER_NODE_NAME);
         if (consumerNodeExists) {
-            final ArrayNode existingConsumerNode = (ArrayNode) existingNode.get(CONSUMER_NODE_NAME);
-            if (relationExists(existingConsumerNode, relatedServiceName)) {
+
+            if (serviceName.equals(relationProperties.get("target").asText())) {
                 throw new RelationAddException();
             }
 
-            if (serviceName.equals(relatedServiceName)) {
-                throw new RelationAddException();
+            final ArrayNode existingConsumesProperties = (ArrayNode) existingNode.get(CONSUMER_NODE_NAME);
+
+            Optional<ObjectNode> relation = getRelation(existingConsumesProperties, relationProperties);
+            if (relation.isPresent()) {
+                relation.get().setAll(relationProperties);
+            } else {
+                existingConsumesProperties.add(relationProperties);
             }
 
-            existingConsumerNode.add(relatedServiceName);
             serviceProperties.setContent(existingNode.toString());
             return servicePropertiesRepository.save(serviceProperties);
         }
 
-        final ArrayNode newConsumerNode = createConsumerNode(relatedServiceName);
+        final ArrayNode newConsumerNode = createConsumerNode(relationProperties);
         existingNode.set(CONSUMER_NODE_NAME, newConsumerNode);
         serviceProperties.setContent(existingNode.toString());
         return servicePropertiesRepository.save(serviceProperties);
     }
 
-    private boolean relationExists(ArrayNode arrayNode, String relatedServiceName) {
+    private Optional<ObjectNode> getRelation(ArrayNode arrayNode, ObjectNode relationProperties) {
         for (Iterator<JsonNode> it = arrayNode.iterator(); it.hasNext(); ) {
             JsonNode node = it.next();
-            if (node.textValue().equals(relatedServiceName)) {
-                return true;
+            if (node.get("target").textValue().equals(relationProperties.get("target").textValue())) {
+                return Optional.of((ObjectNode) node);
             }
         }
-        return false;
+        return Optional.empty();
     }
 
-    public ServiceProperties createAndSaveNewProperties(String serviceName, String relatedServiceName) {
+    public ServiceProperties createAndSaveNewProperties(String serviceName, ObjectNode relatedServiceName) {
         final ArrayNode consumerNode = createConsumerNode(relatedServiceName);
         final ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
         contentNode.set(CONSUMER_NODE_NAME, consumerNode);
@@ -76,7 +81,7 @@ public class ConsumerPropertiesService {
         return servicePropertiesRepository.save(newServiceProperties);
     }
 
-    private ArrayNode createConsumerNode(String relatedServiceName) {
+    private ArrayNode createConsumerNode(ObjectNode relatedServiceName) {
         ArrayNode consumerNode = defaultNodeContentFactory.getMapper().createArrayNode();
         consumerNode.add(relatedServiceName);
         return consumerNode;

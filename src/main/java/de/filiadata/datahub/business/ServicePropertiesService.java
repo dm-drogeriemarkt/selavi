@@ -1,5 +1,6 @@
 package de.filiadata.datahub.business;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class ServicePropertiesService {
         serviceAddDeleteService.createNewServiceInfo(dto);
     }
 
-    public void addRelation(String serviceName, String relatedServiceName) {
+    public void addRelation(String serviceName, ObjectNode relatedServiceName) {
         final Boolean servicePropertiesExist = servicePropertiesRepository.exists(serviceName);
         if (!servicePropertiesExist) {
             consumerPropertiesService.createAndSaveNewProperties(serviceName, relatedServiceName);
