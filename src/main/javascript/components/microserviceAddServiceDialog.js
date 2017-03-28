@@ -1,13 +1,12 @@
 const React = require('react');
-import { connect } from 'react-redux';
+import {connect} from "react-redux";
+import Dialog from "material-ui/Dialog";
+import TextField from "material-ui/TextField";
+import FlatButton from "material-ui/FlatButton";
+import Toggle from "material-ui/Toggle";
 
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
-
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
 
 const mapStateToProps = (state) => {
     return {
@@ -19,12 +18,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onCancel: function() {
+        onCancel: function () {
             dispatch({
                 type: 'CANCEL_MENU_ACTION',
             });
         },
-        onSubmit: function() {
+        onSubmit: function () {
             var request = {
                 entity: {
                     id: this.refs.inputServiceId.getValue(),
@@ -37,7 +36,9 @@ const mapDispatchToProps = (dispatch) => {
                     'microservice-url': this.refs.inputMicroserviceUrl.getValue(),
                     ipAddress: this.refs.inputIpAddress.getValue(),
                     networkZone: this.refs.inputNetworkZone.getValue(),
-                    isExternal: this.refs.inputIsExternal.isToggled()
+                    isExternal: this.refs.inputIsExternal.isToggled(),
+                    bitbucketProject: this.refs.inputBitbucketProject.getValue(),
+                    bitbucketRepository: this.refs.inputBitbucketRepo.getValue()
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -151,7 +152,7 @@ class MicroserviceAddServiceDialog extends React.Component {
                            hintText="eg. &quot;ZOE&quot;"
                            errorText={this.state.validationMessages.inputServiceId}
                            defaultValue={microservice.id}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
+                <TextField style={{marginLeft: "1em"}}
                            ref="inputLabel"
                            floatingLabelText="Label *"
                            hintText="eg. &quot;ZOE&quot;"
@@ -162,7 +163,7 @@ class MicroserviceAddServiceDialog extends React.Component {
                            floatingLabelText="Description"
                            hintText="eg. &quot;ZKDB Online Echtzeitfähig&quot;"
                            defaultValue={microservice.description}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
+                <TextField style={{marginLeft: "1em"}}
                            ref="inputTeam"
                            floatingLabelText="Development Team"
                            hintText="eg. &quot;ZOE-Team&quot;"
@@ -173,7 +174,7 @@ class MicroserviceAddServiceDialog extends React.Component {
                            floatingLabelText="dm-Owner"
                            hintText="eg. &quot;Erik Altmann&quot;"
                            defaultValue={microservice.dmOwner}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
+                <TextField style={{marginLeft: "1em"}}
                            ref="inputFdOwner"
                            floatingLabelText="Filiadata-Owner"
                            hintText="eg. &quot;Erik Altmann&quot;"
@@ -184,7 +185,7 @@ class MicroserviceAddServiceDialog extends React.Component {
                            floatingLabelText="Link to documentation"
                            hintText="eg. &quot;https://wiki.dm.de/ZOE&quot;"
                            defaultValue={microservice.documentationLink}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
+                <TextField style={{marginLeft: "1em"}}
                            ref="inputMicroserviceUrl"
                            floatingLabelText="URL"
                            hintText="eg. &quot;https://zoe.dm.de&quot;"
@@ -194,11 +195,21 @@ class MicroserviceAddServiceDialog extends React.Component {
                            floatingLabelText="IP address"
                            hintText="eg. &quot;172.23.68.213&quot;"
                            defaultValue={microservice.ipAddress}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
+                <TextField style={{marginLeft: "1em"}}
                            ref="inputNetworkZone"
                            floatingLabelText="Network zone"
                            hintText="eg. &quot;LAN&quot;"
                            defaultValue={microservice.networkZone}></TextField><br />
+
+                <TextField ref="inputBitbucketProject"
+                           floatingLabelText="Bitbucket project"
+                           hintText="eg. &quot;ZOE&quot;"
+                           defaultValue={microservice.bitbucketProject}></TextField>
+                <TextField style={{marginLeft: "1em"}}
+                           ref="inputBitbucketRepo"
+                           floatingLabelText="Bitbucket Repo"
+                           hintText="eg. &quot;zoe&quot;"
+                           defaultValue={microservice.bitbucketRepo}></TextField><br />
 
                 <Toggle ref="inputIsExternal"
                         label="External service (eg., not a microservice)"
@@ -210,4 +221,4 @@ class MicroserviceAddServiceDialog extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceAddServiceDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceAddServiceDialog);
