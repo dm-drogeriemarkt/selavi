@@ -15,7 +15,7 @@
   },
   "scripts": {
     "watch": "webpack --watch -d",
-    "test": "mocha -w src/test/javascript/setup.js src/test/javascript/**/*.spec.js",
+    "test": "mocha -w src/test/javascript/**/*.spec.js --compilers js:babel-core/register --require src/test/javascript/setup.js",
     "testCI": "nyc mocha src/test/javascript/setup.js src/test/javascript/**/*.spec.js"
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
     "enzyme": "^2.7.1",
+    "jsdom": "^9.12.0",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
