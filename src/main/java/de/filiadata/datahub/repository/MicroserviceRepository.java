@@ -109,7 +109,7 @@ public class MicroserviceRepository {
     private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
         if (instanceNode.hasNonNull(propertyName)) {
             final JsonNode port = instanceNode.get(propertyName);
-            if (port.get("@enabled").textValue().equals("true")) {
+            if ("true".equals(port.get("@enabled").textValue())) {
                 portsNode.add(JsonNodeFactory.instance.numberNode(port.get("$").intValue()));
             }
         }
