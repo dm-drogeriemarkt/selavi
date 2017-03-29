@@ -2,14 +2,16 @@ package de.filiadata.datahub.business.bitbucket;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Link;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,6 +19,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 public class BitbucketService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BitbucketService.class);
 
     private final RestTemplate restTemplate;
     private final String bitbucketCredentials;
@@ -33,7 +37,7 @@ public class BitbucketService {
         this.numberOfTopCommiters = numberOfTopCommiters;
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo) throws IOException {
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo) {
         final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}/commits?limit=500");
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("project", project);
@@ -42,7 +46,7 @@ public class BitbucketService {
         return getTopCommitters(link.expand(parameters).getHref());
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url) throws IOException {
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url) {
         final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(url);
 
         return handleResponse(responseEntity);
@@ -76,14 +80,19 @@ public class BitbucketService {
         return result;
     }
 
-    private ResponseEntity<BitbucketCommitsDto> performRequest(String url) throws IOException {
+    private ResponseEntity<BitbucketCommitsDto> performRequest(String url) {
         final HttpEntity<?> httpEntity = new HttpEntity<>(createHttpHeaders());
-        return restTemplate.exchange(url,
-                HttpMethod.GET,
-                httpEntity,
-                new ParameterizedTypeReference<BitbucketCommitsDto>() {
-                }
-        );
+        try {
+            return restTemplate.exchange(url,
+                    HttpMethod.GET,
+                    httpEntity,
+                    new ParameterizedTypeReference<BitbucketCommitsDto>() {
+                    }
+            );
+        } catch (RestClientException e) {
+            LOG.error("Error while performing GET request to url {}!", url, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Map<BitbucketAuthorDto, Long> getAllCommiters(BitbucketCommitsDto bitbucketCommitsDto) {

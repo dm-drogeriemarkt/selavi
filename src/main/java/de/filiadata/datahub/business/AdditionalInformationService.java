@@ -48,7 +48,7 @@ public class AdditionalInformationService {
             }
 
         } catch (IOException e) {
-            LOG.warn("Error occurred while getting top committers! {}", e);
+            LOG.error("Error occurred while getting top committers:", e);
         }
 
         return Collections.emptyMap();

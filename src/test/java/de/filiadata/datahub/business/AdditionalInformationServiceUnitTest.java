@@ -7,7 +7,6 @@ import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,18 +46,4 @@ public class AdditionalInformationServiceUnitTest {
         assertThat(actualResult.entrySet().size(), is(1));
     }
 
-    @Test
-    public void ioErrorReturnsEmptyMap() throws Exception {
-
-        String microserviceId = "test-service";
-
-        ServiceProperties serviceProperties = new ServiceProperties(microserviceId, "{\"bitbucketProject\": \"test-service\", \"bitbucketRepo\": \"test-repo\"}");
-        when(servicePropertiesRepository.findById(microserviceId)).thenReturn(serviceProperties);
-
-        when(bitbucketService.getTopCommitters(anyString(), anyString())).thenThrow(new IOException());
-
-        Map<BitbucketAuthorDto, Long> actualResult = additionalInformationService.getTopCommitters(microserviceId);
-
-        assertThat(actualResult.isEmpty(), is(true));
-    }
 }
