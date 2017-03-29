@@ -1,13 +1,12 @@
 const React = require('react');
-import { connect } from 'react-redux';
+import {connect} from "react-redux";
+import Dialog from "material-ui/Dialog";
+import TextField from "material-ui/TextField";
+import FlatButton from "material-ui/FlatButton";
+import Toggle from "material-ui/Toggle";
 
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
-
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import Toggle from 'material-ui/Toggle';
 
 const mapStateToProps = (state) => {
     return {
@@ -19,12 +18,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onCancel: function() {
+        onCancel: function () {
             dispatch({
                 type: 'CANCEL_MENU_ACTION',
             });
         },
-        onSubmit: function() {
+        onSubmit: function () {
             let entity = {};
 
             for (var key in this.refs) {
@@ -108,7 +107,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
 
         let style;
         if (rightcolumn) {
-            style = { marginLeft: "1em" };
+            style = {marginLeft: "1em"};
         }
 
         options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
@@ -159,7 +158,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
         let toggles = [];
 
         let editableProperties = Object.keys(microservice);
-        
+
         for (var key in this.props.textFields) {
             let textField = this.props.textFields[key];
 
@@ -231,4 +230,4 @@ export class MicroserviceAddServiceDialog extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceAddServiceDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceAddServiceDialog);

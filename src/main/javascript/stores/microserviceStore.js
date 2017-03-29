@@ -1,5 +1,5 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import {applyMiddleware, createStore} from "redux";
+import thunk from "redux-thunk";
 
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
@@ -24,7 +24,7 @@ const initialState = {
 
 // reducer function, creates a new state object from the previous state and the action
 function updateStore(state = initialState, action) {
-    switch(action.type) {
+    switch (action.type) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
@@ -35,7 +35,8 @@ function updateStore(state = initialState, action) {
         }
         case 'MICROSERVICE_NODE_SELECTED': {
             const newState = Object.assign({}, state, {
-                selectedService: action.selectedServiceId
+                selectedService: action.selectedServiceId,
+                bitbucketDetails: action.response.entity
             });
             return newState;
         }

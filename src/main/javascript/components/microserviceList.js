@@ -1,28 +1,29 @@
 const React = require('react');
-import { connect } from 'react-redux';
-import {List, ListItem} from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
-import Subheader from 'material-ui/Subheader';
+import {connect} from "react-redux";
+import {List, ListItem} from "material-ui/List";
+import Checkbox from "material-ui/Checkbox";
+import Subheader from "material-ui/Subheader";
 
-import { shouldFilterOut, isFilterHit } from './../shared/filterUtils'
+import {isFilterHit, shouldFilterOut} from "./../shared/filterUtils";
 
 const mapStateToProps = (state) => {
     return {
         microservices: state.microservices,
         selectedService: state.selectedService,
-        filterString: state.filterString
+        filterString: state.filterString,
+        bitbucketDetails: state.bitbucketDetails
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSelectService: function(selectedServiceId, isInputChecked) {
+        onSelectService: function (selectedServiceId, isInputChecked) {
             dispatch({
                 type: 'MICROSERVICE_NODE_SELECTED',
                 selectedServiceId: isInputChecked ? selectedServiceId : undefined
             });
         },
-        onNestedListToggle: function() {
+        onNestedListToggle: function () {
             dispatch({
                 type: 'MICROSERVICE_LIST_RESIZE'
             });
@@ -53,7 +54,7 @@ class MicroserviceList extends React.Component {
             var style = {};
 
             if (isFilterHit(propertyName, microservice[propertyName], filterString)) {
-                style = { backgroundColor: "rgb(0, 188, 212)" }
+                style = {backgroundColor: "rgb(0, 188, 212)"}
             }
 
             propertyList.push(<ListItem key={microservice.id + '_' + propertyName}
@@ -106,12 +107,26 @@ class MicroserviceList extends React.Component {
                 } else {
                     if (microservice.isExternal) {
                         primaryText = <span>{microservice.id} <span style={{color: "#f69805"}}>&#x0272A;</span></span>
-                    } else {
+                    } else {
                         primaryText = <span>{microservice.id} <span style={{color: "#19c786"}}>&#x0272A;</span></span>
                     }
                 }
 
                 var properties = this._getPropertyList(microservice, this.props.filterString);
+
+                var nestedItems = [];
+                if (Array.isArray(this.props.bitbucketDetails)) {
+                    this.props.bitbucketDetails.forEach((propValue, index) => {
+                        nestedItems.push(<ListItem key={microservice.id + '_bitbucket_' + index}
+                                                   primaryText={propValue.emailAddress}
+                                                   secondaryText={propValue.numberOfCommits}/>);
+                    });
+                }
+                properties.push(<ListItem key={microservice.id + '_' + "bitbucketDetails"}
+                                          primaryText="Bitbucket"
+                                          nestedItems={nestedItems}
+                                          style={style}
+                                          secondaryTextLines={2}/>);
 
                 return (
                     <ListItem selected={selected}
@@ -120,7 +135,8 @@ class MicroserviceList extends React.Component {
                               style={style}
                               primaryText={primaryText}
                               secondaryText={microservice['microservice-url']}
-                              leftCheckbox={<Checkbox checked={selected} onCheck={(event, isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
+                              leftCheckbox={<Checkbox checked={selected}
+                                                      onCheck={(event, isInputChecked) => this.props.onSelectService(microservice.id, isInputChecked)}/>}
                               nestedItems={properties}
                               onNestedListToggle={this._onNestedListToggle.bind(this)}
                               primaryTogglesNestedList={true}/>
@@ -137,4 +153,4 @@ class MicroserviceList extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceList);
+export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceList);

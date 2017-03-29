@@ -4,8 +4,8 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
 import {Provider} from "react-redux";
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import injectTapEventPlugin from "react-tap-event-plugin";
 
 import MicroserviceFilterBox from "./components/microserviceFilterbox";
 import MicroserviceList from "./components/microserviceList";
@@ -48,10 +48,16 @@ class App extends React.Component {
             "team": {label: "Development Team *", hint: "eg. &quot;ZOE-Team&quot;", required: true},
             "dmOwner": {label: "dm-Owner", hint: "eg. &quot;Erik Altmann&quot;", required: false},
             "fdOwner": {label: "Filiadata-Owner *", hint: "eg. &quot;Erik Altmann&quot;", required: true},
-            "documentationLink": {label: "Link to documentation", hint: "eg. &quot;https://wiki.dm.de/ZOE&quot;", required: false},
+            "documentationLink": {
+                label: "Link to documentation",
+                hint: "eg. &quot;https://wiki.dm.de/ZOE&quot;",
+                required: false
+            },
             "microserviceUrl": {label: "URL", hint: "eg. &quot;https://zoe.dm.de&quot;", required: false},
             "ipAddress": {label: "IP address", hint: "eg. &quot;172.23.68.213&quot;", required: false},
-            "networkZone": {label: "Network zone", hint: "eg. &quot;LAN&quot;", required: false}
+            "networkZone": {label: "Network zone", hint: "eg. &quot;LAN&quot;", required: false},
+            "bitbucketProject": {label: "Bitbucket project", hint: "eg. &quot;ZOE&quot;", required: false},
+            "bitbucketRepo": {label: "Bitbucket Repository", hint: "eg. &quot;zoe&quot;", required: false}
         };
 
         const serviceToggles = {
@@ -59,7 +65,7 @@ class App extends React.Component {
         };
 
         const relationTextFields = {
-            "target": { label: "Consumed service", required: true, disabled: true },
+            "target": {label: "Consumed service", required: true, disabled: true},
             "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: false}
         };
 

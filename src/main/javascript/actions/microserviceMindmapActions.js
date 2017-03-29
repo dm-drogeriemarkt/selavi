@@ -2,10 +2,19 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
 export function onSelectMicroserviceNode(params) {
-    return {
-        type: 'MICROSERVICE_NODE_SELECTED',
-        selectedServiceId: params.nodes[0]
-    };
+    return function (dispatch) {
+        var client = rest.wrap(mime);
+        client({
+            path: '/selavi/additional-information/bitbucket/' + params.nodes[0],
+            method: 'GET',
+        }).then(response => {
+            dispatch({
+                type: 'MICROSERVICE_NODE_SELECTED',
+                selectedServiceId: params.nodes[0],
+                response: response
+            });
+        });
+    }
 }
 
 export function onContextMenuOpen(params) {
@@ -18,7 +27,7 @@ export function onContextMenuOpen(params) {
             contextMenuFromId: undefined,
             contextMenuToId: undefined
         };
-    } else if (params.edgeFromId && params.edgeToId){
+    } else if (params.edgeFromId && params.edgeToId) {
         return {
             type: 'CONTEXT_MENU_OPEN',
             top: params.top,
