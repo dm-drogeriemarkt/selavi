@@ -50,17 +50,10 @@ export function onContextMenuOpen(params) {
 
 export function onAddLink(edgeData) {
     return function (dispatch) {
-        var client = rest.wrap(mime);
-        client({
-            path: '/selavi/services/' + edgeData.from + '/relation',
-            method: 'PUT',
-            entity: edgeData.to
-        }).then(response => {
-            dispatch({
-                type: 'ADD_LINK_SET_CONSUMED_SERVICE',
-                consumerId: edgeData.from,
-                consumedServiceId: edgeData.to
-            });
+        dispatch({
+            type: 'ADD_RELATION',
+            consumerId: edgeData.from,
+            consumedServiceId: edgeData.to
         });
     }
 }

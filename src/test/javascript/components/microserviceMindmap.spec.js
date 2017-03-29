@@ -90,7 +90,7 @@ describe('<MicroserviceMindmap/>', function () {
                 label: "bar-consumer",
                 isExternal: true,
                 consumes: [
-                    "foo-service"
+                    {"target": "foo-service", "type": "REST"}
                 ],
                 group: "external"
             }
@@ -99,7 +99,9 @@ describe('<MicroserviceMindmap/>', function () {
         const expectedEdges = [
             {
                 from: "bar-consumer",
-                to: "foo-service"
+                to: "foo-service",
+                label: "REST",
+                font: {align: 'middle'}
             }
         ]
 
@@ -296,7 +298,7 @@ function createProps() {
             label: "bar-consumer",
             isExternal: true,
             consumes: [
-                "foo-service"
+                {"target": "foo-service", "type": "REST"}
             ]
         }
     ];

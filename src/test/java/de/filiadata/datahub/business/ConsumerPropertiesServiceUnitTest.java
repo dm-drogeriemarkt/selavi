@@ -7,18 +7,19 @@ import de.filiadata.datahub.business.semanticexceptions.RelationAddException;
 import de.filiadata.datahub.business.semanticexceptions.RelationRemoveException;
 import de.filiadata.datahub.domain.ServiceProperties;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.AdditionalAnswers;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 public class ConsumerPropertiesServiceUnitTest {
     private static final String SERVICE_NAME = "fry-service";
-    private static final String RELATED_SERVICE_NAME = "bender-service";
+    private final static ObjectNode RELATED_SERVICE_NODE = new ObjectMapper().createObjectNode().put("target", "");
     private static final String CONSUMER_NODE_NAME = "consumes";
+    private static final String RELATED_SERVICE_NAME = "bender-service";
 
     private final ServicePropertiesRepository servicePropertiesRepository = mock(ServicePropertiesRepository.class);
     private final DefaultNodeContentFactory defaultNodeContentFactory = mock(DefaultNodeContentFactory.class);
@@ -44,12 +45,12 @@ public class ConsumerPropertiesServiceUnitTest {
         when(objectNode.toString()).thenReturn(content);
 
         // when
-        final ServiceProperties result = service.createAndSaveNewProperties(SERVICE_NAME, RELATED_SERVICE_NAME);
+        final ServiceProperties result = service.createAndSaveNewProperties(SERVICE_NAME, RELATED_SERVICE_NODE);
 
         // then
-        assertThat(result.getId(), Matchers.is(SERVICE_NAME));
-        assertThat(result.getContent(), Matchers.is(content));
-        verify(arrayNode).add(RELATED_SERVICE_NAME);
+        assertThat(result.getId(), is(SERVICE_NAME));
+        assertThat(result.getContent(), is(content));
+        verify(arrayNode).add(RELATED_SERVICE_NODE);
         verify(objectNode).set(CONSUMER_NODE_NAME, arrayNode);
         verify(servicePropertiesRepository).save(any(ServiceProperties.class));
     }
@@ -60,6 +61,8 @@ public class ConsumerPropertiesServiceUnitTest {
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);
         final ObjectNode objectNode = mock(ObjectNode.class);
         final ArrayNode arrayNode = new ObjectMapper().createArrayNode();
+        ObjectNode targetProperties = new ObjectMapper().createObjectNode().put("target", "newService");
+        arrayNode.add(targetProperties);
 
         when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
         when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
@@ -68,10 +71,10 @@ public class ConsumerPropertiesServiceUnitTest {
         when(objectNode.get(CONSUMER_NODE_NAME)).thenReturn(arrayNode);
 
         // when
-        service.addConsumedService(SERVICE_NAME, RELATED_SERVICE_NAME);
+        service.saveRelationProperties(SERVICE_NAME, targetProperties);
 
         // then
-        assertThat(arrayNode.size(), Matchers.is(1));
+        assertThat(arrayNode.size(), is(1));
         verify(serviceProperties).setContent(objectNode.toString());
         verify(servicePropertiesRepository).save(serviceProperties);
         verify(objectNode, never()).set(CONSUMER_NODE_NAME, arrayNode);
@@ -83,7 +86,8 @@ public class ConsumerPropertiesServiceUnitTest {
         final ObjectNode objectNode = mock(ObjectNode.class);
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);
         final ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        arrayNode.add("FOO");
+        ObjectNode targetProperties = new ObjectMapper().createObjectNode().put("target", SERVICE_NAME);
+        arrayNode.add(targetProperties);
 
         when(servicePropertiesRepository.findById(SERVICE_NAME)).thenReturn(serviceProperties);
         when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
@@ -92,7 +96,8 @@ public class ConsumerPropertiesServiceUnitTest {
         when(objectNode.get(CONSUMER_NODE_NAME)).thenReturn(arrayNode);
 
         // when
-        service.addConsumedService(SERVICE_NAME, "FOO");
+        service.saveRelationProperties(SERVICE_NAME, targetProperties);
+
     }
 
     @Test
@@ -109,10 +114,10 @@ public class ConsumerPropertiesServiceUnitTest {
         when(mapper.createArrayNode()).thenReturn(arrayNode);
 
         // when
-        service.addConsumedService(SERVICE_NAME, RELATED_SERVICE_NAME);
+        service.saveRelationProperties(SERVICE_NAME, RELATED_SERVICE_NODE);
 
         // then
-        verify(arrayNode).add(RELATED_SERVICE_NAME);
+        verify(arrayNode).add(RELATED_SERVICE_NODE);
         verify(objectNode).set(CONSUMER_NODE_NAME, arrayNode);
         verify(serviceProperties).setContent(objectNode.toString());
         verify(servicePropertiesRepository).save(serviceProperties);
@@ -143,8 +148,9 @@ public class ConsumerPropertiesServiceUnitTest {
         final ObjectNode objectNode = objectMapper.createObjectNode();
         final ObjectNode resultNode = objectMapper.createObjectNode();
         final ArrayNode arrayNode = objectMapper.createArrayNode();
-        arrayNode.add("FOO");
-        arrayNode.add("BAZ");
+
+        arrayNode.add(objectMapper.createObjectNode().put("target", "FOO"));
+        arrayNode.add(objectMapper.createObjectNode().put("target", "BAZ"));
         objectNode.set(CONSUMER_NODE_NAME, arrayNode);
 
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);
@@ -158,13 +164,13 @@ public class ConsumerPropertiesServiceUnitTest {
         service.removeRelation(SERVICE_NAME, "FOO");
 
         // then
-        assertThat(resultNode.size(), Matchers.is(1));
+        assertThat(resultNode.size(), is(1));
 
         //when
         service.removeRelation(SERVICE_NAME, "BAZ");
 
         // then
-        assertThat(resultNode.hasNonNull(CONSUMER_NODE_NAME), Matchers.is(true));
+        assertThat(resultNode.hasNonNull(CONSUMER_NODE_NAME), is(true));
 
         verify(serviceProperties).setContent(resultNode.toString());
         verify(servicePropertiesRepository, times(2)).save(serviceProperties);
@@ -185,6 +191,9 @@ public class ConsumerPropertiesServiceUnitTest {
         when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
         when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
         when(mapper.createObjectNode()).thenReturn(resultNode);
+        ObjectNode targetNode = new ObjectMapper().createObjectNode();
+
+        targetNode.put("target", "FOO");
 
         // when
         service.removeRelation(SERVICE_NAME, "FOO");
@@ -205,8 +214,10 @@ public class ConsumerPropertiesServiceUnitTest {
         when(defaultNodeContentFactory.getMapper()).thenReturn(mapper);
         when(mapper.readTree(serviceProperties.getContent())).thenReturn(objectNode);
         when(mapper.createObjectNode()).thenReturn(resultNode);
+        ObjectNode targetNode = new ObjectMapper().createObjectNode();
+        targetNode.put("target", SERVICE_NAME);
 
         // when
-        service.addConsumedService(SERVICE_NAME, SERVICE_NAME);
+        service.saveRelationProperties(SERVICE_NAME, targetNode);
     }
 }
