@@ -31,6 +31,9 @@ public class AdditionalInformationService {
     public Map<BitbucketAuthorDto, Long> getTopCommitters(String microserviceId) {
 
         final ServiceProperties serviceProperties = servicePropertiesRepository.findById(microserviceId);
+        if (serviceProperties == null) {
+            return Collections.emptyMap();
+        }
         final String content = serviceProperties.getContent();
         final ObjectMapper objectMapper = new ObjectMapper();
 
