@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch) => {
                     networkZone: this.refs.inputNetworkZone.getValue(),
                     isExternal: this.refs.inputIsExternal.isToggled(),
                     bitbucketProject: this.refs.inputBitbucketProject.getValue(),
-                    bitbucketRepository: this.refs.inputBitbucketRepo.getValue()
+                    bitbucketRepo: this.refs.inputBitbucketRepo.getValue()
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -207,7 +207,7 @@ class MicroserviceAddServiceDialog extends React.Component {
                            defaultValue={microservice.bitbucketProject}></TextField>
                 <TextField style={{marginLeft: "1em"}}
                            ref="inputBitbucketRepo"
-                           floatingLabelText="Bitbucket Repo"
+                           floatingLabelText="Bitbucket repo"
                            hintText="eg. &quot;zoe&quot;"
                            defaultValue={microservice.bitbucketRepo}></TextField><br />
 
