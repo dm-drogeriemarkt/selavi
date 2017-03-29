@@ -41,7 +41,7 @@ public class AdditionalInformationService {
 
             ObjectNode objectNode = objectMapper.readValue(content, ObjectNode.class);
             JsonNode project = objectNode.get("bitbucketProject");
-            JsonNode repository = objectNode.get("bitbucketRepository");
+            JsonNode repository = objectNode.get("bitbucketRepo");
 
             if (null != project && null != repository) {
                 return bitbucketService.getTopCommitters(project.asText(), repository.asText());

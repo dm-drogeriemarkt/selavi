@@ -33,7 +33,7 @@ public class AdditionalInformationServiceUnitTest {
 
         String microserviceId = "test-service";
 
-        ServiceProperties serviceProperties = new ServiceProperties(microserviceId, "{\"bitbucketProject\": \"test-service\", \"bitbucketRepository\": \"test-repo\"}");
+        ServiceProperties serviceProperties = new ServiceProperties(microserviceId, "{\"bitbucketProject\": \"test-service\", \"bitbucketRepo\": \"test-repo\"}");
         when(servicePropertiesRepository.findById(microserviceId)).thenReturn(serviceProperties);
 
         Map<BitbucketAuthorDto, Long> topCommiters = new HashMap<>(3);
@@ -52,7 +52,7 @@ public class AdditionalInformationServiceUnitTest {
 
         String microserviceId = "test-service";
 
-        ServiceProperties serviceProperties = new ServiceProperties(microserviceId, "{\"bitbucketProject\": \"test-service\", \"bitbucketRepository\": \"test-repo\"}");
+        ServiceProperties serviceProperties = new ServiceProperties(microserviceId, "{\"bitbucketProject\": \"test-service\", \"bitbucketRepo\": \"test-repo\"}");
         when(servicePropertiesRepository.findById(microserviceId)).thenReturn(serviceProperties);
 
         when(bitbucketService.getTopCommitters(anyString(), anyString())).thenThrow(new IOException());
