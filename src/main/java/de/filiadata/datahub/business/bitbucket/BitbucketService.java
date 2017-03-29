@@ -5,10 +5,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +25,7 @@ public class BitbucketService {
 
     public BitbucketService(RestTemplate restTemplate,
                             @Value("${selavi.bitbucket.credentials}") String bitbucketCredentials,
-                            @Value("${selavi.bitbucket.irgnoredCommitters}")String ignoredCommiters,
+                            @Value("${selavi.bitbucket.irgnoredCommitters}") String ignoredCommiters,
                             @Value("${selavi.bitbucket.topcommitters.size}") Integer numberOfTopCommiters) {
         this.restTemplate = restTemplate;
         this.bitbucketCredentials = bitbucketCredentials;
@@ -52,21 +49,25 @@ public class BitbucketService {
     }
 
     private Map<BitbucketAuthorDto, Long> handleResponse(ResponseEntity<BitbucketCommitsDto> responseEntity) {
+
         final Map<BitbucketAuthorDto, Long> result = new LinkedHashMap<>();
-        if (responseEntity.hasBody()) {
+
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK) && responseEntity.hasBody()) {
+
             final BitbucketCommitsDto bitbucketCommitsDto = responseEntity.getBody();
             final Map<BitbucketAuthorDto, Long> allCommittersSorted = new LinkedHashMap<>();
+
             getAllCommiters(bitbucketCommitsDto).entrySet().stream()
                     .sorted(Map.Entry.<BitbucketAuthorDto, Long>comparingByValue().reversed())
                     .forEachOrdered(x -> allCommittersSorted.put(x.getKey(), x.getValue()));
 
             int i = 0;
-            for (final Map.Entry<BitbucketAuthorDto, Long> entry : allCommittersSorted.entrySet()){
-                if (i < numberOfTopCommiters && !ignoredCommiters.contains(entry.getKey().getEmailAddress())){
+            for (final Map.Entry<BitbucketAuthorDto, Long> entry : allCommittersSorted.entrySet()) {
+                if (i < numberOfTopCommiters && !ignoredCommiters.contains(entry.getKey().getEmailAddress())) {
                     i++;
                     result.put(entry.getKey(), entry.getValue());
                 }
-                if (i == numberOfTopCommiters){
+                if (i == numberOfTopCommiters) {
                     break;
                 }
             }
@@ -75,7 +76,7 @@ public class BitbucketService {
         return result;
     }
 
-    private ResponseEntity<BitbucketCommitsDto> performRequest(String url) throws IOException{
+    private ResponseEntity<BitbucketCommitsDto> performRequest(String url) throws IOException {
         final HttpEntity<?> httpEntity = new HttpEntity<>(createHttpHeaders());
         return restTemplate.exchange(url,
                 HttpMethod.GET,
