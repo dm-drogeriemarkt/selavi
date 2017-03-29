@@ -45,13 +45,13 @@ public class ServicePropertiesService {
         serviceAddDeleteService.createNewServiceInfo(dto);
     }
 
-    public void addRelation(String serviceName, ObjectNode relatedServiceName) {
+    public void addRelation(String serviceName, ObjectNode relationProperties) {
         final Boolean servicePropertiesExist = servicePropertiesRepository.exists(serviceName);
         if (!servicePropertiesExist) {
-            consumerPropertiesService.createAndSaveNewProperties(serviceName, relatedServiceName);
+            consumerPropertiesService.createAndSaveNewProperties(serviceName, relationProperties);
         } else {
             try {
-                consumerPropertiesService.addConsumedService(serviceName, relatedServiceName);
+                consumerPropertiesService.addConsumedService(serviceName, relationProperties);
             } catch (IOException e) {
                 LOG.warn("Update of service properties failed.", e);
             }

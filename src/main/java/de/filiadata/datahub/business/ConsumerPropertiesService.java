@@ -72,8 +72,8 @@ public class ConsumerPropertiesService {
         return Optional.empty();
     }
 
-    public ServiceProperties createAndSaveNewProperties(String serviceName, ObjectNode relatedServiceName) {
-        final ArrayNode consumerNode = createConsumerNode(relatedServiceName);
+    public ServiceProperties createAndSaveNewProperties(String serviceName, ObjectNode relationProperties) {
+        final ArrayNode consumerNode = createConsumerNode(relationProperties);
         final ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
         contentNode.set(CONSUMER_NODE_NAME, consumerNode);
 
