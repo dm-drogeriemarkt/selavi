@@ -149,8 +149,8 @@ public class ConsumerPropertiesServiceUnitTest {
         final ObjectNode resultNode = objectMapper.createObjectNode();
         final ArrayNode arrayNode = objectMapper.createArrayNode();
 
-        arrayNode.add("FOO");
-        arrayNode.add("BAZ");
+        arrayNode.add(objectMapper.createObjectNode().put("target", "FOO"));
+        arrayNode.add(objectMapper.createObjectNode().put("target", "BAZ"));
         objectNode.set(CONSUMER_NODE_NAME, arrayNode);
 
         final ServiceProperties serviceProperties = mock(ServiceProperties.class);

@@ -124,7 +124,7 @@ public class ConsumerPropertiesService {
 
         for (Iterator<JsonNode> it = consumer.iterator(); it.hasNext(); ) {
             final JsonNode node = it.next();
-            if (node.textValue().equals(relatedServiceName)) {
+            if (node.get("target").textValue().equals(relatedServiceName)) {
                 it.remove();
                 return resultNode;
             }
