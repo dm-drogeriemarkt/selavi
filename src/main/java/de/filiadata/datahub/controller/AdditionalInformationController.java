@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -37,7 +38,11 @@ public class AdditionalInformationController {
         JsonNode project = objectNode.get("bitbucketProject");
         JsonNode repository = objectNode.get("bitbucketRepository");
 
-        return bitbucketService.getTopCommitters(project.asText(), repository.asText());
+        if (null != project && null != repository) {
+            return bitbucketService.getTopCommitters(project.asText(), repository.asText());
+        }
+
+        return Collections.emptyMap();
     }
 
 }
