@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class BitbucketServiceUnitTest {
     private final RestTemplate restTemplate = mock(RestTemplate.class);
 
     @Test
-    public void testNumberOfTopCommiters(){
+    public void testNumberOfTopCommiters() throws IOException {
         String href = "http://www.foobar.com";
         when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());
@@ -37,7 +38,7 @@ public class BitbucketServiceUnitTest {
     }
 
     @Test
-    public void testNoResultIsEmptyMap(){
+    public void testNoResultIsEmptyMap() throws IOException {
         String href = "http://www.foobar2.com";
         when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getEmptyResponseEntity());
@@ -49,7 +50,7 @@ public class BitbucketServiceUnitTest {
 
 
     @Test
-    public void testGetTopCommitersWithProjectAndRepo(){
+    public void testGetTopCommitersWithProjectAndRepo() throws IOException {
         String href = "https://example.com/rest/api/1.0/projects/prj/repos/repo/commits?limit=500";
         when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());
@@ -60,7 +61,7 @@ public class BitbucketServiceUnitTest {
     }
 
     @Test
-    public void testOrderOfTopCommiters(){
+    public void testOrderOfTopCommiters() throws IOException {
         String href = "http://www.foobar.com";
         when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());

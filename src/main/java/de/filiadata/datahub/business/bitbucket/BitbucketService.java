@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class BitbucketService {
         this.numberOfTopCommiters = numberOfTopCommiters;
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo){
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo) throws IOException {
         final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}/commits?limit=500");
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("project", project);
@@ -44,7 +45,7 @@ public class BitbucketService {
         return getTopCommitters(link.expand(parameters).getHref());
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url) {
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url) throws IOException {
         final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(url);
 
         return handleResponse(responseEntity);
@@ -74,7 +75,7 @@ public class BitbucketService {
         return result;
     }
 
-    private ResponseEntity<BitbucketCommitsDto> performRequest(String url) {
+    private ResponseEntity<BitbucketCommitsDto> performRequest(String url) throws IOException{
         final HttpEntity<?> httpEntity = new HttpEntity<>(createHttpHeaders());
         return restTemplate.exchange(url,
                 HttpMethod.GET,
