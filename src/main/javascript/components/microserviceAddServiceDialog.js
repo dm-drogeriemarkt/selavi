@@ -12,8 +12,8 @@ import Toggle from 'material-ui/Toggle';
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
-        addPropertyServiceId: state.addPropertyServiceId,
-        microservices: state.microservices
+        entity: state.entity,
+        addEditDialogFormAction: state.addEditDialogFormAction
     };
 };
 
@@ -25,30 +25,32 @@ const mapDispatchToProps = (dispatch) => {
             });
         },
         onSubmit: function() {
-            var request = {
-                entity: {
-                    id: this.refs.inputServiceId.getValue(),
-                    label: this.refs.inputLabel.getValue(),
-                    description: this.refs.inputDescription.getValue(),
-                    team: this.refs.inputTeam.getValue(),
-                    dmOwner: this.refs.inputDmOwner.getValue(),
-                    fdOwner: this.refs.inputFdOwner.getValue(),
-                    documentationLink: this.refs.inputDocumentationLink.getValue(),
-                    'microservice-url': this.refs.inputMicroserviceUrl.getValue(),
-                    ipAddress: this.refs.inputIpAddress.getValue(),
-                    networkZone: this.refs.inputNetworkZone.getValue(),
-                    isExternal: this.refs.inputIsExternal.isToggled()
-                },
-                headers: {
-                    'Content-Type': 'application/json'
+            let entity = {};
+
+            for (var key in this.refs) {
+                if (key.substr(0, 6) === "input_") {
+                    if (this.refs[key] instanceof TextField) {
+                        entity[key.substr(6)] = this.refs[key].getValue();
+                    } else if (this.refs[key] instanceof Toggle) {
+                        entity[key.substr(6)] = this.refs[key].isToggled();
+                    } else {
+                        console.log("unkown input type " + this.refs[key]);
+                    }
                 }
             }
 
-            if (this.props.menuMode === "EDIT_SERVICE") {
-                request.path = '/selavi/services/' + this.props.addPropertyServiceId + '/properties';
+            var request = {
+                entity: entity,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (this.props.menuMode === this.props.editMenuMode) {
+                request.path = this.props.addEditDialogFormAction;
                 request.method = 'PUT';
-            } else if (this.props.menuMode === "ADD_SERVICE") {
-                request.path = '/selavi/services';
+            } else if (this.props.menuMode === this.props.addMenuMode) {
+                request.path = this.props.addEditDialogFormAction;
                 request.method = 'POST';
             }
 
@@ -65,7 +67,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-class MicroserviceAddServiceDialog extends React.Component {
+export class MicroserviceAddServiceDialog extends React.Component {
 
     constructor(props) {
         super(props);
@@ -88,28 +90,39 @@ class MicroserviceAddServiceDialog extends React.Component {
         var validationMessages = {};
         var isValid = true;
 
-        if (!this.refs.inputServiceId.getValue()) {
-            validationMessages.inputServiceId = "Field is required!";
-            isValid = false;
-        }
-
-        if (!this.refs.inputLabel.getValue()) {
-            validationMessages.inputLabel = "Field is required!";
-            isValid = false;
-        }
-
-        if (!this.refs.inputTeam.getValue()) {
-            validationMessages.inputTeam = "Field is required!";
-            isValid = false;
-        }
-
-        if (!this.refs.inputFdOwner.getValue()) {
-            validationMessages.inputFdOwner = "Field is required!";
-            isValid = false;
+        for (var key in this.props.textFields) {
+            if (this.props.textFields[key].required) {
+                if (!this.refs["input_" + key].getValue()) {
+                    validationMessages[key] = "Field is required!";
+                    isValid = false;
+                }
+            }
         }
 
         this.setState({validationMessages: validationMessages});
         return isValid;
+    }
+
+    _addTextField(options) {
+        const rightcolumn = ((options.textFields.length - 1) % 3 === 0);
+
+        let style;
+        if (rightcolumn) {
+            style = { marginLeft: "1em" };
+        }
+
+        options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
+                                           style={style}
+                                           ref={"input_" + options.key}
+                                           floatingLabelText={options.label}
+                                           hintText={options.hint}
+                                           errorText={this.state.validationMessages[options.key]}
+                                           defaultValue={options.value}
+                                           disabled={options.disabled}></TextField>);
+
+        if (rightcolumn) {
+            options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
+        }
     }
 
     render() {
@@ -124,20 +137,85 @@ class MicroserviceAddServiceDialog extends React.Component {
                 label="Submit"
                 primary={true}
                 onTouchTap={this._handleOnSubmit.bind(this)}
-            />,
+            />
         ];
 
         var isOpen = false;
-        var microservice = {};
+        var microservice = this.props.entity || {};
         var title = "";
 
-        if (this.props.menuMode === "ADD_SERVICE") {
+        if (this.props.menuMode === this.props.addMenuMode) {
             isOpen = true;
-            title = "Add Service";
-        } else if (this.props.menuMode === "EDIT_SERVICE") {
+            title = "Add " + this.props.entityDisplayName;
+        } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
-            title = "Edit Service";
-            microservice = this.props.microservices.filter((microservice) => microservice.id === this.props.addPropertyServiceId)[0];
+            title = "Edit " + this.props.entityDisplayName;
+        } else {
+            // dialog is closed, we can short-cut here
+            return null;
+        }
+
+        let textFields = [];
+        let toggles = [];
+
+        let editableProperties = Object.keys(microservice);
+        
+        for (var key in this.props.textFields) {
+            let textField = this.props.textFields[key];
+
+            let value = "";
+            if (typeof(microservice[key]) === "string") {
+                value = microservice[key];
+
+                editableProperties.splice(editableProperties.indexOf(key), 1);
+            }
+
+            this._addTextField({
+                textFields: textFields,
+                key: key,
+                label: textField.label,
+                hint: textField.hint,
+                value: value,
+                disabled: textField.disabled
+            });
+        }
+
+        for (var key in this.props.toggles) {
+            let toggle = this.props.toggles[key];
+
+            let value = false;
+            if (typeof(microservice[key]) === "boolean") {
+                value = microservice[key];
+
+                editableProperties.splice(editableProperties.indexOf(key), 1);
+            }
+
+            toggles.push(<Toggle key={"add_edit_dialog_" + key}
+                                 ref={"input_" + key}
+                                 label={toggle.label}
+                                 defaultToggled={value}
+                                 style={{marginTop: "2em", maxWidth: "23em"}}/>)
+        }
+
+        for (var idx in editableProperties) {
+            const key = editableProperties[idx];
+
+            if (typeof(microservice[key]) === "string") {
+                this._addTextField({
+                    textFields: textFields,
+                    key: key,
+                    label: key,
+                    hint: key,
+                    value: microservice[key]
+                });
+            } else if (typeof(microservice[key]) === "boolean") {
+                toggles.push(<Toggle ref={"input_" + key}
+                                     label={key}
+                                     defaultToggled={microservice[key]}
+                                     style={{marginTop: "2em", maxWidth: "23em"}}/>)
+            } else {
+                console.log("unkown property type for key \"" + key + "\" with value \"" + microservice[key] + "\"");
+            }
         }
 
         return (
@@ -146,65 +224,8 @@ class MicroserviceAddServiceDialog extends React.Component {
                 actions={actions}
                 modal={true}
                 open={isOpen}>
-                <TextField ref="inputServiceId"
-                           floatingLabelText="Service ID *"
-                           hintText="eg. &quot;ZOE&quot;"
-                           errorText={this.state.validationMessages.inputServiceId}
-                           defaultValue={microservice.id}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputLabel"
-                           floatingLabelText="Label *"
-                           hintText="eg. &quot;ZOE&quot;"
-                           errorText={this.state.validationMessages.inputLabel}
-                           defaultValue={microservice.label}></TextField><br />
-
-                <TextField ref="inputDescription"
-                           floatingLabelText="Description"
-                           hintText="eg. &quot;ZKDB Online Echtzeitfähig&quot;"
-                           defaultValue={microservice.description}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputTeam"
-                           floatingLabelText="Development Team"
-                           hintText="eg. &quot;ZOE-Team&quot;"
-                           errorText={this.state.validationMessages.inputTeam}
-                           defaultValue={microservice.team}></TextField><br />
-
-                <TextField ref="inputDmOwner"
-                           floatingLabelText="dm-Owner"
-                           hintText="eg. &quot;Erik Altmann&quot;"
-                           defaultValue={microservice.dmOwner}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputFdOwner"
-                           floatingLabelText="Filiadata-Owner"
-                           hintText="eg. &quot;Erik Altmann&quot;"
-                           errorText={this.state.validationMessages.inputFdOwner}
-                           defaultValue={microservice.fdOwner}></TextField><br />
-
-                <TextField ref="inputDocumentationLink"
-                           floatingLabelText="Link to documentation"
-                           hintText="eg. &quot;https://wiki.dm.de/ZOE&quot;"
-                           defaultValue={microservice.documentationLink}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputMicroserviceUrl"
-                           floatingLabelText="URL"
-                           hintText="eg. &quot;https://zoe.dm.de&quot;"
-                           defaultValue={microservice['microservice-url']}></TextField><br />
-
-                <TextField ref="inputIpAddress"
-                           floatingLabelText="IP address"
-                           hintText="eg. &quot;172.23.68.213&quot;"
-                           defaultValue={microservice.ipAddress}></TextField>
-                <TextField style={{ marginLeft: "1em" }}
-                           ref="inputNetworkZone"
-                           floatingLabelText="Network zone"
-                           hintText="eg. &quot;LAN&quot;"
-                           defaultValue={microservice.networkZone}></TextField><br />
-
-                <Toggle ref="inputIsExternal"
-                        label="External service (eg., not a microservice)"
-                        defaultToggled={microservice.isExternal}
-                        style={{marginTop: "2em", maxWidth: "23em"}}/>
-
+                {textFields}
+                {toggles}
             </Dialog>
         );
     }

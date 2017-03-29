@@ -1,7 +1,7 @@
 const React = require('react');
 import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
-import {onSelectMicroserviceNode, onContextMenuOpen, onAddLink} from "./../actions/microserviceMindmapActions";
+import {onAddLink, onContextMenuOpen, onSelectMicroserviceNode} from "./../actions/microserviceMindmapActions";
 import {shouldFilterOut} from "./../shared/filterUtils";
 
 const mapStateToProps = (state) => {
@@ -157,7 +157,9 @@ export class MicroserviceMindmap extends React.Component {
             el.consumes.forEach(function (consumer) {
                 edgeArray.push({
                     from: el.id,
-                    to: consumer
+                    to: consumer.target,
+                    label: consumer.type,
+                    font: {align: 'middle'}
                 });
             });
         });

@@ -17,6 +17,7 @@ const initialState = {
     menuMode: undefined,
     filterString: '',
     microserviceListResizeCount: 0,
+    addEditDialogFormAction: undefined,
     // TODO: either remove this when its not needed anymore, or maybe use react-router to handle url
     debugMode: (document.location.search === '?debug')
 }
@@ -27,7 +28,8 @@ function updateStore(state = initialState, action) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
-                menuMode: undefined
+                menuMode: undefined,
+                entity: undefined
             });
             return newState;
         }
@@ -53,11 +55,20 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'ADD_RELATION': {
+            const newState = Object.assign({}, state, {
+                menuMode: 'ADD_RELATION',
+                entity: {"target": action.consumedServiceId},
+                addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations"
+            });
+            return newState;
+        }
         case 'EDIT_SERVICE': {
             const newState = Object.assign({}, state, {
-                addPropertyServiceId: state.contextMenuServiceId,
+                entity: state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0],
                 contextMenuServiceId: undefined,
-                menuMode: 'EDIT_SERVICE'
+                menuMode: 'EDIT_SERVICE',
+                addEditDialogFormAction: "/selavi/services/" + state.contextMenuServiceId + "/properties"
             });
             return newState;
         }
@@ -76,6 +87,18 @@ function updateStore(state = initialState, action) {
                 contextMenuFromId: undefined,
                 contextMenuToId: undefined,
                 menuMode: 'DELETE_LINK'
+            });
+            return newState;
+        }
+        case 'EDIT_LINK': {
+            const newState = Object.assign({}, state, {
+                entity: state.microservices
+                    .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
+                    .filter((relation) => relation.target === state.contextMenuToId)[0],
+                contextMenuFromId: undefined,
+                contextMenuToId: undefined,
+                menuMode: 'EDIT_RELATION',
+                addEditDialogFormAction: "/selavi/services/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
             });
             return newState;
         }
@@ -107,7 +130,8 @@ function updateStore(state = initialState, action) {
         }
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
-                menuMode: 'ADD_SERVICE'
+                menuMode: 'ADD_SERVICE',
+                addEditDialogFormAction: "/selavi/services"
             });
             return newState;
         }

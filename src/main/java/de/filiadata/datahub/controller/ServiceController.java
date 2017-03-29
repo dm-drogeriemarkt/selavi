@@ -37,25 +37,22 @@ public class ServiceController {
         servicePropertiesService.deleteService(serviceName);
     }
 
-    /**
-     * @deprecated, use {@link #addNewRelation(String, String)} instead
-     */
-    @ApiOperation(value = "DEPRECATED, use /services/{serviceName}/relations/{relatedServiceName} with PUT instead.")
-    @RequestMapping(value = "/{serviceName}/relation", method = RequestMethod.PUT)
-    public void addRelation(@PathVariable String serviceName, @RequestBody String relatedServiceName) {
-        servicePropertiesService.addRelation(serviceName, relatedServiceName);
-    }
-
     @ApiOperation(value = "Add a new relation between two services.")
-    @RequestMapping(value = "/{serviceName}/relations/{relatedServiceName}", method = RequestMethod.PUT)
-    public void addNewRelation(@PathVariable String serviceName, @PathVariable String relatedServiceName) {
-        servicePropertiesService.addRelation(serviceName, relatedServiceName);
+    @RequestMapping(value = "/{serviceName}/relations", method = RequestMethod.POST)
+    public void addNewRelation(@PathVariable String serviceName, @RequestBody ObjectNode relationProperties) {
+        servicePropertiesService.saveRelation(serviceName, relationProperties);
     }
 
     @ApiOperation(value = "Delete a relation between two services. If the last relation ist removed, the 'consumes' property will also removed.")
     @RequestMapping(value = "/{serviceName}/relations/{relatedServiceName}", method = RequestMethod.DELETE)
     public void deleteRelation(@PathVariable String serviceName, @PathVariable String relatedServiceName) {
         servicePropertiesService.deleteRelation(serviceName, relatedServiceName);
+    }
+
+    @ApiOperation(value = "Edit a relation between two services.")
+    @RequestMapping(value = "/{serviceName}/relations/{relationProperties}", method = RequestMethod.PUT)
+    public void editRelation(@PathVariable String serviceName, @RequestBody ObjectNode relationProperties) {
+        servicePropertiesService.saveRelation(serviceName, relationProperties);
     }
 
     @ApiOperation(value = "Add a new property or update an existing. Properties internal properties are not allowed to be set.")
