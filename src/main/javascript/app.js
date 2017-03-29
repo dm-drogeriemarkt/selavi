@@ -59,7 +59,7 @@ class App extends React.Component {
         };
 
         const relationTextFields = {
-            "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: true},
+            "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: false},
         };
 
         return (
