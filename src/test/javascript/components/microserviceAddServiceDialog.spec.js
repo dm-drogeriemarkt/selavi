@@ -85,12 +85,22 @@ describe('<MicroserviceAddServiceDialog/>', function () {
             "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
         };
 
-        const wrapper = mount(<MicroserviceAddServiceDialog {...props}/>);
+        const wrapper = mount(<MicroserviceAddServiceDialog {...props}/>, {
+            context: {
+                muiTheme: getMuiTheme(),
+            },
+            childContextTypes: {
+                muiTheme: React.PropTypes.object.isRequired,
+            },
+        });
 
         wrapper.instance()._handleOnSubmit();
 
-        chai.expect(wrapper.find('TextField').at(0).props().errorText).to.equal("Service ID *");
-        chai.expect(wrapper.find('TextField').at(1).props().errorText).to.equal("bar-consumer");
+        chai.expect(wrapper.state().validationMessages.id).to.equal("Field is required!");
+        chai.expect(wrapper.state().validationMessages.label).to.equal("Field is required!");
+
+        chai.expect(wrapper.instance().refs.input_id.props.errorText).to.equal("Field is required!");
+        chai.expect(wrapper.instance().refs.input_label.props.errorText).to.equal("Field is required!");
     });
 });
 
