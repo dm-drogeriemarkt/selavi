@@ -1,15 +1,14 @@
 package de.filiadata.datahub.business.bitbucket;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class BitbucketAuthorDto {
+
     private String name;
     private String emailAddress;
     private Long id;
