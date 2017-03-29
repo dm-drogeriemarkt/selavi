@@ -29,6 +29,11 @@ const mapDispatchToProps = (dispatch) => {
             dispatch({
                 type: 'DELETE_LINK'
             });
+        },
+        onEditLink: function() {
+            dispatch({
+                type: 'EDIT_LINK'
+            });
         }
     };
 };
@@ -50,6 +55,7 @@ class MicroserviceMindmapContextMenu extends React.Component {
             return (
                 <nav style={style} className="contextMenu">
                     <button onClick={this.props.onDeleteLink}>Delete Link</button>
+                    <button onClick={this.props.onEditLink}>Edit Link</button>
                 </nav>
             );
         } else {

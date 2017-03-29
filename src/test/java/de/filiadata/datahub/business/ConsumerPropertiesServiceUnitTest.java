@@ -71,7 +71,7 @@ public class ConsumerPropertiesServiceUnitTest {
         when(objectNode.get(CONSUMER_NODE_NAME)).thenReturn(arrayNode);
 
         // when
-        service.addConsumedService(SERVICE_NAME, targetProperties);
+        service.saveRelationProperties(SERVICE_NAME, targetProperties);
 
         // then
         assertThat(arrayNode.size(), is(1));
@@ -96,7 +96,7 @@ public class ConsumerPropertiesServiceUnitTest {
         when(objectNode.get(CONSUMER_NODE_NAME)).thenReturn(arrayNode);
 
         // when
-        service.addConsumedService(SERVICE_NAME, targetProperties);
+        service.saveRelationProperties(SERVICE_NAME, targetProperties);
 
     }
 
@@ -114,7 +114,7 @@ public class ConsumerPropertiesServiceUnitTest {
         when(mapper.createArrayNode()).thenReturn(arrayNode);
 
         // when
-        service.addConsumedService(SERVICE_NAME, RELATED_SERVICE_NODE);
+        service.saveRelationProperties(SERVICE_NAME, RELATED_SERVICE_NODE);
 
         // then
         verify(arrayNode).add(RELATED_SERVICE_NODE);
@@ -218,6 +218,6 @@ public class ConsumerPropertiesServiceUnitTest {
         targetNode.put("target", SERVICE_NAME);
 
         // when
-        service.addConsumedService(SERVICE_NAME, targetNode);
+        service.saveRelationProperties(SERVICE_NAME, targetNode);
     }
 }

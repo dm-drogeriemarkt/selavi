@@ -79,7 +79,7 @@ class App extends React.Component {
                                                   editMenuMode="EDIT_SERVICE"/>
                     <MicroserviceAddServiceDialog textFields={relationTextFields}
                                                   addMenuMode="ADD_RELATION"
-                                                  editMenuMode="_TODO_UNDEFINED_"/>
+                                                  editMenuMode="EDIT_RELATION"/>
                     <MicroserviceDeleteServiceDialog/>
                 </div>
             </div>

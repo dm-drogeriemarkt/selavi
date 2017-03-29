@@ -90,6 +90,18 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'EDIT_LINK': {
+            const newState = Object.assign({}, state, {
+                entity: state.microservices
+                    .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
+                    .filter((relation) => relation.target === state.contextMenuToId)[0],
+                contextMenuFromId: undefined,
+                contextMenuToId: undefined,
+                menuMode: 'EDIT_RELATION',
+                addEditDialogFormAction: "/selavi/services/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
+            });
+            return newState;
+        }
         case 'DELETE_SERVICE_FAILED': {
             const newState = Object.assign({}, state, {
                 deleteServiceErrorMessage: action.message

@@ -31,7 +31,7 @@ public class ConsumerPropertiesService {
         this.defaultNodeContentFactory = defaultNodeContentFactory;
     }
 
-    public ServiceProperties addConsumedService(String serviceName, ObjectNode relationProperties) throws IOException {
+    public ServiceProperties saveRelationProperties(String serviceName, ObjectNode relationProperties) throws IOException {
         final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
         final ObjectMapper mapper = defaultNodeContentFactory.getMapper();
         final ObjectNode existingNode = (ObjectNode) mapper.readTree(serviceProperties.getContent());

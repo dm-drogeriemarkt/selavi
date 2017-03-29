@@ -40,13 +40,19 @@ public class ServiceController {
     @ApiOperation(value = "Add a new relation between two services.")
     @RequestMapping(value = "/{serviceName}/relations", method = RequestMethod.POST)
     public void addNewRelation(@PathVariable String serviceName, @RequestBody ObjectNode relationProperties) {
-        servicePropertiesService.addRelation(serviceName, relationProperties);
+        servicePropertiesService.saveRelation(serviceName, relationProperties);
     }
 
     @ApiOperation(value = "Delete a relation between two services. If the last relation ist removed, the 'consumes' property will also removed.")
     @RequestMapping(value = "/{serviceName}/relations/{relatedServiceName}", method = RequestMethod.DELETE)
     public void deleteRelation(@PathVariable String serviceName, @PathVariable String relatedServiceName) {
         servicePropertiesService.deleteRelation(serviceName, relatedServiceName);
+    }
+
+    @ApiOperation(value = "Edit a relation between two services.")
+    @RequestMapping(value = "/{serviceName}/relations/{relationProperties}", method = RequestMethod.PUT)
+    public void editRelation(@PathVariable String serviceName, @RequestBody ObjectNode relationProperties) {
+        servicePropertiesService.saveRelation(serviceName, relationProperties);
     }
 
     @ApiOperation(value = "Add a new property or update an existing. Properties internal properties are not allowed to be set.")
