@@ -117,7 +117,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
                                            floatingLabelText={options.label}
                                            hintText={options.hint}
                                            errorText={this.state.validationMessages[options.key]}
-                                           defaultValue={options.value}></TextField>);
+                                           defaultValue={options.value}
+                                           disabled={options.disabled}></TextField>);
 
         if (rightcolumn) {
             options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
@@ -145,10 +146,13 @@ export class MicroserviceAddServiceDialog extends React.Component {
 
         if (this.props.menuMode === this.props.addMenuMode) {
             isOpen = true;
-            title = "Add Service";
+            title = "Add " + this.props.entityDisplayName;
         } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
-            title = "Edit Service";
+            title = "Edit " + this.props.entityDisplayName;
+        } else {
+            // dialog is closed, we can short-cut here
+            return null;
         }
 
         let textFields = [];
@@ -171,7 +175,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 key: key,
                 label: textField.label,
                 hint: textField.hint,
-                value: value
+                value: value,
+                disabled: textField.disabled
             });
         }
 

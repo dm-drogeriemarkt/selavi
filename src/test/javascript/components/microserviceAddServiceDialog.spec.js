@@ -73,6 +73,23 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal("Label *");
         chai.expect(wrapper.find('TextField').at(1).props().defaultValue).to.equal("bar-consumer");
     });
+
+    it('renders disabled text fields', function () {
+
+        let props = createProps();
+        props.textFields = {
+            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true, disabled: true},
+            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
+        }
+
+        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+
+        chai.expect(wrapper.find('TextField').length).to.equal(2);
+        chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("Service ID *");
+        chai.expect(wrapper.find('TextField').at(0).props().disabled).to.equal(true);
+        chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal("Label *");
+        chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(false);
+    });
 });
 
 function createProps() {

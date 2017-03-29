@@ -59,7 +59,8 @@ class App extends React.Component {
         };
 
         const relationTextFields = {
-            "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: false},
+            "target": { label: "Consumed service", required: true, disabled: true },
+            "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: false}
         };
 
         return (
@@ -76,10 +77,12 @@ class App extends React.Component {
                     <MicroserviceAddServiceDialog textFields={serviceTextFields}
                                                   toggles={serviceToggles}
                                                   addMenuMode="ADD_SERVICE"
-                                                  editMenuMode="EDIT_SERVICE"/>
+                                                  editMenuMode="EDIT_SERVICE"
+                                                  entityDisplayName="Service"/>
                     <MicroserviceAddServiceDialog textFields={relationTextFields}
                                                   addMenuMode="ADD_RELATION"
-                                                  editMenuMode="EDIT_RELATION"/>
+                                                  editMenuMode="EDIT_RELATION"
+                                                  entityDisplayName="Link"/>
                     <MicroserviceDeleteServiceDialog/>
                 </div>
             </div>
