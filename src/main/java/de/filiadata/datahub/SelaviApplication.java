@@ -12,9 +12,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.ldap.core.ContextSource;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -65,21 +62,5 @@ public class SelaviApplication extends SpringBootServletInitializer {
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/");
-    }
-// Dn: cn=DE-ServiceUser\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int; Username: username; Password: [PROTECTED]
-    @Bean
-    public ContextSource ldapContextSource() {
-        // TODO: 29.03.17 configure
-        LdapContextSource ldapContextSource = new LdapContextSource();
-        ldapContextSource.setUrl("ldaps://example.com:636");
-        ldapContextSource.setUserDn("cn=DE-ServiceUser\\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int");
-        ldapContextSource.setPassword("insert_ablaufuser_password_here");
-        ldapContextSource.setBase("dc=dm,dc=int");
-        return ldapContextSource;
-    }
-
-    @Bean
-    public LdapTemplate ldapTemplate(ContextSource contextSource) {
-        return new LdapTemplate(contextSource);
     }
 }
