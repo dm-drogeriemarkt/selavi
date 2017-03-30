@@ -80,8 +80,6 @@ public class SelaviApplication extends SpringBootServletInitializer {
 
     @Bean
     public LdapTemplate ldapTemplate(ContextSource contextSource) {
-        LdapTemplate ldapTemplate = new LdapTemplate(contextSource);
-        ldapTemplate.setIgnorePartialResultException(true);
-        return ldapTemplate;
+        return new LdapTemplate(contextSource);
     }
 }
