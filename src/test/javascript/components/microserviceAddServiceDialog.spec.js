@@ -112,13 +112,7 @@ function createProps() {
         microservices: [],
         addPropertyServiceId: undefined,
         menuMode: undefined,
-        editMenuMode: undefined,
-        context: {
-            muiTheme: getMuiTheme(),
-        },
-        childContextTypes: {
-            muiTheme: React.PropTypes.object.isRequired,
-        }
+        editMenuMode: undefined
     };
 
     return props;
