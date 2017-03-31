@@ -276,7 +276,11 @@ describe('<MicroserviceMindmap/>', function () {
 
         chai.expect(clickEventHandler).to.be.a('function');
 
-        clickEventHandler();
+        clickEventHandler({
+            event: {
+                srcEvent: {}
+            }
+        });
 
         sinon.assert.calledOnce(props.onContextMenuOpen);
         sinon.assert.calledWith(props.onContextMenuOpen, {

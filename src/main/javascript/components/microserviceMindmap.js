@@ -66,7 +66,11 @@ export class MicroserviceMindmap extends React.Component {
         });
     }
 
-    onClickHandler() {
+    onClickHandler(options) {
+        if (options.event.srcEvent.ctrlKey) {
+            // macbook touchpad right-click using ctrl key?
+            return;
+        }
 
         this.props.onContextMenuOpen({
             top: -1,
