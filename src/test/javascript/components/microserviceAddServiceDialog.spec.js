@@ -2,8 +2,9 @@ var sinon = require('sinon');
 
 import React from "react";
 import chai from "chai";
-import {shallow} from "enzyme";
+import {shallow, mount} from "enzyme";
 import {MicroserviceAddServiceDialog} from "../../../main/javascript/components/microserviceAddServiceDialog";
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('<MicroserviceAddServiceDialog/>', function () {
 
@@ -13,7 +14,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         props.textFields = {
             "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
             "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
-        }
+        };
 
         const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
 
@@ -53,7 +54,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         props.textFields = {
             "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
             "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
-        }
+        };
         props.entity =        {
             id: "bar-consumer",
             label: "bar-consumer",
@@ -89,6 +90,32 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         chai.expect(wrapper.find('TextField').at(0).props().disabled).to.equal(true);
         chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal("Label *");
         chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(false);
+    });
+
+    it('validates text fields with required=true on submit', function () {
+
+        let props = createProps();
+        props.textFields = {
+            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
+            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
+        };
+
+        const wrapper = mount(<MicroserviceAddServiceDialog {...props}/>, {
+            context: {
+                muiTheme: getMuiTheme(),
+            },
+            childContextTypes: {
+                muiTheme: React.PropTypes.object.isRequired,
+            },
+        });
+
+        wrapper.instance()._handleOnSubmit();
+
+        chai.expect(wrapper.state().validationMessages.id).to.equal("Field is required!");
+        chai.expect(wrapper.state().validationMessages.label).to.equal("Field is required!");
+
+        chai.expect(wrapper.instance().refs.input_id.props.errorText).to.equal("Field is required!");
+        chai.expect(wrapper.instance().refs.input_label.props.errorText).to.equal("Field is required!");
     });
 });
 
