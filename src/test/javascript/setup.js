@@ -6,3 +6,8 @@ global.document = jsdom('<html><head><script></script></head><body></body></html
 });
 global.window = document.defaultView;
 global.navigator = window.navigator;
+
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+// see http://www.material-ui.com/#/get-started/installation
+injectTapEventPlugin();
