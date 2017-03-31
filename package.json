@@ -15,7 +15,7 @@
   },
   "scripts": {
     "watch": "webpack --watch -d",
-    "test": "mocha -w src/test/javascript/**/*.spec.js --compilers js:babel-core/register --require src/test/javascript/setup.js",
+    "test": "mocha -w src/test/javascript/setup.js src/test/javascript/**/*.spec.js",
     "testCI": "nyc mocha src/test/javascript/setup.js src/test/javascript/**/*.spec.js"
   },
   "devDependencies": {

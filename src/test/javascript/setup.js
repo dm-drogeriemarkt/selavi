@@ -1,3 +1,5 @@
+require('babel-register')();
+
 var jsdom = require('jsdom').jsdom;
 
 // setup jsdom
@@ -7,7 +9,9 @@ global.document = jsdom('<html><head><script></script></head><body></body></html
 global.window = document.defaultView;
 global.navigator = window.navigator;
 
+// react-tap-event-plugin must not be called twice
+if (!global.touchTapSetup) {
+    require('react-tap-event-plugin')();
+    global.touchTapSetup = true;
+}
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-// see http://www.material-ui.com/#/get-started/installation
-injectTapEventPlugin();
