@@ -42,22 +42,22 @@ class App extends React.Component {
     render() {
 
         const serviceTextFields = {
-            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
-            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true},
-            "description": {label: "Description", hint: "eg. &quot;ZKDB Online Echtzeitfähig&quot;", required: false},
-            "team": {label: "Development Team *", hint: "eg. &quot;ZOE-Team&quot;", required: true},
-            "dmOwner": {label: "dm-Owner", hint: "eg. &quot;Erik Altmann&quot;", required: false},
-            "fdOwner": {label: "Filiadata-Owner *", hint: "eg. &quot;Erik Altmann&quot;", required: true},
+            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
+            "description": {label: "Description", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: false},
+            "team": {label: "Development Team *", hint: "eg. \"ZOE-Team\"", required: true},
+            "dmOwner": {label: "dm-Owner", hint: "eg. \"Erik Altmann\"", required: false},
+            "fdOwner": {label: "Filiadata-Owner *", hint: "eg. \"Erik Altmann\"", required: true},
             "documentationLink": {
                 label: "Link to documentation",
-                hint: "eg. &quot;https://wiki.dm.de/ZOE&quot;",
+                hint: "eg. \"https://wiki.dm.de/ZOE\"",
                 required: false
             },
-            "microserviceUrl": {label: "URL", hint: "eg. &quot;https://zoe.dm.de&quot;", required: false},
-            "ipAddress": {label: "IP address", hint: "eg. &quot;172.23.68.213&quot;", required: false},
-            "networkZone": {label: "Network zone", hint: "eg. &quot;LAN&quot;", required: false},
-            "bitbucketProject": {label: "Bitbucket project", hint: "eg. &quot;ZOE&quot;", required: false},
-            "bitbucketRepo": {label: "Bitbucket Repository", hint: "eg. &quot;zoe&quot;", required: false}
+            "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false},
+            "ipAddress": {label: "IP address", hint: "eg. \"172.23.68.213\"", required: false},
+            "networkZone": {label: "Network zone", hint: "eg. \"LAN\"", required: false},
+            "bitbucketProject": {label: "Bitbucket project", hint: "eg. \"ZOE\"", required: false},
+            "bitbucketRepo": {label: "Bitbucket Repository", hint: "eg. \"zoe\"", required: false}
         };
 
         const serviceToggles = {

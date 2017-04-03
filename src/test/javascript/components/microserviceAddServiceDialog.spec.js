@@ -12,8 +12,8 @@ describe('<MicroserviceAddServiceDialog/>', function () {
 
         let props = createProps();
         props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
-            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
+            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         };
 
         const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
@@ -52,8 +52,8 @@ describe('<MicroserviceAddServiceDialog/>', function () {
 
         let props = createProps();
         props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
-            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
+            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         };
         props.entity =        {
             id: "bar-consumer",
@@ -79,8 +79,8 @@ describe('<MicroserviceAddServiceDialog/>', function () {
 
         let props = createProps();
         props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true, disabled: true},
-            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
+            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true, disabled: true},
+            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         }
 
         const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
@@ -96,8 +96,8 @@ describe('<MicroserviceAddServiceDialog/>', function () {
 
         let props = createProps();
         props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. &quot;ZOE&quot;", required: true},
-            "label": {label: "Label *", hint: "eg. &quot;ZOE&quot;", required: true}
+            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         };
 
         const wrapper = mount(<MicroserviceAddServiceDialog {...props}/>, {
