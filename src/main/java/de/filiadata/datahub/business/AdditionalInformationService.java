@@ -35,12 +35,14 @@ public class AdditionalInformationService {
         final List<TopCommitter> result = new ArrayList<>();
         final Map<BitbucketAuthorDto, Long> topCommitters = getTopCommitters(microserviceId);
 
-        LOG.info("Top commiters: {}", topCommitters);
+        LOG.info("Top commiter dtos: {}", topCommitters);
 
         for (final Map.Entry<BitbucketAuthorDto, Long> entry : topCommitters.entrySet()){
             final BitbucketAuthorDto dto = entry.getKey();
             result.add(TopCommitter.builder().emailAddress(dto.getEmailAddress()).id(dto.getId()).name(dto.getName()).numberOfCommits(entry.getValue()).build());
         }
+
+        LOG.info("Top commiters view beans: {}", topCommitters);
 
         return result;
     }
