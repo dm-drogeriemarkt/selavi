@@ -58,6 +58,7 @@ public class AdditionalInformationService {
             JsonNode repository = objectNode.get("bitbucketRepo");
 
             if (null != project && null != repository) {
+                LOG.info("Getting top committers for project {}, repo {}", project, repository);
                 return bitbucketService.getTopCommitters(project.asText(), repository.asText());
             }
 
