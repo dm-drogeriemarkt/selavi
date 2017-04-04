@@ -5,6 +5,7 @@ import thunk from "redux-thunk";
 const initialState = {
     microservices: [],
     bitbucketDetails: {},
+    topComitters: undefined,
     selectedService: undefined,
     contextMenuTop: -1,
     contextMenuLeft: -1,
@@ -30,7 +31,8 @@ function updateStore(state = initialState, action) {
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
                 menuMode: undefined,
-                entity: undefined
+                entity: undefined,
+                topComitters: undefined
             });
             return newState;
         }
@@ -40,7 +42,8 @@ function updateStore(state = initialState, action) {
 
             const newState = Object.assign({}, state, {
                 selectedService: action.selectedServiceId,
-                bitbucketDetails: newBitbucketDetails
+                bitbucketDetails: newBitbucketDetails,
+                topComitters: newBitbucketDetails[action.selectedServiceId]
             });
             return newState;
         }
@@ -71,6 +74,7 @@ function updateStore(state = initialState, action) {
         case 'EDIT_SERVICE': {
             const newState = Object.assign({}, state, {
                 entity: state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0],
+                topComitters: state.bitbucketDetails[state.contextMenuServiceId],
                 contextMenuServiceId: undefined,
                 menuMode: 'EDIT_SERVICE',
                 addEditDialogFormAction: "/selavi/services/" + state.contextMenuServiceId + "/properties"

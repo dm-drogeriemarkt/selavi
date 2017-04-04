@@ -46,6 +46,8 @@ export class MicroserviceMindmap extends React.Component {
         if (nodeId) {
             // right click does not select node!
             this._network.selectNodes([nodeId]);
+            // network.selectNodes(...) does _not_ fire events!
+            this.props.onSelectMicroserviceNode({nodes: [nodeId]});
         } else {
             this._network.unselectAll();
 

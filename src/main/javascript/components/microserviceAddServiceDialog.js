@@ -4,6 +4,8 @@ import Dialog from "material-ui/Dialog";
 import TextField from "material-ui/TextField";
 import FlatButton from "material-ui/FlatButton";
 import Toggle from "material-ui/Toggle";
+import {List, ListItem} from "material-ui/List";
+import {Tabs, Tab} from 'material-ui/Tabs';
 
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
@@ -12,6 +14,7 @@ const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
         entity: state.entity,
+        topComitters: state.topComitters,
         addEditDialogFormAction: state.addEditDialogFormAction
     };
 };
@@ -217,14 +220,38 @@ export class MicroserviceAddServiceDialog extends React.Component {
             }
         }
 
+        let topComittersTab = undefined;
+
+        if (Array.isArray(this.props.topComitters)) {
+            let topComittersList = [];
+            this.props.topComitters.forEach((propValue, index) => {
+                topComittersList.push(<ListItem key={microservice.id + '_bitbucket_' + index}
+                                           primaryText={propValue.emailAddress}
+                                           secondaryText={propValue.numberOfCommits}/>);
+            });
+
+            topComittersTab = <Tab label="Bitbucket" >
+                <List>
+                    {topComittersList}
+                </List>
+            </Tab>
+        }
+
         return (
             <Dialog
                 title={title}
                 actions={actions}
                 modal={true}
                 open={isOpen}>
-                {textFields}
-                {toggles}
+                <Tabs>
+                    <Tab label="Text Fields" >
+                        {textFields}
+                    </Tab>
+                    <Tab label="Toggles" >
+                        {toggles}
+                    </Tab>
+                    {topComittersTab}
+                </Tabs>
             </Dialog>
         );
     }

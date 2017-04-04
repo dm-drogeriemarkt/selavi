@@ -221,6 +221,11 @@ describe('<MicroserviceMindmap/>', function () {
 
         sinon.assert.calledOnce(networkSelectNodesSpy);
         sinon.assert.calledWith(networkSelectNodesSpy, ['my_node_id']);
+
+        sinon.assert.calledOnce(props.onSelectMicroserviceNode);
+        sinon.assert.calledWith(props.onSelectMicroserviceNode, {
+            nodes: ['my_node_id']
+        });
     });
 
     it('opens context menu on right-click on a link, and unselects all services', function () {
