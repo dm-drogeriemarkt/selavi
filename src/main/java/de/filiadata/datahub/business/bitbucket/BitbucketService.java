@@ -83,6 +83,7 @@ public class BitbucketService {
     private ResponseEntity<BitbucketCommitsDto> performRequest(String url) {
         final HttpEntity<?> httpEntity = new HttpEntity<>(createHttpHeaders());
         try {
+            LOG.debug("Performing GET request to url {}, Headers: {}", url, httpEntity.getHeaders());
             return restTemplate.exchange(url,
                     HttpMethod.GET,
                     httpEntity,
