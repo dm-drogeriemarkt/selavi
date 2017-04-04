@@ -67,6 +67,7 @@ function updateStore(state = initialState, action) {
             const newState = Object.assign({}, state, {
                 menuMode: 'ADD_RELATION',
                 entity: {"target": action.consumedServiceId},
+                topComitters: undefined,
                 addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations"
             });
             return newState;
@@ -104,6 +105,7 @@ function updateStore(state = initialState, action) {
                 entity: state.microservices
                     .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
                     .filter((relation) => relation.target === state.contextMenuToId)[0],
+                topComitters: undefined,
                 contextMenuFromId: undefined,
                 contextMenuToId: undefined,
                 menuMode: 'EDIT_RELATION',
@@ -140,7 +142,9 @@ function updateStore(state = initialState, action) {
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
                 menuMode: 'ADD_SERVICE',
-                addEditDialogFormAction: "/selavi/services"
+                addEditDialogFormAction: "/selavi/services",
+                entity: undefined,
+                topComitters: undefined
             });
             return newState;
         }
@@ -148,7 +152,9 @@ function updateStore(state = initialState, action) {
             const newState = Object.assign({}, state, {
                 menuMode: undefined,
                 addPropertyServiceId: undefined,
-                deleteServiceErrorMessage: undefined
+                deleteServiceErrorMessage: undefined,
+                entity: undefined,
+                topComitters: undefined
             });
             return newState;
         }
