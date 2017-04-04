@@ -115,8 +115,8 @@ class MicroserviceList extends React.Component {
                 var properties = this._getPropertyList(microservice, this.props.filterString);
 
                 var nestedItems = [];
-                if (Array.isArray(this.props.bitbucketDetails)) {
-                    this.props.bitbucketDetails.forEach((propValue, index) => {
+                if (Array.isArray(this.props.bitbucketDetails[this.props.selectedService])) {
+                    this.props.bitbucketDetails[this.props.selectedService].forEach((propValue, index) => {
                         nestedItems.push(<ListItem key={microservice.id + '_bitbucket_' + index}
                                                    primaryText={propValue.emailAddress}
                                                    secondaryText={propValue.numberOfCommits}/>);

@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
     microservices: [],
+    bitbucketDetails: {},
     selectedService: undefined,
     contextMenuTop: -1,
     contextMenuLeft: -1,
@@ -34,9 +35,12 @@ function updateStore(state = initialState, action) {
             return newState;
         }
         case 'MICROSERVICE_NODE_SELECTED': {
+            const newBitbucketDetails = Object.assign({}, state.bitbucketDetails);
+            newBitbucketDetails[action.selectedServiceId] = action.response.entity;
+
             const newState = Object.assign({}, state, {
                 selectedService: action.selectedServiceId,
-                bitbucketDetails: action.response.entity
+                bitbucketDetails: newBitbucketDetails
             });
             return newState;
         }
