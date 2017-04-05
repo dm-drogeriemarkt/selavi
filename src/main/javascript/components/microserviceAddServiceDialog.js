@@ -243,7 +243,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 title={title}
                 actions={actions}
                 modal={true}
-                open={isOpen}>
+                open={isOpen}
+                repositionOnUpdate={false}>
                 <Tabs>
                     <Tab label="Default Properties" >
                         {defaultPropertyInputs}
