@@ -157,10 +157,9 @@ export class MicroserviceAddServiceDialog extends React.Component {
             return null;
         }
 
-        let textFields = [];
-        let toggles = [];
+        let defaultPropertyInputs = [];
 
-        let editableProperties = Object.keys(microservice);
+        let customProperties = Object.keys(microservice);
 
         for (var key in this.props.textFields) {
             let textField = this.props.textFields[key];
@@ -169,11 +168,11 @@ export class MicroserviceAddServiceDialog extends React.Component {
             if (typeof(microservice[key]) === "string") {
                 value = microservice[key];
 
-                editableProperties.splice(editableProperties.indexOf(key), 1);
+                customProperties.splice(customProperties.indexOf(key), 1);
             }
 
             this._addTextField({
-                textFields: textFields,
+                textFields: defaultPropertyInputs,
                 key: key,
                 label: textField.label,
                 hint: textField.hint,
@@ -189,29 +188,31 @@ export class MicroserviceAddServiceDialog extends React.Component {
             if (typeof(microservice[key]) === "boolean") {
                 value = microservice[key];
 
-                editableProperties.splice(editableProperties.indexOf(key), 1);
+                customProperties.splice(customProperties.indexOf(key), 1);
             }
 
-            toggles.push(<Toggle key={"add_edit_dialog_" + key}
+            defaultPropertyInputs.push(<Toggle key={"add_edit_dialog_" + key}
                                  ref={"input_" + key}
                                  label={toggle.label}
                                  defaultToggled={value}
                                  style={{marginTop: "2em", maxWidth: "23em"}}/>)
         }
 
-        for (var idx in editableProperties) {
-            const key = editableProperties[idx];
+        let customPropertyInputs = [];
+
+        for (var idx in customProperties) {
+            const key = customProperties[idx];
 
             if (typeof(microservice[key]) === "string") {
                 this._addTextField({
-                    textFields: textFields,
+                    textFields: customPropertyInputs,
                     key: key,
                     label: key,
                     hint: key,
                     value: microservice[key]
                 });
             } else if (typeof(microservice[key]) === "boolean") {
-                toggles.push(<Toggle ref={"input_" + key}
+                customPropertyInputs.push(<Toggle ref={"input_" + key}
                                      label={key}
                                      defaultToggled={microservice[key]}
                                      style={{marginTop: "2em", maxWidth: "23em"}}/>)
@@ -244,11 +245,11 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 modal={true}
                 open={isOpen}>
                 <Tabs>
-                    <Tab label="Text Fields" >
-                        {textFields}
+                    <Tab label="Default Properties" >
+                        {defaultPropertyInputs}
                     </Tab>
-                    <Tab label="Toggles" >
-                        {toggles}
+                    <Tab label="Custom Properties" >
+                        {customPropertyInputs}
                     </Tab>
                     {topComittersTab}
                 </Tabs>
