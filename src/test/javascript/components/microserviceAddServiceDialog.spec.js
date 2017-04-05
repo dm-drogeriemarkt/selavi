@@ -117,6 +117,31 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         chai.expect(wrapper.instance().refs.input_id.props.errorText).to.equal("Field is required!");
         chai.expect(wrapper.instance().refs.input_label.props.errorText).to.equal("Field is required!");
     });
+
+    it('renders bitbucket top comitters in separate tab, when present', function () {
+
+        let props = createProps();
+        props.topComitters = [
+            {
+                emailAddress: "foo@bar.baz",
+                numberOfCommits: 42
+            },
+            {
+                emailAddress: "moo@cow.biz",
+                numberOfCommits: 1337
+            },
+        ]
+
+        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+
+        chai.expect(wrapper.find('Tab').length).to.equal(3);
+        chai.expect(wrapper.find('Tab').at(2).props().label).to.equal("Bitbucket");
+        chai.expect(wrapper.find('Tab').at(2).find('ListItem').length).to.equal(2);
+        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(0).props().primaryText).to.equal("foo@bar.baz");
+        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(0).props().secondaryText).to.equal(42);
+        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(1).props().primaryText).to.equal("moo@cow.biz");
+        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(1).props().secondaryText).to.equal(1337);
+    });
 });
 
 function createProps() {
