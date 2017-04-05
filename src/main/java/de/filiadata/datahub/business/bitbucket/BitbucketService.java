@@ -38,7 +38,7 @@ public class BitbucketService {
     }
 
     public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo) {
-        final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}/commits?limit=100");
+        final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}/commits?limit=500");
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("project", project);
         parameters.put("repo", repo);
