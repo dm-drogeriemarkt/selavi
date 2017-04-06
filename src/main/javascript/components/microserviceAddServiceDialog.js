@@ -7,6 +7,8 @@ import Toggle from "material-ui/Toggle";
 import {List, ListItem} from "material-ui/List";
 import {Tabs, Tab} from 'material-ui/Tabs';
 
+import LinkTextField from "./linkTextField";
+
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
@@ -113,14 +115,25 @@ export class MicroserviceAddServiceDialog extends React.Component {
             style = {marginLeft: "1em"};
         }
 
-        options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
-                                           style={style}
-                                           ref={"input_" + options.key}
-                                           floatingLabelText={options.label}
-                                           hintText={options.hint}
-                                           errorText={this.state.validationMessages[options.key]}
-                                           defaultValue={options.value}
-                                           disabled={options.disabled}></TextField>);
+        if (options.isLink) {
+            options.textFields.push(<LinkTextField key={"add_edit_dialog_" + options.key}
+                                               style={style}
+                                               ref={"input_" + options.key}
+                                               floatingLabelText={options.label}
+                                               hintText={options.hint}
+                                               errorText={this.state.validationMessages[options.key]}
+                                               defaultValue={options.value}
+                                               disabled={options.disabled}></LinkTextField>);
+        } else {
+            options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
+                                                   style={style}
+                                                   ref={"input_" + options.key}
+                                                   floatingLabelText={options.label}
+                                                   hintText={options.hint}
+                                                   errorText={this.state.validationMessages[options.key]}
+                                                   defaultValue={options.value}
+                                                   disabled={options.disabled}></TextField>);
+        }
 
         if (rightcolumn) {
             options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
@@ -177,7 +190,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 label: textField.label,
                 hint: textField.hint,
                 value: value,
-                disabled: textField.disabled
+                disabled: textField.disabled,
+                isLink: textField.isLink
             });
         }
 

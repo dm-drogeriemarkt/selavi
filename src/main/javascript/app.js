@@ -53,7 +53,7 @@ class App extends React.Component {
                 hint: "eg. \"https://wiki.dm.de/ZOE\"",
                 required: false
             },
-            "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false},
+            "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false, isLink: true},
             "ipAddress": {label: "IP address", hint: "eg. \"172.23.68.213\"", required: false},
             "networkZone": {label: "Network zone", hint: "eg. \"LAN\"", required: false},
             "bitbucketProject": {label: "Bitbucket project", hint: "eg. \"ZOE\"", required: false},
