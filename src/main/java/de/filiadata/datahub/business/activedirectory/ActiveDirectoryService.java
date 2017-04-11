@@ -19,13 +19,14 @@ public class ActiveDirectoryService {
         this.ldapTemplate = ldapTemplate;
     }
 
-    public List<String> getAllPersonNames() {
-        String query = "altmann";
+    public List<String> getAllPersonNames(String query) {
+        String ldapQuery = "*" + query + "*";
+        ldapQuery = ldapQuery.replace(' ', '*');
 
         return ldapTemplate.search(
                 query().where("objectclass").is("person")
                         .and("uid").not().like("*Admin*")
-                        .and(query().where("sn").like(query).or("givenName").like(query)),
+                        .and("name").like(ldapQuery),
                 new AttributesMapper<String>() {
                     public String mapFromAttributes(Attributes attrs)
                             throws NamingException, javax.naming.NamingException {

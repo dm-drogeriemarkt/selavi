@@ -18,7 +18,9 @@ public class ActiveDirectoryServiceIntegrationTest {
 
     @Test
     public void readAllPersons() {
-        List<String> allPersonNames = activeDirectoryService.getAllPersonNames();
+        String query = "altmann erik";
+
+        List<String> allPersonNames = activeDirectoryService.getAllPersonNames(query);
         System.out.println(allPersonNames);
     }
 }
