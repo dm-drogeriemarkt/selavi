@@ -158,11 +158,13 @@ public class MicroserviceRepository {
                 ObjectNode consumerObjectNode = JsonNodeFactory.instance.objectNode();
 
                 String[] consumer = consumerWithType.split(":");
-                if (consumer.length == 2) {
+                if (consumer.length >= 1) {
 
                     consumerObjectNode.put(TARGET, consumer[0].toUpperCase());
-                    consumerObjectNode.put(TYPE, consumer[1]);
 
+                    if (consumer.length == 2) {
+                        consumerObjectNode.put(TYPE, consumer[1]);
+                    }
                     result.add(consumerObjectNode);
                 }
             }
