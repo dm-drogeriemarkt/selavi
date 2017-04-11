@@ -42,6 +42,8 @@ public class MicroserviceRepository {
     private static final String IGNORED_COMMITTERS = "ignoredCommitters";
     private static final String DESCRIPTION = "description";
     private static final String AT_ENABLED = "@enabled";
+    private static final String TARGET = "target";
+    private static final String TYPE = "type";
 
     private RestTemplate restTemplate;
     private DefaultNodeContentFactory defaultNodeContentFactory;
@@ -150,11 +152,18 @@ public class MicroserviceRepository {
             String consumersInput = metadata.get(CONSUMERS).asText();
             String[] consumersWithCommunicationType = consumersInput.split(",");
 
-            ArrayNode consumes = JsonNodeFactory.instance.arrayNode();
-            for (String consumer : consumersWithCommunicationType) {
-                consumes.add(consumer);
+            for (String consumerWithType : consumersWithCommunicationType) {
+                ObjectNode consumerObjectNode = JsonNodeFactory.instance.objectNode();
+
+                String[] consumer = consumerWithType.split(":");
+                if (consumer.length == 2) {
+
+                    consumerObjectNode.put(TARGET, consumer[0].toUpperCase());
+                    consumerObjectNode.put(TYPE, consumer[1]);
+
+                    result.add(consumerObjectNode);
+                }
             }
-            result.add(consumes);
         }
         return result;
     }
