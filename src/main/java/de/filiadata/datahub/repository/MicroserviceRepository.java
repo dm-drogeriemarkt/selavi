@@ -126,9 +126,6 @@ public class MicroserviceRepository {
 
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
-        if (instances.size() <= 0) {
-            return result;
-        }
 
         final JsonNode metadata = instances.get(0).get(METADATA);
         final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
