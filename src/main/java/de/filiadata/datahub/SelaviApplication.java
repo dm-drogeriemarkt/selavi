@@ -30,11 +30,6 @@ public class SelaviApplication extends SpringBootServletInitializer {
     @Value("${cache.expireAfterWriteInMinutes}")
     private Integer expireAfterWriteInMinutes;
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SelaviApplication.class);
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(SelaviApplication.class, args);
     }
