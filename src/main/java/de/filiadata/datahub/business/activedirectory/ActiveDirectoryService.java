@@ -34,7 +34,7 @@ public class ActiveDirectoryService {
                     public Person mapFromAttributes(Attributes attrs)
                             throws NamingException, javax.naming.NamingException {
                         Person.PersonBuilder builder = Person.builder()
-                                .uid((String) attrs.get("uid").get())
+                                .uid((String) attrs.get("sAMAccountName").get())
                                 .displayName((String) attrs.get("displayname").get())
                                 .eMail((String) attrs.get("mail").get());
 
