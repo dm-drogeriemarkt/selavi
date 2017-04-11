@@ -19,13 +19,17 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 @Service
 public class MicroserviceRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
+
+    private static final String INSTANCE = "instance";
+    private static final String METADATA = "metadata";
+    private static final String CONSUMERS = "consumers";
+    private static final String IGNORED_COMMITTERS = "ignoredCommitters";
 
     private RestTemplate restTemplate;
     private DefaultNodeContentFactory defaultNodeContentFactory;
@@ -84,7 +88,7 @@ public class MicroserviceRepository {
             final String applicationName = application.get(nodeApplicationName).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
             applicationNode.set("hosts", readHostInfos(application));
-            applicationNode.set("metadata", readMetadata(application));
+            applicationNode.set(METADATA, readMetadata(application));
             result.put(applicationName, applicationNode);
         });
         return result;
@@ -92,7 +96,7 @@ public class MicroserviceRepository {
 
     private ArrayNode readHostInfos(JsonNode applicationNode) {
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
-        final ArrayNode instances = (ArrayNode) applicationNode.get("instance");
+        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
         instances.forEach(instanceNode -> {
             final ObjectNode hostResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
             addSingleProperty(hostResultNode, instanceNode, "hostName");
@@ -111,31 +115,19 @@ public class MicroserviceRepository {
     }
 
     private ArrayNode readMetadata(JsonNode applicationNode) {
-        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
 
-        ObjectNode metadataResult = null;
-        final ArrayNode instances = (ArrayNode) applicationNode.get("instance");
-        final Iterator<JsonNode> iter = instances.iterator();
-        while (iter.hasNext()) {
+        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+        ObjectNode metadataResult = defaultNodeContentFactory.getMapper().createObjectNode();
+
+        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
+        for (JsonNode instance : instances) {
+
             final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
-            final JsonNode jsonNode = iter.next();
-            final JsonNode metadata = jsonNode.get("metadata");
-            if (metadata.get("consumers") != null) {
-                final ArrayNode consumersNode = JsonNodeFactory.instance.arrayNode();
-                final TextNode consumers = JsonNodeFactory.instance.textNode(metadata.get("consumers").asText());
-                if (StringUtils.isNotEmpty(consumers.asText())) {
-                    consumersNode.add(consumers);
-                    metaResultNode.set("consumers", consumersNode);
-                }
-            }
-            if (metadata.get("ignoredCommitters") != null) {
-                final ArrayNode ignoredCommittersNode = JsonNodeFactory.instance.arrayNode();
-                final TextNode ignoredCommitters = JsonNodeFactory.instance.textNode(metadata.get("ignoredCommitters").asText());
-                if (StringUtils.isNotEmpty(ignoredCommitters.asText())) {
-                    ignoredCommittersNode.add(ignoredCommitters);
-                    metaResultNode.set("ignoredCommitters", ignoredCommittersNode);
-                }
-            }
+            final JsonNode metadata = instance.get(METADATA);
+
+            addChildNodeToMetaResultNode(metaResultNode, metadata, CONSUMERS);
+            addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
+
             if (metaResultNode.iterator().hasNext()) {
                 metadataResult = metaResultNode;
             }
@@ -147,6 +139,17 @@ public class MicroserviceRepository {
 
 
         return result;
+    }
+
+    private void addChildNodeToMetaResultNode(ObjectNode metaResultNode, JsonNode metadata, String fieldName) {
+        if (metadata.get(fieldName) != null) {
+            final ArrayNode childNode = JsonNodeFactory.instance.arrayNode();
+            final TextNode child = JsonNodeFactory.instance.textNode(metadata.get(fieldName).asText());
+            if (StringUtils.isNotEmpty(child.asText())) {
+                childNode.add(child);
+                metaResultNode.set(fieldName, childNode);
+            }
+        }
     }
 
     private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
