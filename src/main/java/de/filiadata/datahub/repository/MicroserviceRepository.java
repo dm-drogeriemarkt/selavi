@@ -39,6 +39,7 @@ public class MicroserviceRepository {
     private static final String PORTS = "ports";
     private static final String CONSUMERS = "consumers";
     private static final String CONSUMES = "consumes";
+    private static final String BITBUCKET_URL = "bitbucketUrl";
     private static final String IGNORED_COMMITTERS = "ignoredCommitters";
     private static final String DESCRIPTION = "description";
     private static final String AT_ENABLED = "@enabled";
@@ -135,6 +136,7 @@ public class MicroserviceRepository {
         final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
 
         addChildNodeToMetaResultNode(metaResultNode, metadata, DESCRIPTION);
+        addChildNodeToMetaResultNode(metaResultNode, metadata, BITBUCKET_URL);
         addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
 
         result.add(metaResultNode);
