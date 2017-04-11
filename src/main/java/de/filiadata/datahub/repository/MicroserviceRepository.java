@@ -37,9 +37,10 @@ public class MicroserviceRepository {
     private static final String PORT = "port";
     private static final String SECURE_PORT = "securePort";
     private static final String PORTS = "ports";
-    private static final String DESCRIPTION = "description";
     private static final String CONSUMERS = "consumers";
+    private static final String CONSUMES = "consumes";
     private static final String IGNORED_COMMITTERS = "ignoredCommitters";
+    private static final String DESCRIPTION = "description";
     private static final String AT_ENABLED = "@enabled";
 
     private RestTemplate restTemplate;
@@ -98,6 +99,7 @@ public class MicroserviceRepository {
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
             applicationNode.set(HOSTS, readHostInfos(application));
             applicationNode.set(METADATA, readMetadata(application));
+            applicationNode.set(CONSUMES, readConsumers(application));
             result.put(applicationName, applicationNode);
         });
         return result;
@@ -131,10 +133,29 @@ public class MicroserviceRepository {
         final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
 
         addChildNodeToMetaResultNode(metaResultNode, metadata, DESCRIPTION);
-        addChildNodeToMetaResultNode(metaResultNode, metadata, CONSUMERS);
         addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
 
         result.add(metaResultNode);
+        return result;
+    }
+
+    private ArrayNode readConsumers(JsonNode applicationNode) {
+
+        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
+        final JsonNode metadata = instances.get(0).get(METADATA);
+
+        if (metadata.get(CONSUMERS) != null) {
+
+            String consumersInput = metadata.get(CONSUMERS).asText();
+            String[] consumersWithCommunicationType = consumersInput.split(",");
+
+            ArrayNode consumes = JsonNodeFactory.instance.arrayNode();
+            for (String consumer : consumersWithCommunicationType) {
+                consumes.add(consumer);
+            }
+            result.add(consumes);
+        }
         return result;
     }
 

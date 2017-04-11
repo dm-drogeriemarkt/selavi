@@ -20,6 +20,7 @@ import java.util.Optional;
 public class ConsumerPropertiesService {
 
     private static final String CONSUMER_NODE_NAME = "consumes";
+    private static final String TARGET = "target";
 
     private ServicePropertiesRepository servicePropertiesRepository;
     private DefaultNodeContentFactory defaultNodeContentFactory;
@@ -39,7 +40,7 @@ public class ConsumerPropertiesService {
         boolean consumerNodeExists = existingNode.hasNonNull(CONSUMER_NODE_NAME);
         if (consumerNodeExists) {
 
-            if (serviceName.equals(relationProperties.get("target").asText())) {
+            if (serviceName.equals(relationProperties.get(TARGET).asText())) {
                 throw new RelationAddException();
             }
 
@@ -65,7 +66,7 @@ public class ConsumerPropertiesService {
     private Optional<ObjectNode> getRelation(ArrayNode arrayNode, ObjectNode relationProperties) {
         for (Iterator<JsonNode> it = arrayNode.iterator(); it.hasNext(); ) {
             JsonNode node = it.next();
-            if (node.get("target").textValue().equals(relationProperties.get("target").textValue())) {
+            if (node.get(TARGET).textValue().equals(relationProperties.get(TARGET).textValue())) {
                 return Optional.of((ObjectNode) node);
             }
         }
@@ -124,7 +125,7 @@ public class ConsumerPropertiesService {
 
         for (Iterator<JsonNode> it = consumer.iterator(); it.hasNext(); ) {
             final JsonNode node = it.next();
-            if (node.get("target").textValue().equals(relatedServiceName)) {
+            if (node.get(TARGET).textValue().equals(relatedServiceName)) {
                 it.remove();
                 return resultNode;
             }
