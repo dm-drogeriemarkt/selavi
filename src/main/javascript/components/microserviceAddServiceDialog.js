@@ -7,6 +7,7 @@ import Toggle from "material-ui/Toggle";
 import {List, ListItem} from "material-ui/List";
 import {Tabs, Tab} from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
+import Avatar from 'material-ui/Avatar';
 import MenuItem from 'material-ui/MenuItem';
 
 const rest = require('rest');
@@ -96,15 +97,18 @@ export class MicroserviceAddServiceDialog extends React.Component {
             client({path: searchEndpoint + "?searchQuery=" + searchText}).then(response => {
                 this.setState({
                     autocompleteDataSource: response.entity.map((person) => {
+                        let avatar = person.thumbnailPhoto && <Avatar src={"data:image/png;base64," + person.thumbnailPhoto} />;
+
                         return {
                             text: person.displayName,
                             value: (
                                 <MenuItem
                                     primaryText={person.displayName}
+                                    rightAvatar={avatar}
                                 />
                             ),
                         }
-                    }),
+                    })
                 });
             });
         } else {
