@@ -26,6 +26,7 @@ public class MicroserviceRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
 
+    private static final String APPLICATION = "application";
     private static final String NAME = "name";
     private static final String HOSTS = "hosts";
     private static final String METADATA = "metadata";
@@ -39,6 +40,7 @@ public class MicroserviceRepository {
     private static final String DESCRIPTION = "description";
     private static final String CONSUMERS = "consumers";
     private static final String IGNORED_COMMITTERS = "ignoredCommitters";
+    private static final String AT_ENABLED = "@enabled";
 
     private RestTemplate restTemplate;
     private DefaultNodeContentFactory defaultNodeContentFactory;
@@ -80,13 +82,12 @@ public class MicroserviceRepository {
             return Collections.emptyMap();
         }
 
-        final String nodeApplication = "application";
         final JsonNode rootNode = response.get(nodeApplications);
-        if (!rootNode.hasNonNull(nodeApplication)) {
+        if (!rootNode.hasNonNull(APPLICATION)) {
             return Collections.emptyMap();
         }
 
-        final ArrayNode applicationsNode = (ArrayNode) rootNode.get(nodeApplication);
+        final ArrayNode applicationsNode = (ArrayNode) rootNode.get(APPLICATION);
         return createResult(applicationsNode);
     }
 
@@ -126,7 +127,6 @@ public class MicroserviceRepository {
 
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
-
         final JsonNode metadata = instances.get(0).get(METADATA);
         final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
 
@@ -152,7 +152,7 @@ public class MicroserviceRepository {
     private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
         if (instanceNode.hasNonNull(propertyName)) {
             final JsonNode port = instanceNode.get(propertyName);
-            if ("true".equals(port.get("@enabled").textValue())) {
+            if ("true".equals(port.get(AT_ENABLED).textValue())) {
                 portsNode.add(JsonNodeFactory.instance.numberNode(port.get("$").intValue()));
             }
         }
