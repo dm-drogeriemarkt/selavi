@@ -6,6 +6,8 @@ import FlatButton from "material-ui/FlatButton";
 import Toggle from "material-ui/Toggle";
 import {List, ListItem} from "material-ui/List";
 import {Tabs, Tab} from 'material-ui/Tabs';
+import AutoComplete from 'material-ui/AutoComplete';
+import MenuItem from 'material-ui/MenuItem';
 
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
@@ -15,7 +17,8 @@ const mapStateToProps = (state) => {
         menuMode: state.menuMode,
         entity: state.entity,
         topComitters: state.topComitters,
-        addEditDialogFormAction: state.addEditDialogFormAction
+        addEditDialogFormAction: state.addEditDialogFormAction,
+        autocompleteDataSource: state.autocompleteDataSource
     };
 };
 
@@ -73,7 +76,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {validationMessages: {}};
+        this.state = {validationMessages: {}, autocompleteDataSource: []};
     }
 
     _handleOnSubmit() {
@@ -85,6 +88,30 @@ export class MicroserviceAddServiceDialog extends React.Component {
     _handleOnCancel() {
         this.setState({validationMessages: {}});
         this.props.onCancel();
+    }
+
+    _handleAutocompleteInput(searchText, searchEndpoint) {
+        if (searchText && searchText.length > 2) {
+            var client = rest.wrap(mime);
+            client({path: searchEndpoint + "?searchQuery=" + searchText}).then(response => {
+                this.setState({
+                    autocompleteDataSource: response.entity.map((person) => {
+                        return {
+                            text: person.displayName,
+                            value: (
+                                <MenuItem
+                                    primaryText={person.displayName}
+                                />
+                            ),
+                        }
+                    }),
+                });
+            });
+        } else {
+            this.setState({
+                autocompleteDataSource: []
+            });
+        }
     }
 
     _validate() {
@@ -113,14 +140,26 @@ export class MicroserviceAddServiceDialog extends React.Component {
             style = {marginLeft: "1em"};
         }
 
-        options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
-                                           style={style}
-                                           ref={"input_" + options.key}
-                                           floatingLabelText={options.label}
-                                           hintText={options.hint}
-                                           errorText={this.state.validationMessages[options.key]}
-                                           defaultValue={options.value}
-                                           disabled={options.disabled}></TextField>);
+        if (options.searchEndpoint) {
+            options.textFields.push(<AutoComplete
+                hintText={options.hint}
+                dataSource={this.state.autocompleteDataSource}
+                onUpdateInput={function(searchText) {
+                    this._handleAutocompleteInput(searchText, options.searchEndpoint)
+                }.bind(this)}
+                ref={"input_" + options.key}
+                filter={AutoComplete.caseInsensitiveFilter}
+            />);
+        } else {
+            options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
+                                               style={style}
+                                               ref={"input_" + options.key}
+                                               floatingLabelText={options.label}
+                                               hintText={options.hint}
+                                               errorText={this.state.validationMessages[options.key]}
+                                               defaultValue={options.value}
+                                               disabled={options.disabled}></TextField>);
+        }
 
         if (rightcolumn) {
             options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
@@ -177,7 +216,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 label: textField.label,
                 hint: textField.hint,
                 value: value,
-                disabled: textField.disabled
+                disabled: textField.disabled,
+                searchEndpoint: textField.searchEndpoint
             });
         }
 
