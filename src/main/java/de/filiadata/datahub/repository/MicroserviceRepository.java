@@ -81,6 +81,7 @@ public class MicroserviceRepository {
             final String applicationName = application.get(nodeApplicationName).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
             applicationNode.set("hosts", readHostInfos(application));
+            applicationNode.set("metadata", readMetadata(application));
             result.put(applicationName, applicationNode);
         });
         return result;
@@ -101,6 +102,19 @@ public class MicroserviceRepository {
 
             hostResultNode.set("ports", portNodes);
             result.add(hostResultNode);
+        });
+
+        return result;
+    }
+
+    private ArrayNode readMetadata(JsonNode applicationNode) {
+        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+        final ArrayNode instances = (ArrayNode) applicationNode.get("instance");
+        final ObjectNode metadata = (ObjectNode) instances.get(0).get("metadata");
+        metadata.forEach(metaNode -> {
+            final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
+            addSingleProperty(metaResultNode, metaNode, "consumers");
+            result.add(metaResultNode);
         });
 
         return result;
