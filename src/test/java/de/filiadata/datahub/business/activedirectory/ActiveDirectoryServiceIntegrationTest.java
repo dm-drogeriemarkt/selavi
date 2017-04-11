@@ -20,7 +20,7 @@ public class ActiveDirectoryServiceIntegrationTest {
     public void readAllPersons() {
         String query = "altmann erik";
 
-        List<String> allPersonNames = activeDirectoryService.getAllPersonNames(query);
+        List<Person> allPersonNames = activeDirectoryService.getAllPersonNames(query);
         System.out.println(allPersonNames);
     }
 }

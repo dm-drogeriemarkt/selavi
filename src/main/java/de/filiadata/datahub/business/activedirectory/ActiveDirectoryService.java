@@ -19,18 +19,29 @@ public class ActiveDirectoryService {
         this.ldapTemplate = ldapTemplate;
     }
 
-    public List<String> getAllPersonNames(String query) {
+    public List<Person> getAllPersonNames(String query) {
         String ldapQuery = "*" + query + "*";
         ldapQuery = ldapQuery.replace(' ', '*');
 
         return ldapTemplate.search(
                 query().where("objectclass").is("person")
+                        .and("uid").isPresent()
                         .and("uid").not().like("*Admin*")
                         .and("name").like(ldapQuery),
-                new AttributesMapper<String>() {
-                    public String mapFromAttributes(Attributes attrs)
+                new AttributesMapper<Person>() {
+                    public Person mapFromAttributes(Attributes attrs)
                             throws NamingException, javax.naming.NamingException {
-                        return (String) attrs.get("cn").get();
+                        Person.PersonBuilder builder = Person.builder()
+                                .uid((String) attrs.get("uid").get())
+                                .displayName((String) attrs.get("displayname").get())
+                                .eMail((String) attrs.get("mail").get());
+
+                        if (attrs.get("thumbnailphoto") != null) {
+                            builder.thumbnailPhoto((byte[]) attrs.get("thumbnailphoto").get());
+                        }
+
+                        return builder.build();
+
                     }
                 });
     }
