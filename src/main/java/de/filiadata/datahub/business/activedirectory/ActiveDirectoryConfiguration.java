@@ -17,7 +17,7 @@ public class ActiveDirectoryConfiguration {
         ldapContextSource.setUrl("ldaps://example.com:636");
         ldapContextSource.setUserDn("cn=DE-ServiceUser\\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int");
         ldapContextSource.setPassword("password");
-        ldapContextSource.setBase("dc=dm,dc=int");
+        ldapContextSource.setBase("ou=dm,dc=dm,dc=int");
         return ldapContextSource;
     }
 

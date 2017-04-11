@@ -24,9 +24,11 @@ public class ActiveDirectoryService {
         ldapQuery = ldapQuery.replace(' ', '*');
 
         return ldapTemplate.search(
-                query().where("objectclass").is("person")
-                        .and("uid").isPresent()
-                        .and("uid").not().like("*Admin*")
+                query().where("objectclass").is("user")
+                        .and("objectclass").not().is("computer")
+                        .and("sAMAccountName").isPresent()
+                        .and("sAMAccountName").not().like("*Admin*")
+                        .and("mail").isPresent()
                         .and("name").like(ldapQuery),
                 new AttributesMapper<Person>() {
                     public Person mapFromAttributes(Attributes attrs)
