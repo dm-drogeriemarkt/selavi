@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import de.filiadata.datahub.business.DefaultNodeContentFactory;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Service
@@ -109,13 +112,39 @@ public class MicroserviceRepository {
 
     private ArrayNode readMetadata(JsonNode applicationNode) {
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+
+        ObjectNode metadataResult = null;
         final ArrayNode instances = (ArrayNode) applicationNode.get("instance");
-        final ObjectNode metadata = (ObjectNode) instances.get(0).get("metadata");
-        metadata.forEach(metaNode -> {
+        final Iterator<JsonNode> iter = instances.iterator();
+        while (iter.hasNext()) {
             final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
-            addSingleProperty(metaResultNode, metaNode, "consumers");
-            result.add(metaResultNode);
-        });
+            final JsonNode jsonNode = iter.next();
+            final JsonNode metadata = jsonNode.get("metadata");
+            if (metadata.get("consumers") != null) {
+                final ArrayNode consumersNode = JsonNodeFactory.instance.arrayNode();
+                final TextNode consumers = JsonNodeFactory.instance.textNode(metadata.get("consumers").asText());
+                if (StringUtils.isNotEmpty(consumers.asText())) {
+                    consumersNode.add(consumers);
+                    metaResultNode.set("consumers", consumersNode);
+                }
+            }
+            if (metadata.get("ignoredCommitters") != null) {
+                final ArrayNode ignoredCommittersNode = JsonNodeFactory.instance.arrayNode();
+                final TextNode ignoredCommitters = JsonNodeFactory.instance.textNode(metadata.get("ignoredCommitters").asText());
+                if (StringUtils.isNotEmpty(ignoredCommitters.asText())) {
+                    ignoredCommittersNode.add(ignoredCommitters);
+                    metaResultNode.set("ignoredCommitters", ignoredCommittersNode);
+                }
+            }
+            if (metaResultNode.iterator().hasNext()) {
+                metadataResult = metaResultNode;
+            }
+
+        }
+        if (metadataResult != null) {
+            result.add(metadataResult);
+        }
+
 
         return result;
     }
