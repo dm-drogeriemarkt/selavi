@@ -1,4 +1,4 @@
-package de.filiadata.datahub.business;
+package de.filiadata.datahub.business.activedirectory;
 
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AttributesMapper;
