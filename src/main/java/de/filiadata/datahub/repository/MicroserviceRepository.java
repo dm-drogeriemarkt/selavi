@@ -26,8 +26,17 @@ public class MicroserviceRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
 
-    private static final String INSTANCE = "instance";
+    private static final String NAME = "name";
+    private static final String HOSTS = "hosts";
     private static final String METADATA = "metadata";
+    private static final String INSTANCE = "instance";
+    private static final String HOST_NAME = "hostName";
+    private static final String IP_ADDR = "ipAddr";
+    private static final String HOME_PAGE_URL = "homePageUrl";
+    private static final String PORT = "port";
+    private static final String SECURE_PORT = "securePort";
+    private static final String PORTS = "ports";
+    private static final String DESCRIPTION = "description";
     private static final String CONSUMERS = "consumers";
     private static final String IGNORED_COMMITTERS = "ignoredCommitters";
 
@@ -82,12 +91,11 @@ public class MicroserviceRepository {
     }
 
     private Map<String, ObjectNode> createResult(ArrayNode applicationsNode) {
-        final String nodeApplicationName = "name";
         final Map<String, ObjectNode> result = new HashMap<>();
         applicationsNode.forEach(application -> {
-            final String applicationName = application.get(nodeApplicationName).textValue();
+            final String applicationName = application.get(NAME).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
-            applicationNode.set("hosts", readHostInfos(application));
+            applicationNode.set(HOSTS, readHostInfos(application));
             applicationNode.set(METADATA, readMetadata(application));
             result.put(applicationName, applicationNode);
         });
@@ -99,15 +107,15 @@ public class MicroserviceRepository {
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
         instances.forEach(instanceNode -> {
             final ObjectNode hostResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
-            addSingleProperty(hostResultNode, instanceNode, "hostName");
-            addSingleProperty(hostResultNode, instanceNode, "ipAddr");
-            addSingleProperty(hostResultNode, instanceNode, "homePageUrl");
+            addSingleProperty(hostResultNode, instanceNode, HOST_NAME);
+            addSingleProperty(hostResultNode, instanceNode, IP_ADDR);
+            addSingleProperty(hostResultNode, instanceNode, HOME_PAGE_URL);
 
             final ArrayNode portNodes = JsonNodeFactory.instance.arrayNode();
-            addArrayProperty(portNodes, instanceNode, "port");
-            addArrayProperty(portNodes, instanceNode, "securePort");
+            addArrayProperty(portNodes, instanceNode, PORT);
+            addArrayProperty(portNodes, instanceNode, SECURE_PORT);
 
-            hostResultNode.set("ports", portNodes);
+            hostResultNode.set(PORTS, portNodes);
             result.add(hostResultNode);
         });
 
@@ -117,27 +125,19 @@ public class MicroserviceRepository {
     private ArrayNode readMetadata(JsonNode applicationNode) {
 
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
-        ObjectNode metadataResult = defaultNodeContentFactory.getMapper().createObjectNode();
-
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
-        for (JsonNode instance : instances) {
-
-            final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
-            final JsonNode metadata = instance.get(METADATA);
-
-            addChildNodeToMetaResultNode(metaResultNode, metadata, CONSUMERS);
-            addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
-
-            if (metaResultNode.iterator().hasNext()) {
-                metadataResult = metaResultNode;
-            }
-
-        }
-        if (metadataResult != null) {
-            result.add(metadataResult);
+        if (instances.size() <= 0) {
+            return result;
         }
 
+        final JsonNode metadata = instances.get(0).get(METADATA);
+        final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
 
+        addChildNodeToMetaResultNode(metaResultNode, metadata, DESCRIPTION);
+        addChildNodeToMetaResultNode(metaResultNode, metadata, CONSUMERS);
+        addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
+
+        result.add(metaResultNode);
         return result;
     }
 
