@@ -46,7 +46,7 @@ class App extends React.Component {
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
             "description": {label: "Description", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: false},
             "team": {label: "Development Team *", hint: "eg. \"ZOE-Team\"", required: true},
-            "dmOwner": {label: "dm-Owner", hint: "eg. \"Erik Altmann\"", required: false},
+            "dmOwner": {label: "dm-Owner", hint: "eg. \"Erik Altmann\"", required: false, searchEndpoint: "/selavi/person/search"},
             "fdOwner": {label: "Filiadata-Owner *", hint: "eg. \"Altmann, Erik\"", required: true, searchEndpoint: "/selavi/person/search"},
             "documentationLink": {
                 label: "Link to documentation",
