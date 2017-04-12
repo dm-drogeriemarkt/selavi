@@ -39,6 +39,8 @@ const mapDispatchToProps = (dispatch) => {
                         entity[key.substr(6)] = this.refs[key].getValue();
                     } else if (this.refs[key] instanceof Toggle) {
                         entity[key.substr(6)] = this.refs[key].isToggled();
+                    } else if (this.refs[key] instanceof AutoComplete) {
+                        entity[key.substr(6)] = this.refs[key].refs.searchTextField.getValue();
                     } else {
                         console.log("unkown input type " + this.refs[key]);
                     }
@@ -126,9 +128,16 @@ export class MicroserviceAddServiceDialog extends React.Component {
 
         for (var key in this.props.textFields) {
             if (this.props.textFields[key].required) {
-                if (!this.refs["input_" + key].getValue()) {
-                    validationMessages[key] = "Field is required!";
-                    isValid = false;
+                if (typeof this.refs["input_" + key].getValue === "function") {
+                    if (!this.refs["input_" + key].getValue()) {
+                        validationMessages[key] = "Field is required!";
+                        isValid = false;
+                    }
+                } else if (typeof this.refs["input_" + key].refs.searchTextField.getValue === "function") {
+                    if (!this.refs["input_" + key].refs.searchTextField.getValue()) {
+                        validationMessages[key] = "Field is required!";
+                        isValid = false;
+                    }
                 }
             }
         }
@@ -152,7 +161,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
                                                   floatingLabelText={options.label}
                                                   hintText={options.hint}
                                                   errorText={this.state.validationMessages[options.key]}
-                                                  defaultValue={options.value}
+                                                  searchText={options.value}
                                                   disabled={options.disabled}
                                                   dataSource={this.state.autocompleteDataSource}
                                                   onUpdateInput={(searchText) => {
