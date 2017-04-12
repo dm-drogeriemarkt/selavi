@@ -24,15 +24,15 @@ public class ConsumerPropertiesService {
 
     private final ServicePropertiesRepository servicePropertiesRepository;
     private final DefaultNodeContentFactory defaultNodeContentFactory;
-    private final JsonNodeMerger jsonNodeMerger;
+    private final RelationArrayNodeMerger relationArrayNodeMerger;
 
     @Autowired
     public ConsumerPropertiesService(ServicePropertiesRepository servicePropertiesRepository,
                                      DefaultNodeContentFactory defaultNodeContentFactory,
-                                     JsonNodeMerger jsonNodeMerger) {
+                                     RelationArrayNodeMerger relationArrayNodeMerger) {
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
-        this.jsonNodeMerger = jsonNodeMerger;
+        this.relationArrayNodeMerger = relationArrayNodeMerger;
     }
 
     public ServiceProperties saveOrMergeRelationProperties(String serviceName, ObjectNode newRelationProperties, Optional<JsonNode> existingRelationProperties) throws IOException {
@@ -77,7 +77,7 @@ public class ConsumerPropertiesService {
     public ServiceProperties mergeRelationProperties(String serviceName, ObjectNode newRelationProperties, JsonNode existingRelationProperties) throws IOException {
 
         JsonNode jsonNewRelationProperties = new ObjectMapper().readTree(newRelationProperties.toString());
-        JsonNode mergedRelationProperties = jsonNodeMerger.merge(existingRelationProperties, jsonNewRelationProperties);
+        JsonNode mergedRelationProperties = relationArrayNodeMerger.merge(existingRelationProperties, jsonNewRelationProperties);
 
         final ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
         contentNode.set(CONSUMER_NODE_NAME, mergedRelationProperties);

@@ -24,13 +24,13 @@ public class ConsumerPropertiesServiceUnitTest {
 
     private final ServicePropertiesRepository servicePropertiesRepository = mock(ServicePropertiesRepository.class);
     private final DefaultNodeContentFactory defaultNodeContentFactory = mock(DefaultNodeContentFactory.class);
-    private final JsonNodeMerger jsonNodeMerger = mock(JsonNodeMerger.class);
+    private final RelationArrayNodeMerger relationArrayNodeMerger = mock(RelationArrayNodeMerger.class);
     private final ObjectMapper mapper = mock(ObjectMapper.class);
     private ConsumerPropertiesService service;
 
     @Before
     public void setUp() throws Exception {
-        service = new ConsumerPropertiesService(servicePropertiesRepository, defaultNodeContentFactory, jsonNodeMerger);
+        service = new ConsumerPropertiesService(servicePropertiesRepository, defaultNodeContentFactory, relationArrayNodeMerger);
     }
 
     @Test
