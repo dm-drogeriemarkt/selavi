@@ -9,15 +9,18 @@ import org.springframework.ldap.core.support.LdapContextSource;
 @Configuration
 public class ActiveDirectoryConfiguration {
 
-    // Dn: cn=DE-ServiceUser\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int; Username: username; Password: [PROTECTED]
+    public static final String URL = "ldaps://example.com:636";
+    public static final String USER_DN = "cn=DE-ServiceUser\\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int";
+    public static final String BASE = "ou=dm,dc=dm,dc=int";
+
     @Bean
-    public ContextSource ldapContextSource() {
+    public ContextSource ldapContextSource(ActiveDirectoryProperties properties) {
         // TODO: 29.03.17 configure
         LdapContextSource ldapContextSource = new LdapContextSource();
-        ldapContextSource.setUrl("ldaps://example.com:636");
-        ldapContextSource.setUserDn("cn=DE-ServiceUser\\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int");
-        ldapContextSource.setPassword("password");
-        ldapContextSource.setBase("ou=dm,dc=dm,dc=int");
+        ldapContextSource.setUrl(URL);
+        ldapContextSource.setUserDn(USER_DN);
+        ldapContextSource.setPassword(properties.getPassword());
+        ldapContextSource.setBase(BASE);
         return ldapContextSource;
     }
 

@@ -1,10 +1,12 @@
 package de.filiadata.datahub;
 
 import com.google.common.cache.CacheBuilder;
+import de.filiadata.datahub.business.activedirectory.ActiveDirectoryProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.CacheManager;
@@ -25,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 @EnableSwagger2
 @EnableDiscoveryClient
+@EnableConfigurationProperties(ActiveDirectoryProperties.class)
 public class SelaviApplication extends SpringBootServletInitializer {
 
     @Value("${cache.expireAfterWriteInMinutes}")
