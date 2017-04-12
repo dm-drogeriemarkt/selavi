@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 @Component
 class RelationArrayNodeMerger {
@@ -24,12 +23,14 @@ class RelationArrayNodeMerger {
 
             ObjectNode newConsumer = JsonNodeFactory.instance.objectNode();
 
-            newConsumer.put(TARGET, existingConsumer.get(TARGET).asText());
+            newConsumer.put(TARGET, existingConsumer.get(TARGET).textValue());
 
             if (existingConsumer.get(TARGET).equals(updatedConsumerNode.get(TARGET))) {
-                newConsumer.put(TYPE, updatedConsumerNode.get(TYPE));
+                newConsumer.put(TYPE, updatedConsumerNode.get(TYPE).textValue());
             } else {
-                newConsumer.put(TYPE, existingConsumer.get(TYPE).asText());
+                JsonNode typeNode = existingConsumer.get(TYPE);
+                String typeValue = (null == typeNode) ? "" : typeNode.textValue();
+                newConsumer.put(TYPE, typeValue);
             }
 
             mergedNode.add(newConsumer);
