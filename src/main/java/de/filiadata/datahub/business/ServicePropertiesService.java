@@ -63,7 +63,7 @@ public class ServicePropertiesService {
 
     private Optional<JsonNode> getConsumesNode(String serviceName, Boolean servicePropertiesExist) {
 
-        final Optional<JsonNode>[] result = new Optional[1];
+        final Optional<JsonNode>[] result = new Optional[]{Optional.empty()};
         if (!servicePropertiesExist) {
 
             Collection<ObjectNode> servicesWithContent = getServicesWithContent();
@@ -71,7 +71,9 @@ public class ServicePropertiesService {
 
                 if (serviceName.equals(service.get("id").asText())) {
                     JsonNode consumes = service.get("consumes");
-                    result[0] = (consumes.size() > 0) ? Optional.of(consumes) : Optional.empty();
+                    if (consumes.size() > 0) {
+                        result[0] = Optional.of(consumes);
+                    }
                 }
             });
         }
