@@ -6,6 +6,9 @@ import FlatButton from "material-ui/FlatButton";
 import Toggle from "material-ui/Toggle";
 import {List, ListItem} from "material-ui/List";
 import {Tabs, Tab} from 'material-ui/Tabs';
+import AutoComplete from 'material-ui/AutoComplete';
+import Avatar from 'material-ui/Avatar';
+import MenuItem from 'material-ui/MenuItem';
 
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
@@ -15,7 +18,8 @@ const mapStateToProps = (state) => {
         menuMode: state.menuMode,
         entity: state.entity,
         topComitters: state.topComitters,
-        addEditDialogFormAction: state.addEditDialogFormAction
+        addEditDialogFormAction: state.addEditDialogFormAction,
+        autocompleteDataSource: state.autocompleteDataSource
     };
 };
 
@@ -35,6 +39,8 @@ const mapDispatchToProps = (dispatch) => {
                         entity[key.substr(6)] = this.refs[key].getValue();
                     } else if (this.refs[key] instanceof Toggle) {
                         entity[key.substr(6)] = this.refs[key].isToggled();
+                    } else if (this.refs[key] instanceof AutoComplete) {
+                        entity[key.substr(6)] = this.refs[key].refs.searchTextField.getValue();
                     } else {
                         console.log("unkown input type " + this.refs[key]);
                     }
@@ -73,7 +79,7 @@ export class MicroserviceAddServiceDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {validationMessages: {}};
+        this.state = {validationMessages: {}, autocompleteDataSource: []};
     }
 
     _handleOnSubmit() {
@@ -87,6 +93,34 @@ export class MicroserviceAddServiceDialog extends React.Component {
         this.props.onCancel();
     }
 
+    _handleAutocompleteInput(searchText, searchEndpoint) {
+        if (searchText && searchText.length > 2) {
+            var client = rest.wrap(mime);
+            let encodedSearchUri = encodeURI(searchEndpoint + "?searchQuery=" + searchText);
+            client({path: encodedSearchUri}).then(response => {
+                this.setState({
+                    autocompleteDataSource: response.entity.map((person) => {
+                        let avatar = person.thumbnailPhoto && <Avatar src={"data:image/png;base64," + person.thumbnailPhoto} />;
+
+                        return {
+                            text: person.displayName,
+                            value: (
+                                <MenuItem
+                                    primaryText={person.displayName}
+                                    rightAvatar={avatar}
+                                />
+                            ),
+                        }
+                    })
+                });
+            });
+        } else {
+            this.setState({
+                autocompleteDataSource: []
+            });
+        }
+    }
+
     _validate() {
 
         var validationMessages = {};
@@ -94,9 +128,16 @@ export class MicroserviceAddServiceDialog extends React.Component {
 
         for (var key in this.props.textFields) {
             if (this.props.textFields[key].required) {
-                if (!this.refs["input_" + key].getValue()) {
-                    validationMessages[key] = "Field is required!";
-                    isValid = false;
+                if (typeof this.refs["input_" + key].getValue === "function") {
+                    if (!this.refs["input_" + key].getValue()) {
+                        validationMessages[key] = "Field is required!";
+                        isValid = false;
+                    }
+                } else if (typeof this.refs["input_" + key].refs.searchTextField.getValue === "function") {
+                    if (!this.refs["input_" + key].refs.searchTextField.getValue()) {
+                        validationMessages[key] = "Field is required!";
+                        isValid = false;
+                    }
                 }
             }
         }
@@ -113,14 +154,30 @@ export class MicroserviceAddServiceDialog extends React.Component {
             style = {marginLeft: "1em"};
         }
 
-        options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
-                                           style={style}
-                                           ref={"input_" + options.key}
-                                           floatingLabelText={options.label}
-                                           hintText={options.hint}
-                                           errorText={this.state.validationMessages[options.key]}
-                                           defaultValue={options.value}
-                                           disabled={options.disabled}></TextField>);
+        if (options.searchEndpoint) {
+            options.textFields.push(<AutoComplete key={"add_edit_dialog_" + options.key}
+                                                  style={style}
+                                                  ref={"input_" + options.key}
+                                                  floatingLabelText={options.label}
+                                                  hintText={options.hint}
+                                                  errorText={this.state.validationMessages[options.key]}
+                                                  searchText={options.value}
+                                                  disabled={options.disabled}
+                                                  dataSource={this.state.autocompleteDataSource}
+                                                  onUpdateInput={(searchText) => {
+                                                      this._handleAutocompleteInput(searchText, options.searchEndpoint);
+                                                  }}
+                                                  filter={AutoComplete.caseInsensitiveFilter}/>);
+        } else {
+            options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
+                                               style={style}
+                                               ref={"input_" + options.key}
+                                               floatingLabelText={options.label}
+                                               hintText={options.hint}
+                                               errorText={this.state.validationMessages[options.key]}
+                                               defaultValue={options.value}
+                                               disabled={options.disabled}></TextField>);
+        }
 
         if (rightcolumn) {
             options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
@@ -177,7 +234,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
                 label: textField.label,
                 hint: textField.hint,
                 value: value,
-                disabled: textField.disabled
+                disabled: textField.disabled,
+                searchEndpoint: textField.searchEndpoint
             });
         }
 

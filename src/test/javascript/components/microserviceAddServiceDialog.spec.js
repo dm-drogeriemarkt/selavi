@@ -1,5 +1,6 @@
-var sinon = require('sinon');
+const rest = require('rest');
 
+const sinon = require('sinon');
 import React from "react";
 import chai from "chai";
 import {shallow, mount} from "enzyme";
@@ -142,6 +143,78 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(1).props().primaryText).to.equal("moo@cow.biz");
         chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(1).props().secondaryText).to.equal(1337);
     });
+
+    describe('autocomplete feature', function() {
+        var thenHandler, clientStub;
+
+        before(function() {
+            const thenSpy = function (handlerParam) {
+                thenHandler = handlerParam;
+            };
+            clientStub = sinon.stub().returns({
+                then: sinon.spy(thenSpy)
+            });
+
+            sinon.stub(rest, 'wrap').returns(clientStub);
+        });
+
+        afterEach(function () {
+            clientStub.reset();
+
+            // cleanup, make sure tests don't interfere with each other
+            thenHandler = undefined;
+            rest.wrap.reset()
+        });
+
+        after(function() {
+            rest.wrap.restore();
+        });
+
+        it('renders autocomplete textField', function () {
+
+            let props = createProps();
+            props.textFields = {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
+                "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
+            };
+
+            const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+
+            chai.expect(wrapper.find('AutoComplete').length).to.equal(1);
+        });
+
+        it('fetches autocomplete data and creates autocomplete list', function () {
+
+            let props = createProps();
+            props.textFields = {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
+                "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
+            };
+
+            const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+
+            wrapper.find('AutoComplete').simulate('updateInput', "Mül");
+
+            sinon.assert.calledOnce(clientStub);
+            sinon.assert.calledWith(clientStub, { path: "/selavi/person/search?searchQuery=M%C3%BCl" });
+
+            thenHandler({entity:[
+                    { displayName: "Müller, Sven" },
+                    { displayName: "Müller, Thomas", thumbnailPhoto: "i_am_a_base64_encoded_png" }
+                ]});
+            
+
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource.length).to.equal(2);
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.primaryText).to.equal("Müller, Sven");
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.rightAvatar).to.be.undefined;
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.primaryText).to.equal("Müller, Thomas");
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.rightAvatar.props.src).to.equal("data:image/png;base64,i_am_a_base64_encoded_png");
+        });
+
+    });
+
 });
 
 function createProps() {
