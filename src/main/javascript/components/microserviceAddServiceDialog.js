@@ -94,7 +94,8 @@ export class MicroserviceAddServiceDialog extends React.Component {
     _handleAutocompleteInput(searchText, searchEndpoint) {
         if (searchText && searchText.length > 2) {
             var client = rest.wrap(mime);
-            client({path: searchEndpoint + "?searchQuery=" + searchText}).then(response => {
+            let encodedSearchUri = encodeURI(searchEndpoint + "?searchQuery=" + searchText);
+            client({path: encodedSearchUri}).then(response => {
                 this.setState({
                     autocompleteDataSource: response.entity.map((person) => {
                         let avatar = person.thumbnailPhoto && <Avatar src={"data:image/png;base64," + person.thumbnailPhoto} />;
