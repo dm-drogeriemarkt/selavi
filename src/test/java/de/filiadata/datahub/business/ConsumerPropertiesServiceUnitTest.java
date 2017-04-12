@@ -16,19 +16,21 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 public class ConsumerPropertiesServiceUnitTest {
+
     private static final String SERVICE_NAME = "fry-service";
-    private final static ObjectNode RELATED_SERVICE_NODE = new ObjectMapper().createObjectNode().put("target", "");
+    private static final ObjectNode RELATED_SERVICE_NODE = new ObjectMapper().createObjectNode().put("target", "");
     private static final String CONSUMER_NODE_NAME = "consumes";
     private static final String RELATED_SERVICE_NAME = "bender-service";
 
     private final ServicePropertiesRepository servicePropertiesRepository = mock(ServicePropertiesRepository.class);
     private final DefaultNodeContentFactory defaultNodeContentFactory = mock(DefaultNodeContentFactory.class);
+    private final JsonNodeMerger jsonNodeMerger = mock(JsonNodeMerger.class);
     private final ObjectMapper mapper = mock(ObjectMapper.class);
     private ConsumerPropertiesService service;
 
     @Before
     public void setUp() throws Exception {
-        service = new ConsumerPropertiesService(servicePropertiesRepository, defaultNodeContentFactory);
+        service = new ConsumerPropertiesService(servicePropertiesRepository, defaultNodeContentFactory, jsonNodeMerger);
     }
 
     @Test

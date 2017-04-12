@@ -22,14 +22,25 @@ public class ConsumerPropertiesService {
     private static final String CONSUMER_NODE_NAME = "consumes";
     private static final String TARGET = "target";
 
-    private ServicePropertiesRepository servicePropertiesRepository;
-    private DefaultNodeContentFactory defaultNodeContentFactory;
+    private final ServicePropertiesRepository servicePropertiesRepository;
+    private final DefaultNodeContentFactory defaultNodeContentFactory;
+    private final JsonNodeMerger jsonNodeMerger;
 
     @Autowired
     public ConsumerPropertiesService(ServicePropertiesRepository servicePropertiesRepository,
-                                     DefaultNodeContentFactory defaultNodeContentFactory) {
+                                     DefaultNodeContentFactory defaultNodeContentFactory,
+                                     JsonNodeMerger jsonNodeMerger) {
         this.servicePropertiesRepository = servicePropertiesRepository;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
+        this.jsonNodeMerger = jsonNodeMerger;
+    }
+
+    public ServiceProperties saveOrMergeRelationProperties(String serviceName, ObjectNode newRelationProperties, Optional<JsonNode> existingRelationProperties) throws IOException {
+        if (!existingRelationProperties.isPresent()) {
+            return saveRelationProperties(serviceName, newRelationProperties);
+        } else {
+            return mergeRelationProperties(serviceName, newRelationProperties, existingRelationProperties.get());
+        }
     }
 
     public ServiceProperties saveRelationProperties(String serviceName, ObjectNode relationProperties) throws IOException {
@@ -62,6 +73,19 @@ public class ConsumerPropertiesService {
         serviceProperties.setContent(existingNode.toString());
         return servicePropertiesRepository.save(serviceProperties);
     }
+
+    public ServiceProperties mergeRelationProperties(String serviceName, ObjectNode newRelationProperties, JsonNode existingRelationProperties) throws IOException {
+
+        JsonNode jsonNewRelationProperties = new ObjectMapper().readTree(newRelationProperties.toString());
+        JsonNode mergedRelationProperties = jsonNodeMerger.merge(existingRelationProperties, jsonNewRelationProperties);
+
+        final ObjectNode contentNode = defaultNodeContentFactory.create(serviceName);
+        contentNode.set(CONSUMER_NODE_NAME, mergedRelationProperties);
+
+        final ServiceProperties newServiceProperties = new ServiceProperties(serviceName, contentNode.toString());
+        return servicePropertiesRepository.save(newServiceProperties);
+    }
+
 
     private Optional<ObjectNode> getRelation(ArrayNode arrayNode, ObjectNode relationProperties) {
         for (Iterator<JsonNode> it = arrayNode.iterator(); it.hasNext(); ) {

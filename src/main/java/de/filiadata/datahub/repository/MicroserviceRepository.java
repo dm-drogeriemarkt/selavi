@@ -109,9 +109,11 @@ public class MicroserviceRepository {
     }
 
     private ArrayNode readHostInfos(JsonNode applicationNode) {
+
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
         instances.forEach(instanceNode -> {
+
             final ObjectNode hostResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
             addSingleProperty(hostResultNode, instanceNode, HOST_NAME);
             addSingleProperty(hostResultNode, instanceNode, IP_ADDR);
@@ -158,11 +160,12 @@ public class MicroserviceRepository {
                 ObjectNode consumerObjectNode = JsonNodeFactory.instance.objectNode();
 
                 String[] consumer = consumerWithType.split(":");
-                if (consumer.length >= 1) {
+                int consumerLength = consumer.length;
 
+                if (consumerLength >= 1) {
                     consumerObjectNode.put(TARGET, consumer[0].toUpperCase());
 
-                    if (consumer.length == 2) {
+                    if (consumerLength == 2) {
                         consumerObjectNode.put(TYPE, consumer[1]);
                     }
                     result.add(consumerObjectNode);

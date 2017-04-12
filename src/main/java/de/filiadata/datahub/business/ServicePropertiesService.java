@@ -1,5 +1,6 @@
 package de.filiadata.datahub.business;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class ServicePropertiesService {
@@ -39,22 +41,41 @@ public class ServicePropertiesService {
         return propertiesContentProviderService.getAllServicesWithContent().values();
     }
 
-
     public void createNewServiceInfo(ObjectNode dto) {
         serviceAddDeleteService.createNewServiceInfo(dto);
     }
 
-    public void saveRelation(String serviceName, ObjectNode relationProperties) {
+    public void saveRelation(String serviceName, ObjectNode newRelationProperties) {
+
         final Boolean servicePropertiesExist = servicePropertiesRepository.exists(serviceName);
-        if (!servicePropertiesExist) {
-            consumerPropertiesService.createAndSaveNewProperties(serviceName, relationProperties);
+        Optional<JsonNode> existingRelationProperties = getConsumesNode(serviceName, servicePropertiesExist);
+
+        if (!servicePropertiesExist && !existingRelationProperties.isPresent()) {
+            consumerPropertiesService.createAndSaveNewProperties(serviceName, newRelationProperties);
         } else {
             try {
-                consumerPropertiesService.saveRelationProperties(serviceName, relationProperties);
+                consumerPropertiesService.saveOrMergeRelationProperties(serviceName, newRelationProperties, existingRelationProperties);
             } catch (IOException e) {
                 LOG.warn("Update of service properties failed.", e);
             }
         }
+    }
+
+    private Optional<JsonNode> getConsumesNode(String serviceName, Boolean servicePropertiesExist) {
+
+        final Optional<JsonNode>[] result = new Optional[1];
+        if (!servicePropertiesExist) {
+
+            Collection<ObjectNode> servicesWithContent = getServicesWithContent();
+            servicesWithContent.forEach(service -> {
+
+                if (serviceName.equals(service.get("id").asText())) {
+                    JsonNode consumes = service.get("consumes");
+                    result[0] = (consumes.size() > 0) ? Optional.of(consumes) : Optional.empty();
+                }
+            });
+        }
+        return result[0];
     }
 
     public void deleteRelation(String serviceName, String relatedServiceName) {
