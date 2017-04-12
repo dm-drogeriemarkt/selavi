@@ -28,4 +28,14 @@ public class RelationArrayNodeMergerUnitTest {
 
         assertThat(mergedNode.toString(), is("[{\"target\":\"KCB-SHOP\",\"type\":\"REST\"},{\"target\":\"KCB-SERVICECENTER\",\"type\":\"SOAP\"},{\"target\":\"KCB-ASSETS\",\"type\":\"FOO\"}]"));
     }
+
+    @Test
+    public void mergeNoTypeIsNullsafe() throws Exception {
+        JsonNode existingConsumerArrayNode = objectMapper.readTree("[{\"target\":\"KCB-SHOP\",\"type\":\"REST\"},{\"target\":\"KCB-SERVICECENTER\",\"type\":\"SOAP\"},{\"target\":\"KCB-ASSETS\"}]");
+        JsonNode updatedConsumerNode = objectMapper.readTree("{\"target\":\"KCB-SHOP\",\"type\":\"FOO\"}");
+
+        JsonNode mergedNode = merger.merge(existingConsumerArrayNode, updatedConsumerNode);
+
+        assertThat(mergedNode.toString(), is("[{\"target\":\"KCB-SHOP\",\"type\":\"FOO\"},{\"target\":\"KCB-SERVICECENTER\",\"type\":\"SOAP\"},{\"target\":\"KCB-ASSETS\",\"type\":\"\"}]"));
+    }
 }
