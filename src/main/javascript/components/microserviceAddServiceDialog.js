@@ -145,15 +145,19 @@ export class MicroserviceAddServiceDialog extends React.Component {
         }
 
         if (options.searchEndpoint) {
-            options.textFields.push(<AutoComplete
-                hintText={options.hint}
-                dataSource={this.state.autocompleteDataSource}
-                onUpdateInput={function(searchText) {
-                    this._handleAutocompleteInput(searchText, options.searchEndpoint)
-                }.bind(this)}
-                ref={"input_" + options.key}
-                filter={AutoComplete.caseInsensitiveFilter}
-            />);
+            options.textFields.push(<AutoComplete key={"add_edit_dialog_" + options.key}
+                                                  style={style}
+                                                  ref={"input_" + options.key}
+                                                  floatingLabelText={options.label}
+                                                  hintText={options.hint}
+                                                  errorText={this.state.validationMessages[options.key]}
+                                                  defaultValue={options.value}
+                                                  disabled={options.disabled}
+                                                  dataSource={this.state.autocompleteDataSource}
+                                                  onUpdateInput={(searchText) => {
+                                                      this._handleAutocompleteInput(searchText, options.searchEndpoint);
+                                                  }}
+                                                  filter={AutoComplete.caseInsensitiveFilter}/>);
         } else {
             options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
                                                style={style}
