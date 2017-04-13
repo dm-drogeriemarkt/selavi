@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import de.filiadata.datahub.business.DefaultNodeContentFactory;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,26 @@ import java.util.Map;
 public class MicroserviceRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
+
+    private static final String APPLICATION = "application";
+    private static final String NAME = "name";
+    private static final String HOSTS = "hosts";
+    private static final String METADATA = "metadata";
+    private static final String INSTANCE = "instance";
+    private static final String HOST_NAME = "hostName";
+    private static final String IP_ADDR = "ipAddr";
+    private static final String HOME_PAGE_URL = "homePageUrl";
+    private static final String PORT = "port";
+    private static final String SECURE_PORT = "securePort";
+    private static final String PORTS = "ports";
+    private static final String CONSUMERS = "consumers";
+    private static final String CONSUMES = "consumes";
+    private static final String BITBUCKET_URL = "bitbucketUrl";
+    private static final String IGNORED_COMMITTERS = "ignoredCommitters";
+    private static final String DESCRIPTION = "description";
+    private static final String AT_ENABLED = "@enabled";
+    private static final String TARGET = "target";
+    private static final String TYPE = "type";
 
     private RestTemplate restTemplate;
     private DefaultNodeContentFactory defaultNodeContentFactory;
@@ -64,52 +86,110 @@ public class MicroserviceRepository {
             return Collections.emptyMap();
         }
 
-        final String nodeApplication = "application";
         final JsonNode rootNode = response.get(nodeApplications);
-        if (!rootNode.hasNonNull(nodeApplication)) {
+        if (!rootNode.hasNonNull(APPLICATION)) {
             return Collections.emptyMap();
         }
 
-        final ArrayNode applicationsNode = (ArrayNode) rootNode.get(nodeApplication);
+        final ArrayNode applicationsNode = (ArrayNode) rootNode.get(APPLICATION);
         return createResult(applicationsNode);
     }
 
     private Map<String, ObjectNode> createResult(ArrayNode applicationsNode) {
-        final String nodeApplicationName = "name";
         final Map<String, ObjectNode> result = new HashMap<>();
         applicationsNode.forEach(application -> {
-            final String applicationName = application.get(nodeApplicationName).textValue();
+            final String applicationName = application.get(NAME).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
-            applicationNode.set("hosts", readHostInfos(application));
+            applicationNode.set(HOSTS, readHostInfos(application));
+            applicationNode.set(METADATA, readMetadata(application));
+            applicationNode.set(CONSUMES, readConsumers(application));
             result.put(applicationName, applicationNode);
         });
         return result;
     }
 
     private ArrayNode readHostInfos(JsonNode applicationNode) {
+
         final ArrayNode result = JsonNodeFactory.instance.arrayNode();
-        final ArrayNode instances = (ArrayNode) applicationNode.get("instance");
+        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
         instances.forEach(instanceNode -> {
+
             final ObjectNode hostResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
-            addSingleProperty(hostResultNode, instanceNode, "hostName");
-            addSingleProperty(hostResultNode, instanceNode, "ipAddr");
-            addSingleProperty(hostResultNode, instanceNode, "homePageUrl");
+            addSingleProperty(hostResultNode, instanceNode, HOST_NAME);
+            addSingleProperty(hostResultNode, instanceNode, IP_ADDR);
+            addSingleProperty(hostResultNode, instanceNode, HOME_PAGE_URL);
 
             final ArrayNode portNodes = JsonNodeFactory.instance.arrayNode();
-            addArrayProperty(portNodes, instanceNode, "port");
-            addArrayProperty(portNodes, instanceNode, "securePort");
+            addArrayProperty(portNodes, instanceNode, PORT);
+            addArrayProperty(portNodes, instanceNode, SECURE_PORT);
 
-            hostResultNode.set("ports", portNodes);
+            hostResultNode.set(PORTS, portNodes);
             result.add(hostResultNode);
         });
 
         return result;
     }
 
+    private ArrayNode readMetadata(JsonNode applicationNode) {
+
+        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
+        final JsonNode metadata = instances.get(0).get(METADATA);
+        final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
+
+        addChildNodeToMetaResultNode(metaResultNode, metadata, DESCRIPTION);
+        addChildNodeToMetaResultNode(metaResultNode, metadata, BITBUCKET_URL);
+        addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
+
+        result.add(metaResultNode);
+        return result;
+    }
+
+    private ArrayNode readConsumers(JsonNode applicationNode) {
+
+        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
+        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
+        final JsonNode metadata = instances.get(0).get(METADATA);
+
+        if (metadata.get(CONSUMERS) != null) {
+
+            String consumersInput = metadata.get(CONSUMERS).asText();
+            String[] consumersWithCommunicationType = consumersInput.split(",");
+
+            for (String consumerWithType : consumersWithCommunicationType) {
+                ObjectNode consumerObjectNode = JsonNodeFactory.instance.objectNode();
+
+                String[] consumer = consumerWithType.split(":");
+                int consumerLength = consumer.length;
+
+                if (consumerLength >= 1) {
+                    consumerObjectNode.put(TARGET, consumer[0].toUpperCase());
+
+                    if (consumerLength == 2) {
+                        consumerObjectNode.put(TYPE, consumer[1]);
+                    }
+                    result.add(consumerObjectNode);
+                }
+            }
+        }
+        return result;
+    }
+
+    private void addChildNodeToMetaResultNode(ObjectNode metaResultNode, JsonNode metadata, String fieldName) {
+        if (metadata.get(fieldName) != null) {
+            final ArrayNode childNode = JsonNodeFactory.instance.arrayNode();
+            final TextNode child = JsonNodeFactory.instance.textNode(metadata.get(fieldName).asText());
+            if (StringUtils.isNotEmpty(child.asText())) {
+                childNode.add(child);
+                metaResultNode.set(fieldName, childNode);
+            }
+        }
+    }
+
     private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
         if (instanceNode.hasNonNull(propertyName)) {
             final JsonNode port = instanceNode.get(propertyName);
-            if ("true".equals(port.get("@enabled").textValue())) {
+            if ("true".equals(port.get(AT_ENABLED).textValue())) {
                 portsNode.add(JsonNodeFactory.instance.numberNode(port.get("$").intValue()));
             }
         }
