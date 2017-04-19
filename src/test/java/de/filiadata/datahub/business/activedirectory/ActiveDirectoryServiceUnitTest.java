@@ -31,7 +31,7 @@ public class ActiveDirectoryServiceUnitTest {
 
         assertThat(queryArgumentCaptor.getValue().filter().toString(),
                 //is("(&(objectclass=user)(!(objectclass=computer))(sAMAccountName=*)(!(sAMAccountName=*Admin*))(mail=*)(name=*Alt,*foo*))"));
-                is("(&(objectclass=user)(!(objectclass=computer))(sAMAccountName=*)(mail=*)(name=*Alt,*foo*))"));
+                is("(&(objectclass=user)(!(objectclass=computer))(sAMAccountName=*)(name=*Alt,*foo*))"));
 
         Attributes attributes = new BasicAttributes();
         attributes.put("sAMAccountName", "fbc");
@@ -44,7 +44,7 @@ public class ActiveDirectoryServiceUnitTest {
 
         assertThat(person.getUid(), is("fbc"));
         assertThat(person.getDisplayName(), is("Altmann, Erik"));
-        assertThat(person.getEMail(), is("john.doe@example.com"));
+//        assertThat(person.getEMail(), is("john.doe@example.com"));
         assertThat(person.getThumbnailPhoto(), is(selfie));
     }
 
