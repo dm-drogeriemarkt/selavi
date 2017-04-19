@@ -27,7 +27,7 @@ public class ActiveDirectoryService {
                 query().where("objectclass").is("user")
                         .and("objectclass").not().is("computer")
                         .and("sAMAccountName").isPresent()
-                        .and("sAMAccountName").not().like("*Admin*")
+//                        .and("sAMAccountName").not().like("*Admin*")
                         .and("mail").isPresent()
                         .and("name").like(ldapQuery),
                 new AttributesMapper<Person>() {

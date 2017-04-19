@@ -11,7 +11,6 @@ import javax.naming.directory.BasicAttributes;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -31,7 +30,8 @@ public class ActiveDirectoryServiceUnitTest {
         verify(ldapTemplate).search(queryArgumentCaptor.capture(), mapperArgumentCaptor.capture());
 
         assertThat(queryArgumentCaptor.getValue().filter().toString(),
-                is("(&(objectclass=user)(!(objectclass=computer))(sAMAccountName=*)(!(sAMAccountName=*Admin*))(mail=*)(name=*Alt,*foo*))"));
+                //is("(&(objectclass=user)(!(objectclass=computer))(sAMAccountName=*)(!(sAMAccountName=*Admin*))(mail=*)(name=*Alt,*foo*))"));
+                is("(&(objectclass=user)(!(objectclass=computer))(sAMAccountName=*)(mail=*)(name=*Alt,*foo*))"));
 
         Attributes attributes = new BasicAttributes();
         attributes.put("sAMAccountName", "fbc");
