@@ -8,5 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ActiveDirectoryProperties {
 
     private String url;
+    private String userDn;
     private String password;
+    private String base;
 }

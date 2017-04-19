@@ -9,17 +9,13 @@ import org.springframework.ldap.core.support.LdapContextSource;
 @Configuration
 public class ActiveDirectoryConfiguration {
 
-    public static final String USER_DN = "cn=DE-ServiceUser\\, Selavi-AD - username,ou=ServiceUsers,ou=Users,ou=DE,ou=dm,dc=dm,dc=int";
-    public static final String BASE = "ou=dm,dc=dm,dc=int";
-
     @Bean
     public ContextSource ldapContextSource(ActiveDirectoryProperties properties) {
-        // TODO: 29.03.17 configure
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrl(properties.getUrl());
-        ldapContextSource.setUserDn(USER_DN);
+        ldapContextSource.setUserDn(properties.getUserDn());
         ldapContextSource.setPassword(properties.getPassword());
-        ldapContextSource.setBase(BASE);
+        ldapContextSource.setBase(properties.getBase());
         return ldapContextSource;
     }
 
