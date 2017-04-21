@@ -7,4 +7,6 @@ src/main/resources/static/built/
 .factorypath
 .project
 .settings/
+.nyc_output/
+coverage/
 
