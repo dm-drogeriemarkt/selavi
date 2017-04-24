@@ -200,7 +200,7 @@ export class AddEditDialog extends React.Component {
         ];
 
         var isOpen = false;
-        var microservice = this.props.entity || {};
+        var _entity = this.props.entity || {};
         var title = "";
 
         if (this.props.menuMode === this.props.addMenuMode) {
@@ -208,7 +208,7 @@ export class AddEditDialog extends React.Component {
             title = "Add " + this.props.entityDisplayName;
         } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
-            title = "Edit " + this.props.entityDisplayName;
+            title = "Edit " + _entity.label;
         } else {
             // dialog is closed, we can short-cut here
             return null;
@@ -216,14 +216,14 @@ export class AddEditDialog extends React.Component {
 
         let defaultPropertyInputs = [];
 
-        let customProperties = Object.keys(microservice);
+        let customProperties = Object.keys(_entity);
 
         for (var key in this.props.textFields) {
             let textField = this.props.textFields[key];
 
             let value = "";
-            if (typeof(microservice[key]) === "string") {
-                value = microservice[key];
+            if (typeof(_entity[key]) === "string") {
+                value = _entity[key];
 
                 customProperties.splice(customProperties.indexOf(key), 1);
             }
@@ -243,8 +243,8 @@ export class AddEditDialog extends React.Component {
             let toggle = this.props.toggles[key];
 
             let value = false;
-            if (typeof(microservice[key]) === "boolean") {
-                value = microservice[key];
+            if (typeof(_entity[key]) === "boolean") {
+                value = _entity[key];
 
                 customProperties.splice(customProperties.indexOf(key), 1);
             }
@@ -261,21 +261,21 @@ export class AddEditDialog extends React.Component {
         for (var idx in customProperties) {
             const key = customProperties[idx];
 
-            if (typeof(microservice[key]) === "string") {
+            if (typeof(_entity[key]) === "string") {
                 this._addTextField({
                     textFields: customPropertyInputs,
                     key: key,
                     label: key,
                     hint: key,
-                    value: microservice[key]
+                    value: _entity[key]
                 });
-            } else if (typeof(microservice[key]) === "boolean") {
+            } else if (typeof(_entity[key]) === "boolean") {
                 customPropertyInputs.push(<Toggle ref={"input_" + key}
                                      label={key}
-                                     defaultToggled={microservice[key]}
+                                     defaultToggled={_entity[key]}
                                      style={{marginTop: "2em", maxWidth: "23em"}}/>)
             } else {
-                console.log("unkown property type for key \"" + key + "\" with value \"" + microservice[key] + "\"");
+                console.log("unkown property type for key \"" + key + "\" with value \"" + _entity[key] + "\"");
             }
         }
 
@@ -284,7 +284,7 @@ export class AddEditDialog extends React.Component {
         if (Array.isArray(this.props.topComitters)) {
             let topComittersList = [];
             this.props.topComitters.forEach((propValue, index) => {
-                topComittersList.push(<ListItem key={microservice.id + '_bitbucket_' + index}
+                topComittersList.push(<ListItem key={_entity.id + '_bitbucket_' + index}
                                            primaryText={propValue.emailAddress}
                                            secondaryText={propValue.numberOfCommits}/>);
             });
