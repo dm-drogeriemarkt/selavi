@@ -11,7 +11,7 @@ import MicroserviceFilterBox from "./components/microserviceFilterbox";
 import MicroserviceList from "./components/microserviceList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceSnackbar from "./components/microserviceSnackbar";
-import MicroserviceAddServiceDialog from "./components/microserviceAddServiceDialog";
+import AddEditDialog from "./components/addEditDialog";
 import MicroserviceDeleteServiceDialog from "./components/microserviceDeleteServiceDialog";
 import store from "./stores/microserviceStore";
 
@@ -80,12 +80,12 @@ class App extends React.Component {
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
-                    <MicroserviceAddServiceDialog textFields={serviceTextFields}
+                    <AddEditDialog textFields={serviceTextFields}
                                                   toggles={serviceToggles}
                                                   addMenuMode="ADD_SERVICE"
                                                   editMenuMode="EDIT_SERVICE"
                                                   entityDisplayName="Service"/>
-                    <MicroserviceAddServiceDialog textFields={relationTextFields}
+                    <AddEditDialog textFields={relationTextFields}
                                                   addMenuMode="ADD_RELATION"
                                                   editMenuMode="EDIT_RELATION"
                                                   entityDisplayName="Link"/>

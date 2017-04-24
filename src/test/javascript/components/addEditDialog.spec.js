@@ -4,10 +4,10 @@ const sinon = require('sinon');
 import React from "react";
 import chai from "chai";
 import {shallow, mount} from "enzyme";
-import {MicroserviceAddServiceDialog} from "../../../main/javascript/components/microserviceAddServiceDialog";
+import {AddEditDialog} from "../../../main/javascript/components/addEditDialog";
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-describe('<MicroserviceAddServiceDialog/>', function () {
+describe('<AddEditDialog/>', function () {
 
     it('renders text fields for all elements in textFields prop', function () {
 
@@ -17,7 +17,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         };
 
-        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+        const wrapper = shallow(<AddEditDialog {...props}/>);
 
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("Service ID *");
@@ -40,7 +40,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         props.menuMode = 'MY_MENU_MODE';
         props.editMenuMode = 'MY_MENU_MODE';
 
-        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+        const wrapper = shallow(<AddEditDialog {...props}/>);
 
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("id");
@@ -67,7 +67,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
         props.menuMode = 'MY_MENU_MODE';
         props.editMenuMode = 'MY_MENU_MODE';
 
-        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+        const wrapper = shallow(<AddEditDialog {...props}/>);
 
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("Service ID *");
@@ -84,7 +84,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         }
 
-        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+        const wrapper = shallow(<AddEditDialog {...props}/>);
 
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("Service ID *");
@@ -101,7 +101,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
         };
 
-        const wrapper = mount(<MicroserviceAddServiceDialog {...props}/>, {
+        const wrapper = mount(<AddEditDialog {...props}/>, {
             context: {
                 muiTheme: getMuiTheme(),
             },
@@ -133,7 +133,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
             },
         ]
 
-        const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+        const wrapper = shallow(<AddEditDialog {...props}/>);
 
         chai.expect(wrapper.find('Tab').length).to.equal(3);
         chai.expect(wrapper.find('Tab').at(2).props().label).to.equal("Bitbucket");
@@ -179,7 +179,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
                 "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
             };
 
-            const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+            const wrapper = shallow(<AddEditDialog {...props}/>);
 
             chai.expect(wrapper.find('AutoComplete').length).to.equal(1);
         });
@@ -193,7 +193,7 @@ describe('<MicroserviceAddServiceDialog/>', function () {
                 "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
             };
 
-            const wrapper = shallow(<MicroserviceAddServiceDialog {...props}/>);
+            const wrapper = shallow(<AddEditDialog {...props}/>);
 
             wrapper.find('AutoComplete').simulate('updateInput', "Mül");
 

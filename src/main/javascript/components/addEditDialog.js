@@ -75,7 +75,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export class MicroserviceAddServiceDialog extends React.Component {
+export class AddEditDialog extends React.Component {
 
     constructor(props) {
         super(props);
@@ -317,4 +317,4 @@ export class MicroserviceAddServiceDialog extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceAddServiceDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(AddEditDialog);
