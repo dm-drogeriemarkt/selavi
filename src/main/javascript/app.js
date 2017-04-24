@@ -41,7 +41,7 @@ class App extends React.Component {
 
     render() {
 
-        const serviceTextFields = {
+        const serviceBusinessInputFields = {
             "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
             "description": {label: "Description", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: false},
@@ -60,14 +60,23 @@ class App extends React.Component {
             "bitbucketRepo": {label: "Bitbucket Repository", hint: "eg. \"zoe\"", required: false}
         };
 
-        const serviceToggles = {
-            "isExternal": {label: "External service (eg., not a microservice)"}
+        const serviceTechInputFields = {
+            "isExternal": {type: "toggle", label: "External service (eg., not a microservice)"}
         };
 
-        const relationTextFields = {
+        const serviceInputTabs = [
+            { label: "Business", inputFields: serviceBusinessInputFields },
+            { label: "Technical", inputFields: serviceTechInputFields }
+        ];
+
+        const relationBasicFields = {
             "target": {label: "Consumed service", required: true, disabled: true},
             "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: false}
         };
+
+        const relationInputTabs = [
+            { label: "Basic", inputFields: relationBasicFields }
+        ];
 
         return (
             <div className="appcontainer">
@@ -80,12 +89,11 @@ class App extends React.Component {
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
-                    <AddEditDialog textFields={serviceTextFields}
-                                                  toggles={serviceToggles}
+                    <AddEditDialog inputTabs={serviceInputTabs}
                                                   addMenuMode="ADD_SERVICE"
                                                   editMenuMode="EDIT_SERVICE"
                                                   entityDisplayName="Service"/>
-                    <AddEditDialog textFields={relationTextFields}
+                    <AddEditDialog inputTabs={relationInputTabs}
                                                   addMenuMode="ADD_RELATION"
                                                   editMenuMode="EDIT_RELATION"
                                                   entityDisplayName="Link"/>

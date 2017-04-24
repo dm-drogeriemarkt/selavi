@@ -9,15 +9,21 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('<AddEditDialog/>', function () {
 
-    it('renders text fields for all elements in textFields prop', function () {
+    it('renders tabs with text fields for all elements in inputTabs prop', function () {
 
         let props = createProps();
-        props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        };
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+        }});
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
+
+
+        chai.expect(wrapper.find('Tab').length).to.equal(1);
+        chai.expect(wrapper.find('Tab').at(0).props().label).to.equal("my_input_tab");
 
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("Service ID *");
@@ -52,10 +58,12 @@ describe('<AddEditDialog/>', function () {
     it('mixes pre-defined and dynamic fields / properties', function () {
 
         let props = createProps();
-        props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        };
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+        }});
         props.entity =        {
             id: "bar-consumer",
             label: "bar-consumer",
@@ -79,10 +87,12 @@ describe('<AddEditDialog/>', function () {
     it('renders disabled text fields', function () {
 
         let props = createProps();
-        props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true, disabled: true},
-            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        }
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true, disabled: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+        }});
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -96,10 +106,12 @@ describe('<AddEditDialog/>', function () {
     it('validates text fields with required=true on submit', function () {
 
         let props = createProps();
-        props.textFields = {
-            "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-            "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        };
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+        }});
 
         const wrapper = mount(<AddEditDialog {...props}/>, {
             context: {
@@ -135,13 +147,13 @@ describe('<AddEditDialog/>', function () {
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
-        chai.expect(wrapper.find('Tab').length).to.equal(3);
-        chai.expect(wrapper.find('Tab').at(2).props().label).to.equal("Bitbucket");
-        chai.expect(wrapper.find('Tab').at(2).find('ListItem').length).to.equal(2);
-        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(0).props().primaryText).to.equal("foo@bar.baz");
-        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(0).props().secondaryText).to.equal(42);
-        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(1).props().primaryText).to.equal("moo@cow.biz");
-        chai.expect(wrapper.find('Tab').at(2).find('ListItem').at(1).props().secondaryText).to.equal(1337);
+        chai.expect(wrapper.find('Tab').length).to.equal(1);
+        chai.expect(wrapper.find('Tab').at(0).props().label).to.equal("Bitbucket");
+        chai.expect(wrapper.find('Tab').at(0).find('ListItem').length).to.equal(2);
+        chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(0).props().primaryText).to.equal("foo@bar.baz");
+        chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(0).props().secondaryText).to.equal(42);
+        chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(1).props().primaryText).to.equal("moo@cow.biz");
+        chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(1).props().secondaryText).to.equal(1337);
     });
 
     describe('autocomplete feature', function() {
@@ -173,11 +185,13 @@ describe('<AddEditDialog/>', function () {
         it('renders autocomplete textField', function () {
 
             let props = createProps();
-            props.textFields = {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
-                "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
-            };
+            props.inputTabs.push({
+                label: "my_input_tab",
+                inputFields: {
+                    "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                    "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
+                    "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
+            }});
 
             const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -187,11 +201,13 @@ describe('<AddEditDialog/>', function () {
         it('fetches autocomplete data and creates autocomplete list', function () {
 
             let props = createProps();
-            props.textFields = {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
-                "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
-            };
+            props.inputTabs.push({
+                label: "my_input_tab",
+                inputFields: {
+                    "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                    "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
+                    "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
+            }});
 
             const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -220,8 +236,7 @@ describe('<AddEditDialog/>', function () {
 function createProps() {
     const props = {
         menuMode: undefined,
-        textFields: undefined,
-        toggles: undefined,
+        inputTabs: [],
         entity: undefined,
         menuMode: undefined,
         editMenuMode: undefined
