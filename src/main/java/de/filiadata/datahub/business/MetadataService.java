@@ -27,17 +27,14 @@ public class MetadataService {
         if (objectNode == null) {
             return Collections.emptyMap();
         }
-        final JsonNode metadata = objectNode.get("metadata");
-        if (metadata == null || metadata.size() < 1) {
-            return Collections.emptyMap();
 
-        }
-        final JsonNode metaDataNode = metadata.get(0);
-        final Iterator<String> iter = metaDataNode.fieldNames();
+        final Iterator<String> iter = objectNode.fieldNames();
         while (iter.hasNext()) {
             final String fieldName = iter.next();
-            final JsonNode jsonNode = metaDataNode.get(fieldName);
-            result.put(fieldName, getValueFromArrayNode(jsonNode));
+            final JsonNode jsonNode = objectNode.get(fieldName);
+            if (jsonNode.isValueNode()) {
+                result.put(fieldName, jsonNode.asText());
+            }
         }
 
 
@@ -45,13 +42,5 @@ public class MetadataService {
 
     }
 
-
-    private String getValueFromArrayNode(JsonNode jsonNode) {
-        if (jsonNode.size() > 0) {
-            return jsonNode.get(0).asText();
-        }
-
-        return null;
-    }
 
 }

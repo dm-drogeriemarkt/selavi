@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 import de.filiadata.datahub.business.DefaultNodeContentFactory;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +98,6 @@ public class MicroserviceRepository {
             final String applicationName = application.get(NAME).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
             applicationNode.set(HOSTS, readHostInfos(application));
-//            applicationNode.set(METADATA, readMetadata(application));
             applicationNode.set(CONSUMES, readConsumers(application));
             addMetadataPropertiesToBaseNode(applicationNode, application);
             result.put(applicationName, applicationNode);
@@ -132,7 +129,6 @@ public class MicroserviceRepository {
     }
 
     private void addMetadataPropertiesToBaseNode(ObjectNode applicationNode, JsonNode application) {
-        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
         final ArrayNode instances = (ArrayNode) application.get(INSTANCE);
         final JsonNode metadata = instances.get(0).get(METADATA);
 
@@ -150,30 +146,6 @@ public class MicroserviceRepository {
         addChildNodeToBaseNode(applicationNode, metadata, "monitoringLink");
     }
 
-
-    private ArrayNode readMetadata(JsonNode applicationNode) {
-
-        final ArrayNode result = JsonNodeFactory.instance.arrayNode();
-        final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
-        final JsonNode metadata = instances.get(0).get(METADATA);
-        final ObjectNode metaResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
-
-        addChildNodeToMetaResultNode(metaResultNode, metadata, DESCRIPTION);
-        addChildNodeToMetaResultNode(metaResultNode, metadata, BITBUCKET_URL);
-        addChildNodeToMetaResultNode(metaResultNode, metadata, IGNORED_COMMITTERS);
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "fdOwner");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "tags");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "description");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "microserviceUrl");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "ipAddress");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "networkZone");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "documentationLink");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "buildMonitorLink");
-        addChildNodeToMetaResultNode(metaResultNode, metadata, "monitoringLink");
-
-        result.add(metaResultNode);
-        return result;
-    }
 
     private ArrayNode readConsumers(JsonNode applicationNode) {
 
@@ -212,16 +184,6 @@ public class MicroserviceRepository {
     }
 
 
-    private void addChildNodeToMetaResultNode(ObjectNode metaResultNode, JsonNode metadata, String fieldName) {
-        if (metadata.get(fieldName) != null) {
-            final ArrayNode childNode = JsonNodeFactory.instance.arrayNode();
-            final TextNode child = JsonNodeFactory.instance.textNode(metadata.get(fieldName).asText());
-            if (StringUtils.isNotEmpty(child.asText())) {
-                childNode.add(child);
-                metaResultNode.set(fieldName, childNode);
-            }
-        }
-    }
 
     private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
         if (instanceNode.hasNonNull(propertyName)) {
