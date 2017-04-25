@@ -37,7 +37,6 @@ public class MicroserviceRepository {
     private static final String PORT = "port";
     private static final String SECURE_PORT = "securePort";
     private static final String PORTS = "ports";
-    private static final String CONSUMERS = "consumers";
     private static final String CONSUMES = "consumes";
     private static final String BITBUCKET_URL = "bitbucketUrl";
     private static final String IGNORED_COMMITTERS = "ignoredCommitters";
@@ -151,9 +150,9 @@ public class MicroserviceRepository {
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
         final JsonNode metadata = instances.get(0).get(METADATA);
 
-        if (metadata.get(CONSUMERS) != null) {
+        if (metadata.get(CONSUMES) != null) {
 
-            String consumersInput = metadata.get(CONSUMERS).asText();
+            String consumersInput = metadata.get(CONSUMES).asText();
             String[] consumersWithCommunicationType = consumersInput.split(",");
 
             for (String consumerWithType : consumersWithCommunicationType) {
