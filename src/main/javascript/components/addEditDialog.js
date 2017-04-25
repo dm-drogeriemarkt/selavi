@@ -195,7 +195,7 @@ export class AddEditDialog extends React.Component {
         }
 
         if (rightcolumn) {
-            options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
+            options.textFields.push(<div key={"add_edit_dialog_dummy_div_" + options.textFields.length}></div>);
         }
     }
 
@@ -282,7 +282,8 @@ export class AddEditDialog extends React.Component {
                 }
             }
 
-            defaultPropertyInputTabs.push(<Tab label={this.props.inputTabs[i].label} >
+            defaultPropertyInputTabs.push(<Tab key={"add_edit_dialog_tab_" + i}
+                                               label={this.props.inputTabs[i].label} >
                 {inputs}
             </Tab>);
         }
