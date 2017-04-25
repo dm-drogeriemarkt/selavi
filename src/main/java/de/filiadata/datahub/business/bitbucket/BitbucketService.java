@@ -24,30 +24,29 @@ public class BitbucketService {
 
     private final RestTemplate restTemplate;
     private final String bitbucketCredentials;
-    private final List<String> ignoredCommiters;
+    private List<String> ignoredCommiters;
     private final Integer numberOfTopCommiters;
 
     public BitbucketService(RestTemplate restTemplate,
                             @Value("${selavi.bitbucket.credentials}") String bitbucketCredentials,
-                            @Value("${selavi.bitbucket.irgnoredCommitters}") String ignoredCommiters,
                             @Value("${selavi.bitbucket.topcommitters.size}") Integer numberOfTopCommiters) {
         this.restTemplate = restTemplate;
         this.bitbucketCredentials = bitbucketCredentials;
-        this.ignoredCommiters = StringUtils.isEmpty(ignoredCommiters) ? Collections.<String>emptyList() : Arrays.<String>asList(ignoredCommiters.split(","));
         this.numberOfTopCommiters = numberOfTopCommiters;
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo) {
-        final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}/commits?limit=500");
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo, String ignoredCommiters) {
+        final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}");
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("project", project);
         parameters.put("repo", repo);
 
-        return getTopCommitters(link.expand(parameters).getHref());
+        return getTopCommitters(link.expand(parameters).getHref(), ignoredCommiters);
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url) {
-        final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(url);
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url, String ignoredCommiters) {
+        this.ignoredCommiters = StringUtils.isEmpty(ignoredCommiters) ? Collections.<String>emptyList() : Arrays.<String>asList(ignoredCommiters.split(","));
+        final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(url + "/commits?limit=500");
 
         return handleResponse(responseEntity);
     }
