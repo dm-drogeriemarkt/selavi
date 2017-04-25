@@ -49,16 +49,6 @@ public class BitbucketServiceUnitTest {
     }
 
 
-    @Test
-    public void testGetTopCommitersWithProjectAndRepo() throws IOException {
-        String href = "https://example.com/rest/api/1.0/projects/prj/repos/repo/commits?limit=500";
-        when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
-        }))).thenReturn(getResponseEntity());
-
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3);
-        final Map<BitbucketAuthorDto, Long> topCommiters = bitbucketService.getTopCommitters("prj", "repo", "foo@bar.de");
-        assertThat(topCommiters.size(), is(3));
-    }
 
     @Test
     public void testOrderOfTopCommiters() throws IOException {
