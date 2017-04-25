@@ -121,6 +121,22 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.find('TextField').at(1).props().style.width).to.equal("33em");
     });
 
+    it('renders link text fields', function () {
+
+        let props = createProps();
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true, isLink: true}
+            }});
+
+        const wrapper = shallow(<AddEditDialog {...props}/>);
+
+        chai.expect(wrapper.find('LinkTextField').length).to.equal(1);
+        chai.expect(wrapper.find('LinkTextField').at(0).props().floatingLabelText).to.equal("Label *");
+    });
+
     it('validates text fields with required=true on submit', function () {
 
         let props = createProps();
