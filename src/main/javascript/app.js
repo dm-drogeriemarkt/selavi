@@ -57,10 +57,10 @@ class App extends React.Component {
         };
 
         const serviceDocumentationInputFields = {
-            "documentationLink": {label: "Link to documentation", hint: "eg. \"https://wiki.dm.de/ZOE\"", required: false},
-            "buildMonitorLink": {label: "Link to Build Monitor", hint: "eg. \"https://zoe-jenkins.dm.de\"", required: false},
-            "monitoringLink": {label: "Link to Monitoring", hint: "eg. \"https://elk-kibana.dm.de\"", required: false},
-            "bitbucketUrl": {label: "Bitbucket URL", hint: "eg. \"https://stash.dm.de/projects/ZOE/repos/zoe\"", required: false}
+            "documentationLink": {label: "Link to documentation", hint: "eg. \"https://wiki.dm.de/ZOE\"", required: false, isLink: true},
+            "buildMonitorLink": {label: "Link to Build Monitor", hint: "eg. \"https://zoe-jenkins.dm.de\"", required: false, isLink: true},
+            "monitoringLink": {label: "Link to Monitoring", hint: "eg. \"https://elk-kibana.dm.de\"", required: false, isLink: true},
+            "bitbucketUrl": {label: "Bitbucket URL", hint: "eg. \"https://stash.dm.de/projects/ZOE/repos/zoe\"", required: false, isLink: true}
         };
 
 

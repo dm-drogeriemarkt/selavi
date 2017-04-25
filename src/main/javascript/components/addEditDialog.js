@@ -10,6 +10,8 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import MenuItem from 'material-ui/MenuItem';
 
+import LinkTextField from "./linkTextField";
+
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 
@@ -171,6 +173,15 @@ export class AddEditDialog extends React.Component {
                                                       this._handleAutocompleteInput(searchText, options.searchEndpoint);
                                                   }}
                                                   filter={AutoComplete.caseInsensitiveFilter}/>);
+        } else if (options.isLink) {
+            options.textFields.push(<LinkTextField key={"add_edit_dialog_" + options.key}
+                                                   style={style}
+                                                   ref={"input_" + options.key}
+                                                   floatingLabelText={options.label}
+                                                   hintText={options.hint}
+                                                   errorText={this.state.validationMessages[options.key]}
+                                                   defaultValue={options.value}
+                                                   disabled={options.disabled}></LinkTextField>);
         } else {
             options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
                                                style={style}
@@ -265,7 +276,8 @@ export class AddEditDialog extends React.Component {
                         multiLine: textField.multiLine,
                         value: value,
                         disabled: textField.disabled,
-                        searchEndpoint: textField.searchEndpoint
+                        searchEndpoint: textField.searchEndpoint,
+                        isLink: textField.isLink
                     });
                 }
             }
