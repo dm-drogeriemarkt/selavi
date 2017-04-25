@@ -165,6 +165,7 @@ export class AddEditDialog extends React.Component {
                                                   errorText={this.state.validationMessages[options.key]}
                                                   searchText={options.value}
                                                   disabled={options.disabled}
+                                                  multiLine={options.multiLine}
                                                   dataSource={this.state.autocompleteDataSource}
                                                   onUpdateInput={(searchText) => {
                                                       this._handleAutocompleteInput(searchText, options.searchEndpoint);
@@ -178,7 +179,8 @@ export class AddEditDialog extends React.Component {
                                                hintText={options.hint}
                                                errorText={this.state.validationMessages[options.key]}
                                                defaultValue={options.value}
-                                               disabled={options.disabled}></TextField>);
+                                               disabled={options.disabled}
+                                               multiLine={options.multiLine}></TextField>);
         }
 
         if (rightcolumn) {
@@ -260,6 +262,7 @@ export class AddEditDialog extends React.Component {
                         key: key,
                         label: textField.label,
                         hint: textField.hint,
+                        multiLine: textField.multiLine,
                         value: value,
                         disabled: textField.disabled,
                         searchEndpoint: textField.searchEndpoint
@@ -299,7 +302,7 @@ export class AddEditDialog extends React.Component {
                 }
             }
 
-            customPropertiesTab = <Tab label="Custom Properties" >
+            customPropertiesTab = <Tab label="Misc" >
                     {customPropertyInputs}
             </Tab>
         }
@@ -315,7 +318,7 @@ export class AddEditDialog extends React.Component {
                                            secondaryText={propValue.numberOfCommits}/>);
             });
 
-            topComittersTab = <Tab label="Bitbucket" >
+            topComittersTab = <Tab label="Top Committers" >
                 <List>
                     {topComittersList}
                 </List>

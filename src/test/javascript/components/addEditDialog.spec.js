@@ -103,6 +103,23 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(false);
     });
 
+    it('renders multi-line text fields', function () {
+
+        let props = createProps();
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true, multiLine: true}
+            }});
+
+        const wrapper = shallow(<AddEditDialog {...props}/>);
+
+        chai.expect(wrapper.find('TextField').length).to.equal(2);
+        chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal("Label *");
+        chai.expect(wrapper.find('TextField').at(1).props().multiLine).to.equal(true);
+    });
+
     it('validates text fields with required=true on submit', function () {
 
         let props = createProps();
@@ -148,7 +165,7 @@ describe('<AddEditDialog/>', function () {
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
         chai.expect(wrapper.find('Tab').length).to.equal(1);
-        chai.expect(wrapper.find('Tab').at(0).props().label).to.equal("Bitbucket");
+        chai.expect(wrapper.find('Tab').at(0).props().label).to.equal("Top Committers");
         chai.expect(wrapper.find('Tab').at(0).find('ListItem').length).to.equal(2);
         chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(0).props().primaryText).to.equal("foo@bar.baz");
         chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(0).props().secondaryText).to.equal(42);
