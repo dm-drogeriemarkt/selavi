@@ -44,29 +44,30 @@ class App extends React.Component {
         const serviceBusinessInputFields = {
             "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
-            "description": {label: "Description", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: false},
-            "team": {label: "Development Team *", hint: "eg. \"ZOE-Team\"", required: true},
-            "dmOwner": {label: "dm-Owner", hint: "eg. \"Erik Altmann\"", required: false, searchEndpoint: "/selavi/person/search"},
-            "fdOwner": {label: "Filiadata-Owner *", hint: "eg. \"Altmann, Erik\"", required: true, searchEndpoint: "/selavi/person/search"},
-            "documentationLink": {
-                label: "Link to documentation",
-                hint: "eg. \"https://wiki.dm.de/ZOE\"",
-                required: false
-            },
-            "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false},
-            "ipAddress": {label: "IP address", hint: "eg. \"172.23.68.213\"", required: false},
-            "networkZone": {label: "Network zone", hint: "eg. \"LAN\"", required: false},
-            "bitbucketProject": {label: "Bitbucket project", hint: "eg. \"ZOE\"", required: false},
-            "bitbucketRepo": {label: "Bitbucket Repository", hint: "eg. \"zoe\"", required: false}
+            "fdOwner": {label: "Contact Person *", hint: "eg. \"Altmann, Erik\"", required: true, searchEndpoint: "/selavi/person/search"},
+            "tags": {label: "Tags", hint: "eg. \"dm-pos-belege, produktdaten\"", required: false},
+            "description": {label: "Description", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: false, multiLine: true},
         };
 
         const serviceTechInputFields = {
+            "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false},
+            "ipAddress": {label: "IP address(es)", hint: "eg. \"172.23.68.213\"", required: false},
+            "networkZone": {label: "Network zone", hint: "eg. \"LAN\"", required: false},
             "isExternal": {type: "toggle", label: "External service (eg., not a microservice)"}
         };
 
+        const serviceDocumentationInputFields = {
+            "documentationLink": {label: "Link to documentation", hint: "eg. \"https://wiki.dm.de/ZOE\"", required: false},
+            "buildMonitorLink": {label: "Link to Build Monitor", hint: "eg. \"https://zoe-jenkins.dm.de\"", required: false},
+            "monitoringLink": {label: "Link to Monitoring", hint: "eg. \"https://elk-kibana.dm.de\"", required: false},
+            "bitbucketUrl": {label: "Bitbucket URL", hint: "eg. \"https://stash.dm.de/projects/ZOE/repos/zoe\"", required: false}
+        };
+
+
         const serviceInputTabs = [
             { label: "Business", inputFields: serviceBusinessInputFields },
-            { label: "Technical", inputFields: serviceTechInputFields }
+            { label: "Technical", inputFields: serviceTechInputFields },
+            { label: "Documentation", inputFields: serviceDocumentationInputFields }
         ];
 
         const relationBasicFields = {
