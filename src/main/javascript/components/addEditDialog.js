@@ -126,17 +126,19 @@ export class AddEditDialog extends React.Component {
         var validationMessages = {};
         var isValid = true;
 
-        for (var key in this.props.textFields) {
-            if (this.props.textFields[key].required) {
-                if (typeof this.refs["input_" + key].getValue === "function") {
-                    if (!this.refs["input_" + key].getValue()) {
-                        validationMessages[key] = "Field is required!";
-                        isValid = false;
-                    }
-                } else if (typeof this.refs["input_" + key].refs.searchTextField.getValue === "function") {
-                    if (!this.refs["input_" + key].refs.searchTextField.getValue()) {
-                        validationMessages[key] = "Field is required!";
-                        isValid = false;
+        for (var i = 0; i < this.props.inputTabs.length; i++) {
+            for (var key in this.props.inputTabs[i].inputFields) {
+                if (this.props.inputTabs[i].inputFields[key].required) {
+                    if (typeof this.refs["input_" + key].getValue === "function") {
+                        if (!this.refs["input_" + key].getValue()) {
+                            validationMessages[key] = "Field is required!";
+                            isValid = false;
+                        }
+                    } else if (typeof this.refs["input_" + key].refs.searchTextField.getValue === "function") {
+                        if (!this.refs["input_" + key].refs.searchTextField.getValue()) {
+                            validationMessages[key] = "Field is required!";
+                            isValid = false;
+                        }
                     }
                 }
             }
@@ -200,7 +202,7 @@ export class AddEditDialog extends React.Component {
         ];
 
         var isOpen = false;
-        var microservice = this.props.entity || {};
+        var _entity = this.props.entity || {};
         var title = "";
 
         if (this.props.menuMode === this.props.addMenuMode) {
@@ -208,83 +210,107 @@ export class AddEditDialog extends React.Component {
             title = "Add " + this.props.entityDisplayName;
         } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
-            title = "Edit " + this.props.entityDisplayName;
+            title = "Edit " + _entity.label;
         } else {
             // dialog is closed, we can short-cut here
             return null;
         }
 
-        let defaultPropertyInputs = [];
+        let customProperties = Object.keys(_entity);
 
-        let customProperties = Object.keys(microservice);
+        // pre-defined input field tabs
+        let defaultPropertyInputTabs = [];
 
-        for (var key in this.props.textFields) {
-            let textField = this.props.textFields[key];
+        for (var i = 0; i < this.props.inputTabs.length; i++) {
 
-            let value = "";
-            if (typeof(microservice[key]) === "string") {
-                value = microservice[key];
+            let inputs = [];
 
-                customProperties.splice(customProperties.indexOf(key), 1);
+            for (var key in this.props.inputTabs[i].inputFields) {
+
+                if (this.props.inputTabs[i].inputFields[key].type === "toggle") {
+                    let toggle = this.props.inputTabs[i].inputFields[key];
+
+                    let value = false;
+                    if (typeof(_entity[key]) === "boolean") {
+                        value = _entity[key];
+
+                        customProperties.splice(customProperties.indexOf(key), 1);
+                    }
+
+                    inputs.push(<Toggle key={"add_edit_dialog_" + key}
+                                                       ref={"input_" + key}
+                                                       label={toggle.label}
+                                                       defaultToggled={value}
+                                                       style={{marginTop: "2em", maxWidth: "23em"}}/>)
+
+                } else {
+                    // default to "text"
+
+                    let textField = this.props.inputTabs[i].inputFields[key];
+
+                    let value = "";
+                    if (typeof(_entity[key]) === "string") {
+                        value = _entity[key];
+
+                        customProperties.splice(customProperties.indexOf(key), 1);
+                    }
+
+                    this._addTextField({
+                        textFields: inputs,
+                        key: key,
+                        label: textField.label,
+                        hint: textField.hint,
+                        value: value,
+                        disabled: textField.disabled,
+                        searchEndpoint: textField.searchEndpoint
+                    });
+                }
             }
 
-            this._addTextField({
-                textFields: defaultPropertyInputs,
-                key: key,
-                label: textField.label,
-                hint: textField.hint,
-                value: value,
-                disabled: textField.disabled,
-                searchEndpoint: textField.searchEndpoint
-            });
+            defaultPropertyInputTabs.push(<Tab label={this.props.inputTabs[i].label} >
+                {inputs}
+            </Tab>);
         }
 
-        for (var key in this.props.toggles) {
-            let toggle = this.props.toggles[key];
+        // custom input field tab (contains all properties defined for entity that are _not_ included in pre-defined input fields)
+        let customPropertiesTab = undefined;
 
-            let value = false;
-            if (typeof(microservice[key]) === "boolean") {
-                value = microservice[key];
+        if (customProperties.length > 0) {
+            let customPropertyInputs = [];
 
-                customProperties.splice(customProperties.indexOf(key), 1);
+            for (var idx in customProperties) {
+                const key = customProperties[idx];
+
+                if (typeof(_entity[key]) === "string") {
+                    this._addTextField({
+                        textFields: customPropertyInputs,
+                        key: key,
+                        label: key,
+                        hint: key,
+                        value: _entity[key]
+                    });
+                } else if (typeof(_entity[key]) === "boolean") {
+                    customPropertyInputs.push(<Toggle ref={"input_" + key}
+                                                      label={key}
+                                                      defaultToggled={_entity[key]}
+                                                      style={{marginTop: "2em", maxWidth: "23em"}}/>)
+                } else {
+                    console.log("unkown property type for key \"" + key + "\" with value \"" + _entity[key] + "\"");
+                }
             }
 
-            defaultPropertyInputs.push(<Toggle key={"add_edit_dialog_" + key}
-                                 ref={"input_" + key}
-                                 label={toggle.label}
-                                 defaultToggled={value}
-                                 style={{marginTop: "2em", maxWidth: "23em"}}/>)
+            customPropertiesTab = <Tab label="Custom Properties" >
+                    {customPropertyInputs}
+            </Tab>
         }
 
-        let customPropertyInputs = [];
-
-        for (var idx in customProperties) {
-            const key = customProperties[idx];
-
-            if (typeof(microservice[key]) === "string") {
-                this._addTextField({
-                    textFields: customPropertyInputs,
-                    key: key,
-                    label: key,
-                    hint: key,
-                    value: microservice[key]
-                });
-            } else if (typeof(microservice[key]) === "boolean") {
-                customPropertyInputs.push(<Toggle ref={"input_" + key}
-                                     label={key}
-                                     defaultToggled={microservice[key]}
-                                     style={{marginTop: "2em", maxWidth: "23em"}}/>)
-            } else {
-                console.log("unkown property type for key \"" + key + "\" with value \"" + microservice[key] + "\"");
-            }
-        }
-
+        // bitbucket top comitters tab
         let topComittersTab = undefined;
 
         if (Array.isArray(this.props.topComitters)) {
             let topComittersList = [];
             this.props.topComitters.forEach((propValue, index) => {
-                topComittersList.push(<ListItem key={microservice.id + '_bitbucket_' + index}
+                topComittersList.push(<ListItem key={_entity.id + '_bitbucket_' + index}
                                            primaryText={propValue.emailAddress}
                                            secondaryText={propValue.numberOfCommits}/>);
             });
@@ -304,13 +330,9 @@ export class AddEditDialog extends React.Component {
                 open={isOpen}
                 repositionOnUpdate={false}>
                 <Tabs>
-                    <Tab label="Default Properties" >
-                        {defaultPropertyInputs}
-                    </Tab>
-                    <Tab label="Custom Properties" >
-                        {customPropertyInputs}
-                    </Tab>
+                    {defaultPropertyInputTabs}
                     {topComittersTab}
+                    {customPropertiesTab}
                 </Tabs>
             </Dialog>
         );

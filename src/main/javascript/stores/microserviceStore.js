@@ -64,9 +64,14 @@ function updateStore(state = initialState, action) {
             return newState;
         }
         case 'ADD_RELATION': {
+            const relation = {
+                target: action.consumedServiceId,
+                label: 'Relation ' + action.consumerId + ' -> ' + action.consumedServiceId
+            };
+
             const newState = Object.assign({}, state, {
                 menuMode: 'ADD_RELATION',
-                entity: {"target": action.consumedServiceId},
+                entity: relation,
                 topComitters: undefined,
                 addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations"
             });
@@ -101,10 +106,13 @@ function updateStore(state = initialState, action) {
             return newState;
         }
         case 'EDIT_LINK': {
+            const relation = state.microservices
+                .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
+                .filter((relation) => relation.target === state.contextMenuToId)[0];
+            relation.label = 'Relation ' + state.contextMenuFromId + ' -> ' + state.contextMenuToId;
+
             const newState = Object.assign({}, state, {
-                entity: state.microservices
-                    .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
-                    .filter((relation) => relation.target === state.contextMenuToId)[0],
+                entity: relation,
                 topComitters: undefined,
                 contextMenuFromId: undefined,
                 contextMenuToId: undefined,
