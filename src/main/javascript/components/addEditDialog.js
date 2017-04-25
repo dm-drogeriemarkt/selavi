@@ -153,6 +153,10 @@ export class AddEditDialog extends React.Component {
     _createTextField(options) {
         let style = {marginLeft: "1em"};
 
+        if (options.multiLine) {
+            style.width = "33em"
+        }
+
         if (options.searchEndpoint) {
             return (<AutoComplete key={"add_edit_dialog_" + options.key}
                                                   style={style}

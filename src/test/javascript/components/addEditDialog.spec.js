@@ -118,6 +118,7 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.find('TextField').length).to.equal(2);
         chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal("Label *");
         chai.expect(wrapper.find('TextField').at(1).props().multiLine).to.equal(true);
+        chai.expect(wrapper.find('TextField').at(1).props().style.width).to.equal("33em");
     });
 
     it('validates text fields with required=true on submit', function () {
