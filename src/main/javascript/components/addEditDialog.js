@@ -325,7 +325,8 @@ export class AddEditDialog extends React.Component {
                                            secondaryText={propValue.numberOfCommits}/>);
             });
 
-            topComittersTab = <Tab label="Top Committers" >
+            topComittersTab = <Tab key="add_edit_dialog_tab_top_committers"
+                                   label="Top Committers" >
                 <List>
                     {topComittersList}
                 </List>
