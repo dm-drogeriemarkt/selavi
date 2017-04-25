@@ -150,11 +150,11 @@ export class AddEditDialog extends React.Component {
         return isValid;
     }
 
-    _addTextField(options) {
+    _createTextField(options) {
         let style = {marginLeft: "1em"};
 
         if (options.searchEndpoint) {
-            options.textFields.push(<AutoComplete key={"add_edit_dialog_" + options.key}
+            return (<AutoComplete key={"add_edit_dialog_" + options.key}
                                                   style={style}
                                                   ref={"input_" + options.key}
                                                   floatingLabelText={options.label}
@@ -169,7 +169,7 @@ export class AddEditDialog extends React.Component {
                                                   }}
                                                   filter={AutoComplete.caseInsensitiveFilter}/>);
         } else if (options.isLink) {
-            options.textFields.push(<LinkTextField key={"add_edit_dialog_" + options.key}
+            return (<LinkTextField key={"add_edit_dialog_" + options.key}
                                                    style={style}
                                                    ref={"input_" + options.key}
                                                    floatingLabelText={options.label}
@@ -178,7 +178,7 @@ export class AddEditDialog extends React.Component {
                                                    defaultValue={options.value}
                                                    disabled={options.disabled}></LinkTextField>);
         } else {
-            options.textFields.push(<TextField key={"add_edit_dialog_" + options.key}
+            return (<TextField key={"add_edit_dialog_" + options.key}
                                                style={style}
                                                ref={"input_" + options.key}
                                                floatingLabelText={options.label}
@@ -259,8 +259,7 @@ export class AddEditDialog extends React.Component {
                         customProperties.splice(customProperties.indexOf(key), 1);
                     }
 
-                    this._addTextField({
-                        textFields: inputs,
+                    inputs.push(this._createTextField({
                         key: key,
                         label: textField.label,
                         hint: textField.hint,
@@ -269,7 +268,7 @@ export class AddEditDialog extends React.Component {
                         disabled: textField.disabled,
                         searchEndpoint: textField.searchEndpoint,
                         isLink: textField.isLink
-                    });
+                    }));
                 }
             }
 
@@ -289,24 +288,24 @@ export class AddEditDialog extends React.Component {
                 const key = customProperties[idx];
 
                 if (typeof(_entity[key]) === "string") {
-                    this._addTextField({
-                        textFields: customPropertyInputs,
+                    customPropertyInputs.push(this._createTextField({
                         key: key,
                         label: key,
                         hint: key,
                         value: _entity[key]
-                    });
+                    }));
                 } else if (typeof(_entity[key]) === "boolean") {
                     customPropertyInputs.push(<Toggle ref={"input_" + key}
                                                       label={key}
                                                       defaultToggled={_entity[key]}
                                                       style={{marginTop: "2em", maxWidth: "23em"}}/>)
                 } else {
-                    console.log("unkown property type for key \"" + key + "\" with value \"" + _entity[key] + "\"");
+                    console.log("unkown property type for key \"" + key + "\" with value \"" + JSON.stringify(_entity[key]) + "\"");
                 }
             }
 
-            customPropertiesTab = <Tab label="Misc" >
+            customPropertiesTab = <Tab key="add_edit_dialog_tab_custom_props"
+                                       label="Misc" >
                     {customPropertyInputs}
             </Tab>
         }
