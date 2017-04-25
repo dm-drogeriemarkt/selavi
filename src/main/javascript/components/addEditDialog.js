@@ -173,7 +173,7 @@ export class AddEditDialog extends React.Component {
                                                       this._handleAutocompleteInput(searchText, options.searchEndpoint);
                                                   }}
                                                   filter={AutoComplete.caseInsensitiveFilter}/>);
-        } if (options.isLink) {
+        } else if (options.isLink) {
             options.textFields.push(<LinkTextField key={"add_edit_dialog_" + options.key}
                                                    style={style}
                                                    ref={"input_" + options.key}
