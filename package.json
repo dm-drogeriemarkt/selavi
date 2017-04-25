@@ -32,5 +32,15 @@
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
     "sinon": "^1.17.6"
+  },
+  "nyc": {
+    "exclude": [
+      "src/**/*.spec.js",
+      "src/test/javascript/setup.js"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ]
   }
 }

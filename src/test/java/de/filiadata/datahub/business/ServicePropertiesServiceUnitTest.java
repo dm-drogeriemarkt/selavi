@@ -6,6 +6,7 @@ import de.filiadata.datahub.repository.ServicePropertiesRepository;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -79,6 +80,7 @@ public class ServicePropertiesServiceUnitTest {
         final ObjectNode relatedServiceName = new ObjectMapper().createObjectNode();
 
         when(servicePropertiesRepository.exists(serviceName)).thenReturn(true);
+        when(consumerPropertiesService.saveOrMergeRelationProperties(eq(serviceName), any(ObjectNode.class), eq(Optional.empty()))).thenCallRealMethod();
 
         // when
         service.saveRelation(serviceName, relatedServiceName);
