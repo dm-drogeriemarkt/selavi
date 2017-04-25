@@ -151,12 +151,7 @@ export class AddEditDialog extends React.Component {
     }
 
     _addTextField(options) {
-        const rightcolumn = ((options.textFields.length - 1) % 3 === 0);
-
-        let style;
-        if (rightcolumn) {
-            style = {marginLeft: "1em"};
-        }
+        let style = {marginLeft: "1em"};
 
         if (options.searchEndpoint) {
             options.textFields.push(<AutoComplete key={"add_edit_dialog_" + options.key}
@@ -192,10 +187,6 @@ export class AddEditDialog extends React.Component {
                                                defaultValue={options.value}
                                                disabled={options.disabled}
                                                multiLine={options.multiLine}></TextField>);
-        }
-
-        if (rightcolumn) {
-            options.textFields.push(<br key={"add_edit_dialog_br_" + options.textFields.length}/>);
         }
     }
 
@@ -282,7 +273,8 @@ export class AddEditDialog extends React.Component {
                 }
             }
 
-            defaultPropertyInputTabs.push(<Tab label={this.props.inputTabs[i].label} >
+            defaultPropertyInputTabs.push(<Tab key={"add_edit_dialog_tab_" + i}
+                                               label={this.props.inputTabs[i].label} >
                 {inputs}
             </Tab>);
         }
