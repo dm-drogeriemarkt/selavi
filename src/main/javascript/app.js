@@ -14,6 +14,7 @@ import MicroserviceSnackbar from "./components/microserviceSnackbar";
 import AddEditDialog from "./components/addEditDialog";
 import MicroserviceDeleteServiceDialog from "./components/microserviceDeleteServiceDialog";
 import store from "./stores/microserviceStore";
+import {getRequiredPropertyNames} from "./shared/requiredPropertyUtil";
 
 // see http://www.material-ui.com/#/get-started/installation
 injectTapEventPlugin();
@@ -70,6 +71,8 @@ class App extends React.Component {
             { label: "Documentation", inputFields: serviceDocumentationInputFields }
         ];
 
+        const serviceRequiredProperties = getRequiredPropertyNames(serviceInputTabs);
+
         const relationBasicFields = {
             "target": {label: "Consumed service", required: true, disabled: true},
             "type": {label: "Type of relation", hint: "eg. \"REST\", \"SOAP\"", required: false}
@@ -85,7 +88,7 @@ class App extends React.Component {
                     <MicroserviceFilterBox/>
                 </div>
                 <div className="appcontent">
-                    <MicroserviceMindmap/>
+                    <MicroserviceMindmap serviceRequiredProperties={serviceRequiredProperties}/>
                     <MicroserviceList/>
                 </div>
                 <div className="appfooter">
