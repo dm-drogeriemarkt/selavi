@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.hateoas.Link;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -24,7 +23,6 @@ public class BitbucketService {
 
     private final RestTemplate restTemplate;
     private final String bitbucketCredentials;
-    private List<String> ignoredCommiters;
     private final Integer numberOfTopCommiters;
 
     public BitbucketService(RestTemplate restTemplate,
@@ -35,23 +33,14 @@ public class BitbucketService {
         this.numberOfTopCommiters = numberOfTopCommiters;
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(String project, String repo, String ignoredCommiters) {
-        final Link link = new Link("https://example.com/rest/api/1.0/projects/{project}/repos/{repo}");
-        final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("project", project);
-        parameters.put("repo", repo);
-
-        return getTopCommitters(link.expand(parameters).getHref(), ignoredCommiters);
-    }
-
     public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url, String ignoredCommiters) {
-        this.ignoredCommiters = StringUtils.isEmpty(ignoredCommiters) ? Collections.<String>emptyList() : Arrays.<String>asList(ignoredCommiters.split(","));
         final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(url + "/commits?limit=500");
 
-        return handleResponse(responseEntity);
+        return handleResponse(responseEntity, ignoredCommiters);
     }
 
-    private Map<BitbucketAuthorDto, Long> handleResponse(ResponseEntity<BitbucketCommitsDto> responseEntity) {
+    private Map<BitbucketAuthorDto, Long> handleResponse(ResponseEntity<BitbucketCommitsDto> responseEntity, String ignoredCommiters2) {
+        final List<String> ignoredCommiters = StringUtils.isEmpty(ignoredCommiters2) ? Collections.<String>emptyList() : Arrays.<String>asList(ignoredCommiters2.split(","));
 
         final Map<BitbucketAuthorDto, Long> result = new LinkedHashMap<>();
 
