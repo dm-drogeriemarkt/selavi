@@ -126,6 +126,36 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledWith(windowAddEventListenerSpy, "resize", sinon.match.func);
     });
 
+    it('highlights services that are missing a required property', function () {
+
+        const props = createProps();
+        props.serviceRequiredProperties = ['consumes'];
+
+        shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+
+        const expectedAllNodes = [
+            {
+                id: "foo-service",
+                label: "foo-service",
+                group: "microservice",
+                shadow: {
+                    color: "#e50f03"
+                }
+            },
+            {
+                id: "bar-consumer",
+                label: "bar-consumer",
+                isExternal: true,
+                consumes: [
+                    {"target": "foo-service", "type": "REST"}
+                ],
+                group: "external",
+            }
+        ]
+
+        sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+    });
+
     it('only creates vis network once', function () {
 
         const props = createProps();
