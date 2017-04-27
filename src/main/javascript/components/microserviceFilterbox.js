@@ -59,7 +59,7 @@ class MicroserviceFilterbox extends React.Component {
                     <ToolbarTitle text="SeLaVi - Service Landscape Visualizer" />
                 </ToolbarGroup>
                 <ToolbarGroup>
-                    <MicroserviceCountLabel/>
+                    <MicroserviceCountLabel serviceRequiredProperties={this.props.serviceRequiredProperties}/>
                 </ToolbarGroup>
                 <ToolbarGroup>
                     <TextField hintText="Filter services..." onChange={this.props.onType.bind(this)}></TextField>

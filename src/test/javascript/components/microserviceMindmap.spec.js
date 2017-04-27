@@ -316,7 +316,8 @@ function createProps() {
         onSelectMicroserviceNode: sinon.spy(),
         onAddLink: sinon.spy(),
         onContextMenuOpen: sinon.spy(),
-        microservices: microservices
+        microservices: microservices,
+        serviceRequiredProperties: []
     };
 
     return props;

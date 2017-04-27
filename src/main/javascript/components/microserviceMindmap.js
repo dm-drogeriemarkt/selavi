@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 import {onAddLink, onContextMenuOpen, onSelectMicroserviceNode} from "./../actions/microserviceMindmapActions";
 import {shouldFilterOut} from "./../shared/filterUtils";
+import {hasAllRequiredProperties} from "./../shared/requiredPropertyUtil";
 
 const mapStateToProps = (state) => {
     return {
@@ -149,6 +150,13 @@ export class MicroserviceMindmap extends React.Component {
             } else {
                 microservice.group = "microservice";
             }
+
+            if (!hasAllRequiredProperties(microservice, this.props.serviceRequiredProperties)) {
+                microservice.shadow = {
+                    color: "#e50f03"
+                }
+            }
+
             return microservice;
         });
 

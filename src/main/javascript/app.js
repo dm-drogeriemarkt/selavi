@@ -85,7 +85,7 @@ class App extends React.Component {
         return (
             <div className="appcontainer">
                 <div className="appheader">
-                    <MicroserviceFilterBox/>
+                    <MicroserviceFilterBox serviceRequiredProperties={serviceRequiredProperties}/>
                 </div>
                 <div className="appcontent">
                     <MicroserviceMindmap serviceRequiredProperties={serviceRequiredProperties}/>
