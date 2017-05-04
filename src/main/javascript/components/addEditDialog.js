@@ -32,37 +32,15 @@ const mapDispatchToProps = (dispatch) => {
                 type: 'CANCEL_MENU_ACTION',
             });
         },
-        onSubmit: function () {
-            let entity = {};
-
-            for (var key in this.refs) {
-                if (key.substr(0, 6) === "input_") {
-                    if (this.refs[key] instanceof TextField || this.refs[key] instanceof LinkTextField) {
-                        entity[key.substr(6)] = this.refs[key].getValue();
-                    } else if (this.refs[key] instanceof Toggle) {
-                        entity[key.substr(6)] = this.refs[key].isToggled();
-                    } else if (this.refs[key] instanceof AutoComplete) {
-                        entity[key.substr(6)] = this.refs[key].refs.searchTextField.getValue();
-                    } else {
-                        console.log("unkown input type " + this.refs[key]);
-                    }
-                }
-            }
-
+        onSubmit: function (entity, path, method) {
             var request = {
                 entity: entity,
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                path: path,
+                method: method
             };
-
-            if (this.props.menuMode === this.props.editMenuMode) {
-                request.path = this.props.addEditDialogFormAction;
-                request.method = 'PUT';
-            } else if (this.props.menuMode === this.props.addMenuMode) {
-                request.path = this.props.addEditDialogFormAction;
-                request.method = 'POST';
-            }
 
             var client = rest.wrap(mime);
             client(request).then(response => {
@@ -86,7 +64,31 @@ export class AddEditDialog extends React.Component {
 
     _handleOnSubmit() {
         if (this._validate()) {
-            this.props.onSubmit.apply(this);
+            let entity = {};
+
+            for (var key in this.refs) {
+                if (key.substr(0, 6) === "input_") {
+                    if (this.refs[key] instanceof TextField || this.refs[key] instanceof LinkTextField) {
+                        entity[key.substr(6)] = this.refs[key].getValue();
+                    } else if (this.refs[key] instanceof Toggle) {
+                        entity[key.substr(6)] = this.refs[key].isToggled();
+                    } else if (this.refs[key] instanceof AutoComplete) {
+                        entity[key.substr(6)] = this.refs[key].refs.searchTextField.getValue();
+                    } else {
+                        console.log("unkown input type " + this.refs[key]);
+                    }
+                }
+            }
+
+            let method;
+
+            if (this.props.menuMode === this.props.editMenuMode) {
+                method = 'PUT';
+            } else if (this.props.menuMode === this.props.addMenuMode) {
+                method = 'POST';
+            }
+
+            this.props.onSubmit(entity, this.props.addEditDialogFormAction, method);
         }
     }
 
