@@ -9,7 +9,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-class MicroserviceCountLabel extends React.Component {
+export class MicroserviceCountLabel extends React.Component {
     render() {
 
         const externalCount = this.props.microservices.filter((microservice) => microservice.isExternal).length;
