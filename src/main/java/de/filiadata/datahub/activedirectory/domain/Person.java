@@ -1,4 +1,4 @@
-package de.filiadata.datahub.business.activedirectory;
+package de.filiadata.datahub.activedirectory.domain;
 
 import lombok.Builder;
 import lombok.Data;

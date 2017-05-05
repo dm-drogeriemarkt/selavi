@@ -1,5 +1,6 @@
-package de.filiadata.datahub.business.activedirectory;
+package de.filiadata.datahub.activedirectory.business;
 
+import de.filiadata.datahub.activedirectory.domain.Person;
 import org.springframework.ldap.NamingException;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;

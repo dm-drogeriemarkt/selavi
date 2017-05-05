@@ -1,11 +1,10 @@
 package de.filiadata.datahub;
 
 import com.google.common.cache.CacheBuilder;
-import de.filiadata.datahub.business.activedirectory.ActiveDirectoryProperties;
+import de.filiadata.datahub.activedirectory.business.ActiveDirectoryProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;

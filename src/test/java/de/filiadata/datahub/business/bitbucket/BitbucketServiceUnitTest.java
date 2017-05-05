@@ -1,5 +1,12 @@
 package de.filiadata.datahub.business.bitbucket;
 
+import de.filiadata.datahub.bitbucket.business.BitbucketService;
+import de.filiadata.datahub.bitbucket.domain.BitbucketAuthorDto;
+import de.filiadata.datahub.bitbucket.domain.BitbucketCommitsDto;
+import de.filiadata.datahub.bitbucket.domain.BitbucketCommitterDto;
+import de.filiadata.datahub.bitbucket.domain.TopCommitter;
+import de.filiadata.datahub.business.MetadataService;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -10,41 +17,51 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class BitbucketServiceUnitTest {
 
+    private static final String BITBUCKET_URL = "http://www.foobar.com";
+    private static final String IGNORED_COMMITERS = "foo@bar.de";
     private final RestTemplate restTemplate = mock(RestTemplate.class);
+    private final MetadataService metadataService = mock(MetadataService.class);
+
+    @Before
+    public void setUp() {
+        final Map<String, String> metadata = new HashMap<>();
+        metadata.put("bitbucketUrl", BITBUCKET_URL);
+        metadata.put("ignoredCommitters", IGNORED_COMMITERS);
+        when(metadataService.getMetadataForMicroservice(anyString())).thenReturn(metadata);
+
+    }
 
     @Test
     public void testNumberOfTopCommiters() throws IOException {
-        String href = "http://www.foobar.com/commits?limit=500";
-        when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
+        when(restTemplate.exchange(eq(BITBUCKET_URL + "/commits?limit=500"), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());
 
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3);
-        final Map<BitbucketAuthorDto, Long> topCommiters = bitbucketService.getTopCommitters("http://www.foobar.com", "foo@bar.de");
+        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, metadataService);
+        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
         assertThat(topCommiters.size(), is(3));
     }
 
     @Test
     public void testNoResultIsEmptyMap() throws IOException {
-        String href = "http://www.foobar2.com/commits?limit=500";
-        when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
+        when(restTemplate.exchange(eq(BITBUCKET_URL + "/commits?limit=500"), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getEmptyResponseEntity());
 
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3);
-        final Map<BitbucketAuthorDto, Long> topCommiters = bitbucketService.getTopCommitters("http://www.foobar2.com", "foo@bar.de");
+        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, metadataService);
+        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
+
         assertTrue(topCommiters.isEmpty());
     }
 
@@ -52,20 +69,15 @@ public class BitbucketServiceUnitTest {
 
     @Test
     public void testOrderOfTopCommiters() throws IOException {
-        String href = "http://www.foobar.com/commits?limit=500";
-        when(restTemplate.exchange(eq(href), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
+
+        when(restTemplate.exchange(eq(BITBUCKET_URL + "/commits?limit=500"), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());
 
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3);
-        final Map<BitbucketAuthorDto, Long> topCommiters = bitbucketService.getTopCommitters("http://www.foobar.com", "foo@bar.de");
-
-        final List<String> commiterEmails = topCommiters.entrySet().stream()
-                .map(bitbucketAuthorDtoLongEntry -> bitbucketAuthorDtoLongEntry.getKey().getEmailAddress())
-                .collect(Collectors.toList());
-
-        assertThat(commiterEmails.get(0), is("foo1@bar.de"));
-        assertThat(commiterEmails.get(1), is("foo4@bar.de"));
-        assertThat(commiterEmails.get(2), is("foo2@bar.de"));
+        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, metadataService);
+        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
+        assertThat(topCommiters.get(0).getEmailAddress(), is("foo1@bar.de"));
+        assertThat(topCommiters.get(1).getEmailAddress(), is("foo4@bar.de"));
+        assertThat(topCommiters.get(2).getEmailAddress(), is("foo2@bar.de"));
     }
 
     private ResponseEntity<BitbucketCommitsDto> getResponseEntity() {

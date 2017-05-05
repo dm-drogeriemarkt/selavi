@@ -1,4 +1,4 @@
-package de.filiadata.datahub.business.activedirectory;
+package de.filiadata.datahub.activedirectory.business;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

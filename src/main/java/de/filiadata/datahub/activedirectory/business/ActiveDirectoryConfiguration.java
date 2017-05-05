@@ -1,4 +1,4 @@
-package de.filiadata.datahub.business.activedirectory;
+package de.filiadata.datahub.activedirectory.business;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

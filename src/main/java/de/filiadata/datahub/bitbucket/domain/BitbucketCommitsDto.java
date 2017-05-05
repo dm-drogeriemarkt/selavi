@@ -1,4 +1,4 @@
-package de.filiadata.datahub.business.bitbucket;
+package de.filiadata.datahub.bitbucket.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

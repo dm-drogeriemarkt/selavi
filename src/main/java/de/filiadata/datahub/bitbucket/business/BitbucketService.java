@@ -1,5 +1,10 @@
-package de.filiadata.datahub.business.bitbucket;
+package de.filiadata.datahub.bitbucket.business;
 
+import de.filiadata.datahub.bitbucket.domain.BitbucketAuthorDto;
+import de.filiadata.datahub.bitbucket.domain.BitbucketCommitsDto;
+import de.filiadata.datahub.bitbucket.domain.BitbucketCommitterDto;
+import de.filiadata.datahub.bitbucket.domain.TopCommitter;
+import de.filiadata.datahub.business.MetadataService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -21,16 +26,50 @@ public class BitbucketService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BitbucketService.class);
 
+    private static final String BITBUCKET_URL = "bitbucketUrl";
+    private static final String IGNORED_COMMITTERS = "ignoredCommitters";
+
     private final RestTemplate restTemplate;
     private final String bitbucketCredentials;
     private final Integer numberOfTopCommiters;
+    private final MetadataService metadataService;
 
     public BitbucketService(RestTemplate restTemplate,
                             @Value("${selavi.bitbucket.credentials}") String bitbucketCredentials,
-                            @Value("${selavi.bitbucket.topcommitters.size}") Integer numberOfTopCommiters) {
+                            @Value("${selavi.bitbucket.topcommitters.size}") Integer numberOfTopCommiters, MetadataService metadataService) {
         this.restTemplate = restTemplate;
         this.bitbucketCredentials = bitbucketCredentials;
         this.numberOfTopCommiters = numberOfTopCommiters;
+        this.metadataService = metadataService;
+    }
+
+    public List<TopCommitter> getNamedTopCommitter(String microserviceId) {
+        final List<TopCommitter> result = new ArrayList<>();
+        final Map<BitbucketAuthorDto, Long> topCommitters = getTopCommitters(microserviceId);
+
+        LOG.info("Top commiter dtos: {}", topCommitters);
+
+        for (final Map.Entry<BitbucketAuthorDto, Long> entry : topCommitters.entrySet()) {
+            final BitbucketAuthorDto dto = entry.getKey();
+            result.add(TopCommitter.builder().emailAddress(dto.getEmailAddress()).id(dto.getId()).name(dto.getName()).numberOfCommits(entry.getValue()).build());
+        }
+
+        return result;
+    }
+
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(String microserviceId) {
+        final Map<String, String> metadataForMicroservice = metadataService.getMetadataForMicroservice(microserviceId);
+
+        final String bitbucketUrl = metadataForMicroservice.get(BITBUCKET_URL);
+        final String ignoredCommitters = metadataForMicroservice.get(IGNORED_COMMITTERS);
+        if (bitbucketUrl != null) {
+            final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(bitbucketUrl + "/commits?limit=500");
+            return handleResponse(responseEntity, ignoredCommitters);
+        }
+
+        return Collections.emptyMap();
+
+
     }
 
     public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url, String ignoredCommiters) {

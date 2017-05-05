@@ -1,5 +1,7 @@
 package de.filiadata.datahub.business.activedirectory;
 
+import de.filiadata.datahub.activedirectory.business.ActiveDirectoryService;
+import de.filiadata.datahub.activedirectory.domain.Person;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ldap.core.AttributesMapper;

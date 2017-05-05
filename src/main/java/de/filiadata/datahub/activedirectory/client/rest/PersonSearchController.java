@@ -1,7 +1,7 @@
-package de.filiadata.datahub.controller;
+package de.filiadata.datahub.activedirectory.client.rest;
 
-import de.filiadata.datahub.business.activedirectory.ActiveDirectoryService;
-import de.filiadata.datahub.business.activedirectory.Person;
+import de.filiadata.datahub.activedirectory.business.ActiveDirectoryService;
+import de.filiadata.datahub.activedirectory.domain.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
