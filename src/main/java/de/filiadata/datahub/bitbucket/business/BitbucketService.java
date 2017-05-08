@@ -4,7 +4,7 @@ import de.filiadata.datahub.bitbucket.domain.BitbucketAuthorDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitsDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitterDto;
 import de.filiadata.datahub.bitbucket.domain.TopCommitter;
-import de.filiadata.datahub.selavi.business.MetadataService;
+import de.filiadata.datahub.microservices.business.MetadataService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
