@@ -1,9 +1,12 @@
-import chai from 'chai';
+import chai from "chai";
+import {
+    onSelectMicroserviceNode,
+    onContextMenuOpen,
+    onAddLink
+} from "../../../main/javascript/actions/microserviceMindmapActions";
 const sinon = require('sinon');
 
 const rest = require('rest');
-
-import { onSelectMicroserviceNode, onContextMenuOpen, onAddLink } from '../../../main/javascript/actions/microserviceMindmapActions';
 
 describe('microserviceMindmapActions', function () {
 
@@ -44,7 +47,7 @@ describe('microserviceMindmapActions', function () {
             selectMicroserviceNodeFn(dispatchSpy);
 
             sinon.assert.calledOnce(clientStub);
-            sinon.assert.calledWith(clientStub, { method: 'GET', path: "/selavi/additional-information/bitbucket/my_service_id" });
+            sinon.assert.calledWith(clientStub, {method: 'GET', path: "/selavi/bitbucket/my_service_id"});
 
             thenHandler('response_to_get_bitbucket_committers');
 
