@@ -11,6 +11,7 @@ import Avatar from 'material-ui/Avatar';
 import MenuItem from 'material-ui/MenuItem';
 
 import LinkTextField from "./linkTextField";
+import {onCancel, onSubmit} from "./../actions/addEditDialogActions";
 
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
@@ -25,34 +26,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        onCancel: function () {
-            dispatch({
-                type: 'CANCEL_MENU_ACTION',
-            });
-        },
-        onSubmit: function (entity, path, method) {
-            var request = {
-                entity: entity,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                path: path,
-                method: method
-            };
-
-            var client = rest.wrap(mime);
-            client(request).then(response => {
-                client({path: '/selavi/services'}).then(response => {
-                    dispatch({
-                        type: 'FETCH_MICROSERVICES_SUCCESS',
-                        response: response
-                    });
-                });
-            });
-        }
-    };
+const mapDispatchToProps = {
+    onCancel,
+    onSubmit
 };
 
 export class AddEditDialog extends React.Component {
