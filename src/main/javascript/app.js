@@ -13,6 +13,7 @@ import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceSnackbar from "./components/microserviceSnackbar";
 import AddEditDialog from "./components/addEditDialog";
 import MicroserviceDeleteServiceDialog from "./components/microserviceDeleteServiceDialog";
+import LoginDialog from "./components/loginDialog";
 import store from "./stores/microserviceStore";
 import {getRequiredPropertyNames} from "./shared/requiredPropertyUtil";
 
@@ -82,6 +83,9 @@ class App extends React.Component {
             { label: "Basic", inputFields: relationBasicFields }
         ];
 
+        // TODO: display MicroserviceCountLabel in lower left corner, on top of mindmap
+        // <MicroserviceCountLabel serviceRequiredProperties={this.props.serviceRequiredProperties}/>
+
         return (
             <div className="appcontainer">
                 <div className="appheader">
@@ -102,6 +106,7 @@ class App extends React.Component {
                                                   editMenuMode="EDIT_RELATION"
                                                   entityDisplayName="Link"/>
                     <MicroserviceDeleteServiceDialog/>
+                    <LoginDialog/>
                 </div>
             </div>
         )

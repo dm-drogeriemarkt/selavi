@@ -104,6 +104,11 @@
             <version>${extended-actuator-health-endpoints.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
         <!--Develop-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
