@@ -31,5 +31,17 @@ public class ServiceTestController {
         microserviceConditioningService.addNewService(dto);
     }
 
+    @ApiOperation(value = "Add a new property or update an existing. Properties internal properties are not allowed to be set.")
+    @RequestMapping(value = "/{serviceName}/properties", method = RequestMethod.PUT)
+    public void updateService(@PathVariable String serviceName, @RequestBody MicroserviceDto dto) {
+        microserviceConditioningService.updateService(dto);
+    }
+
+
+    @ApiOperation(value = "Delete a service node. Only manually added and not from the registry loaded are allowed to delete.")
+    @RequestMapping(value = "/{serviceName}", method = RequestMethod.DELETE)
+    public void deleteService(@PathVariable String serviceName) {
+        microserviceConditioningService.deleteService(serviceName);
+    }
 
 }

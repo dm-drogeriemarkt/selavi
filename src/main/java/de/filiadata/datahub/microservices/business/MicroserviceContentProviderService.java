@@ -20,10 +20,18 @@ public class MicroserviceContentProviderService {
     }
 
     public Map<String, MicroserviceDto> getAllMicroservices(){
-        final Map<String, MicroserviceDto> microservicesFromRegistry = serviceRegistryRepository.findAllServices();
-        final Map<String, MicroserviceDto> microservicesFromPersistence = persistenceContentProvider.getAllMicroservices();
+        final Map<String, MicroserviceDto> microservicesFromRegistry = getMicroservicesFromServiceRegistry();
+        final Map<String, MicroserviceDto> microservicesFromPersistence = getMicroservicesFromPersistence();
 
 
         return microserviceMergeService.mergeCompleteMicroservices(microservicesFromRegistry, microservicesFromPersistence);
+    }
+
+    public Map<String, MicroserviceDto> getMicroservicesFromPersistence(){
+        return persistenceContentProvider.getAllMicroservices();
+    }
+
+    public Map<String, MicroserviceDto> getMicroservicesFromServiceRegistry(){
+        return serviceRegistryRepository.findAllServices();
     }
 }
