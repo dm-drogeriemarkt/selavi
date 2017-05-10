@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/services")
+@RequestMapping("/1_services")
 public class ServiceController {
 
     private ServicePropertiesService servicePropertiesService;

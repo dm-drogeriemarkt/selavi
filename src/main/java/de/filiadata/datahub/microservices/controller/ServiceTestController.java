@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/test-services")
+@RequestMapping("/services")
 public class ServiceTestController {
 
     private final MicroserviceConditioningService microserviceConditioningService;
@@ -24,5 +24,12 @@ public class ServiceTestController {
     public Collection<MicroserviceDto> readAllServices() {
         return microserviceConditioningService.getAllMicroserviceDtos();
     }
+
+    @ApiOperation(value = "Add a new service as node to add properties and relations to other services.")
+    @RequestMapping(method = RequestMethod.POST)
+    public void addNewService(@RequestBody MicroserviceDto dto) {
+        microserviceConditioningService.addNewService(dto);
+    }
+
 
 }

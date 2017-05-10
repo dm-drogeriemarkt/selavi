@@ -3,6 +3,7 @@ package de.filiadata.datahub.microservices.business;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,22 +14,26 @@ public class MicroserviceMergeService {
     public Map<String, MicroserviceDto> mergeCompleteMicroservices(final Map<String, MicroserviceDto> microservicesFromRegistry, final Map<String, MicroserviceDto> microservicesFromPersistence){
         final Map<String, MicroserviceDto> result = new HashMap<>();
         for (final MicroserviceDto microserviceFromRegistry : microservicesFromRegistry.values()){
-            final MicroserviceDto dto = mergeMicroservice(microserviceFromRegistry, microservicesFromPersistence.get(microserviceFromRegistry.getId()));
-            result.put(dto.getId(), dto);
+            final MicroserviceDto dto = mergeMicroservice(new MicroserviceDto(), microserviceFromRegistry);
+            result.put(dto.getId(), mergeMicroservice(dto, microservicesFromPersistence.get(microserviceFromRegistry.getId())));
         }
         for (final MicroserviceDto microserviceFromPersistence : microservicesFromPersistence.values()){
             if (microservicesFromRegistry.get(microserviceFromPersistence.getId()) == null){
-                result.put(microserviceFromPersistence.getId(), microserviceFromPersistence);
+                result.put(microserviceFromPersistence.getId(), mergeMicroservice(new MicroserviceDto(), microservicesFromPersistence.get(microserviceFromPersistence.getId())));
             }
         }
-        
+
         return result;
     }
 
-    private MicroserviceDto mergeMicroservice(MicroserviceDto sourceService, MicroserviceDto serviceToMerge) {
+    public MicroserviceDto mergeMicroservice(MicroserviceDto sourceService, MicroserviceDto serviceToMerge) {
+        Assert.notNull(sourceService);
+
         if (serviceToMerge == null){
             return sourceService;
         }
+
+        sourceService.setId(serviceToMerge.getId());
 
         if (StringUtils.isNotEmpty(serviceToMerge.getLabel())){
             sourceService.setLabel(serviceToMerge.getLabel());
