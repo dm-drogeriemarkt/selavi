@@ -10,12 +10,20 @@ import java.util.Map;
 public class MicroserviceContentProviderService {
 
     private final ServiceRegistryRepository serviceRegistryRepository;
+    private final PersistenceContentProvider persistenceContentProvider;
+    private final MicroserviceMergeService microserviceMergeService;
 
-    public MicroserviceContentProviderService(ServiceRegistryRepository serviceRegistryRepository) {
+    public MicroserviceContentProviderService(ServiceRegistryRepository serviceRegistryRepository, PersistenceContentProvider persistenceContentProvider, MicroserviceMergeService microserviceMergeService) {
         this.serviceRegistryRepository = serviceRegistryRepository;
+        this.persistenceContentProvider = persistenceContentProvider;
+        this.microserviceMergeService = microserviceMergeService;
     }
 
     public Map<String, MicroserviceDto> getAllMicroservices(){
-        return serviceRegistryRepository.findAllServices();
+        final Map<String, MicroserviceDto> microservicesFromRegistry = serviceRegistryRepository.findAllServices();
+        final Map<String, MicroserviceDto> microservicesFromPersistence = persistenceContentProvider.getAllMicroservices();
+
+
+        return microserviceMergeService.mergeCompleteMicroservices(microservicesFromRegistry, microservicesFromPersistence);
     }
 }
