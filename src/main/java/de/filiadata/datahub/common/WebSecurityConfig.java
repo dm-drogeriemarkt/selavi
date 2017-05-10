@@ -1,18 +1,34 @@
 package de.filiadata.datahub.common;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import de.filiadata.datahub.activedirectory.business.ActiveDirectoryProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.authentication.encoding.LdapShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private ActiveDirectoryProperties activeDirectoryProperties;
+    private LdapContextSource ldapContextSource;
+
+    public WebSecurityConfig(ActiveDirectoryProperties activeDirectoryProperties, LdapContextSource ldapContextSource) {
+        this.activeDirectoryProperties = activeDirectoryProperties;
+        this.ldapContextSource = ldapContextSource;
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -36,11 +52,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable();
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .inMemoryAuthentication()
-                .withUser("admin").password("password").roles("USER", "ADMIN").and()
-                .withUser("user").password("password").roles("USER");
+            .ldapAuthentication()//sAMAccountName
+                .userDnPatterns("sAMAccountName={0},objectClass=user")
+                //.groupSearchBase(activeDirectoryProperties.getBase())
+                .contextSource(ldapContextSource)
+                .passwordCompare()
+                .passwordEncoder(new LdapShaPasswordEncoder())
+                .passwordAttribute("userPassword");
     }
 }
