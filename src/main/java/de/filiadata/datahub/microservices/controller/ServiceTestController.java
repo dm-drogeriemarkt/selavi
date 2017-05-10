@@ -1,6 +1,7 @@
 package de.filiadata.datahub.microservices.controller;
 
 import de.filiadata.datahub.microservices.business.MicroserviceConditioningService;
+import de.filiadata.datahub.microservices.domain.ConsumeDto;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/services")
+@RequestMapping("/1_services")
 public class ServiceTestController {
 
     private final MicroserviceConditioningService microserviceConditioningService;
@@ -43,5 +44,24 @@ public class ServiceTestController {
     public void deleteService(@PathVariable String serviceName) {
         microserviceConditioningService.deleteService(serviceName);
     }
+
+    @ApiOperation(value = "Add a new relation between two services.")
+    @RequestMapping(value = "/{serviceName}/relations", method = RequestMethod.POST)
+    public void addNewRelation(@PathVariable String serviceName, @RequestBody ConsumeDto consumeDto) {
+        microserviceConditioningService.addNewRelation(serviceName, consumeDto);
+    }
+
+    @ApiOperation(value = "Delete a relation between two services. If the last relation ist removed, the 'consumes' property will also removed.")
+    @RequestMapping(value = "/{serviceName}/relations/{relatedServiceName}", method = RequestMethod.DELETE)
+    public void deleteRelation(@PathVariable String serviceName, @PathVariable String relatedServiceName) {
+        microserviceConditioningService.deleteRelation(serviceName, relatedServiceName);
+    }
+
+    @ApiOperation(value = "Edit a relation between two services.")
+    @RequestMapping(value = "/{serviceName}/relations/{consumeDto}", method = RequestMethod.PUT)
+    public void editRelation(@PathVariable String serviceName, @RequestBody ConsumeDto consumeDto) {
+        microserviceConditioningService.editRelation(serviceName, consumeDto);
+    }
+
 
 }

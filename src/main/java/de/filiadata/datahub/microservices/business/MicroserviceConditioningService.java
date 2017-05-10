@@ -2,6 +2,7 @@ package de.filiadata.datahub.microservices.business;
 
 import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceAddException;
 import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceDeleteException;
+import de.filiadata.datahub.microservices.domain.ConsumeDto;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import de.filiadata.datahub.microservices.domain.ServiceProperties;
 import de.filiadata.datahub.microservices.repository.ServicePropertiesRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class MicroserviceConditioningService {
@@ -64,5 +66,32 @@ public class MicroserviceConditioningService {
 
         servicePropertiesRepository.delete(serviceProperties);
 
+    }
+
+    public void addNewRelation(String serviceName, ConsumeDto consumeDto) {
+        final MicroserviceDto microserviceDto = microserviceContentProviderService.getMicroservicesFromPersistence().get(serviceName);
+        if (!microServiceHasConsumes(microserviceDto.getConsumes(), consumeDto)) {
+            microserviceDto.getConsumes().add(consumeDto);
+            servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
+        }
+    }
+
+    private boolean microServiceHasConsumes(List<ConsumeDto> sourceDtos, ConsumeDto dtoToAdd) {
+        if (sourceDtos.isEmpty()) {
+            return false;
+        }
+        for (final ConsumeDto sourceDto : sourceDtos) {
+            if (sourceDto.getTarget().equals(dtoToAdd.getTarget()) && sourceDto.getType().equals(dtoToAdd.getType())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void editRelation(String serviceName, ConsumeDto consumeDto) {
+    }
+
+    public void deleteRelation(String serviceName, String relatedServiceName) {
     }
 }
