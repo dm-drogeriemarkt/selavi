@@ -69,11 +69,30 @@ public class MicroserviceConditioningService {
     }
 
     public void addNewRelation(String serviceName, ConsumeDto consumeDto) {
-        final MicroserviceDto microserviceDto = microserviceContentProviderService.getMicroservicesFromPersistence().get(serviceName);
+        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
         if (!microServiceHasConsumes(microserviceDto.getConsumes(), consumeDto)) {
             microserviceDto.getConsumes().add(consumeDto);
             servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
         }
+    }
+
+
+    public void editRelation(String serviceName, ConsumeDto consumeDto) {
+    }
+
+    public void deleteRelation(String serviceName, String relatedServiceName) {
+    }
+
+
+    private MicroserviceDto getMicroserviceDtoFromPersistenceOrCreateNew(final String serviceName) {
+        MicroserviceDto microserviceDto = microserviceContentProviderService.getMicroservicesFromPersistence().get(serviceName);
+        if (microserviceDto == null) {
+            microserviceDto = new MicroserviceDto();
+            microserviceDto.setId(serviceName);
+            microserviceDto.setLabel(serviceName);
+        }
+
+        return microserviceDto;
     }
 
     private boolean microServiceHasConsumes(List<ConsumeDto> sourceDtos, ConsumeDto dtoToAdd) {
@@ -89,9 +108,4 @@ public class MicroserviceConditioningService {
         return false;
     }
 
-    public void editRelation(String serviceName, ConsumeDto consumeDto) {
-    }
-
-    public void deleteRelation(String serviceName, String relatedServiceName) {
-    }
 }

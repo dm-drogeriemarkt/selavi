@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/1_services")
+@RequestMapping("/services")
 public class ServiceTestController {
 
     private final MicroserviceConditioningService microserviceConditioningService;
