@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -78,9 +79,23 @@ public class MicroserviceConditioningService {
 
 
     public void editRelation(String serviceName, ConsumeDto consumeDto) {
+        deleteRelation(serviceName, consumeDto.getTarget());
+        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
+        microserviceDto.getConsumes().add(consumeDto);
+        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
     }
 
     public void deleteRelation(String serviceName, String relatedServiceName) {
+        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
+        final Iterator<ConsumeDto> iter = microserviceDto.getConsumes().iterator();
+        while (iter.hasNext()) {
+            final ConsumeDto consumeDto = iter.next();
+            if (consumeDto.getTarget().equals(relatedServiceName)) {
+                iter.remove();
+            }
+        }
+
+        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
     }
 
 
@@ -100,7 +115,7 @@ public class MicroserviceConditioningService {
             return false;
         }
         for (final ConsumeDto sourceDto : sourceDtos) {
-            if (sourceDto.getTarget().equals(dtoToAdd.getTarget()) && sourceDto.getType().equals(dtoToAdd.getType())) {
+            if (sourceDto.getTarget().equals(dtoToAdd.getTarget())) {
                 return true;
             }
         }

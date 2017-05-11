@@ -1,12 +1,16 @@
 package de.filiadata.datahub.microservices.business;
 
+import de.filiadata.datahub.microservices.domain.ConsumeDto;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MicroserviceMergeService {
@@ -84,15 +88,23 @@ public class MicroserviceMergeService {
         }
 
         mergeHosts(sourceService, serviceToMerge);
-        mergeConsumes(sourceService, serviceToMerge);
+        mergeConsumes(sourceService.getConsumes(), serviceToMerge.getConsumes());
+
         return sourceService;
     }
 
-    private void mergeConsumes(MicroserviceDto sourceService, MicroserviceDto serviceToMerge) {
-        if (serviceToMerge.getConsumes() != null && !serviceToMerge.getConsumes().isEmpty()){
-            sourceService.getConsumes().addAll(serviceToMerge.getConsumes());
+    private void mergeConsumes(final List<ConsumeDto> consumes, final List<ConsumeDto> consumesToMerge) {
+        final Map<String, ConsumeDto> consumeDtoMap = consumesToMerge.stream().collect(Collectors.toMap(ConsumeDto::getTarget, consumeDto -> consumeDto));
+        final Iterator<ConsumeDto> iter = consumes.iterator();
+        while (iter.hasNext()) {
+            final ConsumeDto consumeDto = iter.next();
+            if (consumeDtoMap.get(consumeDto.getTarget()) != null) {
+                iter.remove();
+            }
         }
+        consumes.addAll(consumesToMerge);
     }
+
 
     private void mergeHosts(MicroserviceDto sourceService, MicroserviceDto serviceToMerge) {
         if (serviceToMerge.getHosts() != null && !serviceToMerge.getHosts().isEmpty()){
