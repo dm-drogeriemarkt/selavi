@@ -60,6 +60,8 @@ export class LoginDialog extends React.Component {
             }
         }
 
+        let textFieldStyle = {marginLeft: "1em"};
+
         return (
             <div>
                 <Dialog
@@ -69,10 +71,13 @@ export class LoginDialog extends React.Component {
                     open={isOpen}>
                     <TextField ref="input_username"
                                floatingLabelText="Username"
-                               hintText="Username"/>
+                               hintText="Username"
+                               style={textFieldStyle}/>
                     <TextField ref="input_password"
                                floatingLabelText="Password"
-                               hintText="Password"/>
+                               hintText="Password"
+                               type="password"
+                               style={textFieldStyle}/>
                 </Dialog>
                 <Snackbar
                     open={isErrorMessageOpen}
