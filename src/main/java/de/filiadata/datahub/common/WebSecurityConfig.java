@@ -55,9 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .ldapAuthentication()//sAMAccountName
-                .userDnPatterns("sAMAccountName={0},objectClass=user")
-                //.groupSearchBase(activeDirectoryProperties.getBase())
+            .ldapAuthentication()
+                .userSearchFilter("(&(sAMAccountName={0})(objectClass=User))")
+                .groupSearchBase("ou=Users,ou=DE,ou=dm,dc=dm,dc=int")
                 .contextSource(ldapContextSource)
                 .passwordCompare()
                 .passwordEncoder(new LdapShaPasswordEncoder())
