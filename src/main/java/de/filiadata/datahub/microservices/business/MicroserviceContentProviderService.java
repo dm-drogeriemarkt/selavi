@@ -1,7 +1,6 @@
 package de.filiadata.datahub.microservices.business;
 
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
-import de.filiadata.datahub.microservices.repository.ServiceRegistryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -9,12 +8,12 @@ import java.util.Map;
 @Service
 public class MicroserviceContentProviderService {
 
-    private final ServiceRegistryRepository serviceRegistryRepository;
+    private final ServiceRegistryContentProvider serviceRegistryContentProvider;
     private final PersistenceContentProvider persistenceContentProvider;
     private final MicroserviceMergeService microserviceMergeService;
 
-    public MicroserviceContentProviderService(ServiceRegistryRepository serviceRegistryRepository, PersistenceContentProvider persistenceContentProvider, MicroserviceMergeService microserviceMergeService) {
-        this.serviceRegistryRepository = serviceRegistryRepository;
+    public MicroserviceContentProviderService(ServiceRegistryContentProvider serviceRegistryContentProvider, PersistenceContentProvider persistenceContentProvider, MicroserviceMergeService microserviceMergeService) {
+        this.serviceRegistryContentProvider = serviceRegistryContentProvider;
         this.persistenceContentProvider = persistenceContentProvider;
         this.microserviceMergeService = microserviceMergeService;
     }
@@ -32,6 +31,6 @@ public class MicroserviceContentProviderService {
     }
 
     public Map<String, MicroserviceDto> getMicroservicesFromServiceRegistry(){
-        return serviceRegistryRepository.findAllServices();
+        return serviceRegistryContentProvider.getAllMicroservices();
     }
 }

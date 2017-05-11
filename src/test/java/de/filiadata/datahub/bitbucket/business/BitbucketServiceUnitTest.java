@@ -4,7 +4,8 @@ import de.filiadata.datahub.bitbucket.domain.BitbucketAuthorDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitsDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitterDto;
 import de.filiadata.datahub.bitbucket.domain.TopCommitter;
-import de.filiadata.datahub.microservices.business.MetadataService;
+import de.filiadata.datahub.microservices.business.MicroserviceContentProviderService;
+import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,31 +17,28 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 public class BitbucketServiceUnitTest {
 
     private static final String BITBUCKET_URL = "http://www.foobar.com";
     private static final String IGNORED_COMMITERS = "foo@bar.de";
     private final RestTemplate restTemplate = mock(RestTemplate.class);
-    private final MetadataService metadataService = mock(MetadataService.class);
+    private final MicroserviceContentProviderService microserviceContentProviderService = mock(MicroserviceContentProviderService.class, RETURNS_DEEP_STUBS);
 
     @Before
     public void setUp() {
-        final Map<String, String> metadata = new HashMap<>();
-        metadata.put("bitbucketUrl", BITBUCKET_URL);
-        metadata.put("ignoredCommitters", IGNORED_COMMITERS);
-        when(metadataService.getMetadataForMicroservice(anyString())).thenReturn(metadata);
-
+        final MicroserviceDto dto = new MicroserviceDto();
+        dto.setBitbucketUrl(BITBUCKET_URL);
+        dto.setIgnoredCommitters(IGNORED_COMMITERS);
+        when(microserviceContentProviderService.getAllMicroservices().get("mocro01")).thenReturn(dto);
     }
 
     @Test
@@ -48,7 +46,7 @@ public class BitbucketServiceUnitTest {
         when(restTemplate.exchange(eq(BITBUCKET_URL + "/commits?limit=500"), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());
 
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, metadataService);
+        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, microserviceContentProviderService);
         final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
         assertThat(topCommiters.size(), is(3));
     }
@@ -58,7 +56,7 @@ public class BitbucketServiceUnitTest {
         when(restTemplate.exchange(eq(BITBUCKET_URL + "/commits?limit=500"), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getEmptyResponseEntity());
 
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, metadataService);
+        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, microserviceContentProviderService);
         final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
 
         assertTrue(topCommiters.isEmpty());
@@ -72,7 +70,7 @@ public class BitbucketServiceUnitTest {
         when(restTemplate.exchange(eq(BITBUCKET_URL + "/commits?limit=500"), eq(HttpMethod.GET), any(HttpEntity.class), eq(new ParameterizedTypeReference<BitbucketCommitsDto>() {
         }))).thenReturn(getResponseEntity());
 
-        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, metadataService);
+        final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, microserviceContentProviderService);
         final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
         assertThat(topCommiters.get(0).getEmailAddress(), is("foo1@bar.de"));
         assertThat(topCommiters.get(1).getEmailAddress(), is("foo4@bar.de"));

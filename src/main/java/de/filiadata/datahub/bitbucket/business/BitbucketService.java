@@ -4,7 +4,8 @@ import de.filiadata.datahub.bitbucket.domain.BitbucketAuthorDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitsDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitterDto;
 import de.filiadata.datahub.bitbucket.domain.TopCommitter;
-import de.filiadata.datahub.microservices.business.MetadataService;
+import de.filiadata.datahub.microservices.business.MicroserviceContentProviderService;
+import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -32,15 +33,15 @@ public class BitbucketService {
     private final RestTemplate restTemplate;
     private final String bitbucketCredentials;
     private final Integer numberOfTopCommiters;
-    private final MetadataService metadataService;
+    private final MicroserviceContentProviderService microserviceContentProviderService;
 
     public BitbucketService(RestTemplate restTemplate,
                             @Value("${selavi.bitbucket.credentials}") String bitbucketCredentials,
-                            @Value("${selavi.bitbucket.topcommitters.size}") Integer numberOfTopCommiters, MetadataService metadataService) {
+                            @Value("${selavi.bitbucket.topcommitters.size}") Integer numberOfTopCommiters, MicroserviceContentProviderService microserviceContentProviderService) {
         this.restTemplate = restTemplate;
         this.bitbucketCredentials = bitbucketCredentials;
         this.numberOfTopCommiters = numberOfTopCommiters;
-        this.metadataService = metadataService;
+        this.microserviceContentProviderService = microserviceContentProviderService;
     }
 
     public List<TopCommitter> getNamedTopCommitter(String microserviceId) {
@@ -58,10 +59,10 @@ public class BitbucketService {
     }
 
     public Map<BitbucketAuthorDto, Long> getTopCommitters(String microserviceId) {
-        final Map<String, String> metadataForMicroservice = metadataService.getMetadataForMicroservice(microserviceId);
+        final MicroserviceDto microserviceDto = microserviceContentProviderService.getAllMicroservices().get(microserviceId);
 
-        final String bitbucketUrl = metadataForMicroservice.get(BITBUCKET_URL);
-        final String ignoredCommitters = metadataForMicroservice.get(IGNORED_COMMITTERS);
+        final String bitbucketUrl = microserviceDto.getBitbucketUrl();
+        final String ignoredCommitters = microserviceDto.getIgnoredCommitters();
         if (bitbucketUrl != null) {
             final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(bitbucketUrl + "/commits?limit=500");
             return handleResponse(responseEntity, ignoredCommitters);
