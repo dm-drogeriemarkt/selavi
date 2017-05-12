@@ -24,7 +24,7 @@ import java.util.Map;
 @Service
 public class ServiceRegistryRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistryRepository.class);
 
     private static final String APPLICATION = "application";
     private static final String NAME = "name";
