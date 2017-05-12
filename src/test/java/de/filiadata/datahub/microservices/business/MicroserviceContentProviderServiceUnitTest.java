@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
 /**
  * Created by username on 12.05.17.
  */
-public class MicroserviceContentProviderServiceTest {
+public class MicroserviceContentProviderServiceUnitTest {
 
     private final ServiceRegistryContentProvider serviceRegistryContentProvider = mock(ServiceRegistryContentProvider.class);
     private final PersistenceContentProvider persistenceContentProvider = mock(PersistenceContentProvider.class);
