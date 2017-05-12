@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bundle.js").permitAll()
                 .antMatchers("/bitbucket/**").permitAll()
                 .antMatchers("/person/**").permitAll()
+                .antMatchers("/_system/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/services").permitAll()
                 .antMatchers(HttpMethod.POST, "/services/**").hasRole("SECDE-ZOE-TEST-ADMINS")
                 .antMatchers(HttpMethod.PUT, "/services/**").hasRole("SECDE-ZOE-TEST-ADMINS")
