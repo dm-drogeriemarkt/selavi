@@ -50,7 +50,7 @@ describe('<LinkTextField/>', function () {
         sinon.assert.notCalled(window.open);
     });
 
-    xit('activates previously in-active button when text is entered in text field', function () {
+    it('activates previously in-active button when text is entered in text field', function () {
         const props = createProps();
 
         const wrapper = mount(<LinkTextField {...props}/>, {
@@ -69,19 +69,11 @@ describe('<LinkTextField/>', function () {
 
         sinon.assert.notCalled(window.open);
 
-        // this is supposed to change the TextFields value, but it doesn't....
-        //wrapper.find('TextField').at(0).simulate("change", "http://foo.bar.baz");
+        // setting the text fields value 'enables' submit button
+        wrapper.ref('textField').find('input').getDOMNode().value = "http://foo.bar.baz";
 
-        // ...so we simulate a change on the 'native' html unput element...
-        wrapper.find('TextField').find('input').simulate("change", { target: {value: "http://foo.bar.baz"}});
-
-        // ...and the LinkTextFields state is set correctly (so we know that TextField has called its onChange handler)
-        chai.expect(wrapper.find('IconButton').at(0).props().tooltip).to.equal("Open link...");
-
-        // however, the TextFields value is _not_ set, so the following call does nothing...
         wrapper.instance()._onTouchTap();
 
-        // ...and these assertions fail!
         sinon.assert.calledOnce(window.open);
         sinon.assert.calledWith(window.open, "http://foo.bar.baz");
     });

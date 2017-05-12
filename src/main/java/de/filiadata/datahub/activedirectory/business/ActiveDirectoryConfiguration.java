@@ -10,7 +10,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
 public class ActiveDirectoryConfiguration {
 
     @Bean
-    public ContextSource ldapContextSource(ActiveDirectoryProperties properties) {
+    public LdapContextSource ldapContextSource(ActiveDirectoryProperties properties) {
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrl(properties.getUrl());
         ldapContextSource.setUserDn(properties.getUserDn());
@@ -20,7 +20,7 @@ public class ActiveDirectoryConfiguration {
     }
 
     @Bean
-    public LdapTemplate ldapTemplate(ContextSource contextSource) {
+    public LdapTemplate ldapTemplate(LdapContextSource contextSource) {
         LdapTemplate ldapTemplate = new LdapTemplate(contextSource);
         ldapTemplate.setIgnorePartialResultException(true);
         return ldapTemplate;
