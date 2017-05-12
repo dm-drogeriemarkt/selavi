@@ -165,6 +165,36 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.instance().refs.input_label.props.errorText).to.equal("Field is required!");
     });
 
+    it('creates entity object and calls props.onSubmit() when validation succeeds', function () {
+
+        let props = createProps();
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+            }});
+        props.entity = {
+            id: "foo",
+            label: "bar"
+        };
+        props.addEditDialogFormAction = "/myBackendUrl"
+
+        const wrapper = mount(<AddEditDialog {...props}/>, {
+            context: {
+                muiTheme: getMuiTheme(),
+            },
+            childContextTypes: {
+                muiTheme: React.PropTypes.object.isRequired,
+            },
+        });
+
+        wrapper.instance()._handleOnSubmit();
+
+        sinon.assert.calledOnce(props.onSubmit);
+        sinon.assert.calledWith(props.onSubmit, { id: "foo", label: "bar" }, "/myBackendUrl", "PUT");
+    });
+
     it('renders bitbucket top comitters in separate tab, when present', function () {
 
         let props = createProps();
@@ -273,7 +303,9 @@ function createProps() {
         inputTabs: [],
         entity: undefined,
         menuMode: undefined,
-        editMenuMode: undefined
+        editMenuMode: undefined,
+        onCancel: sinon.spy(),
+        onSubmit: sinon.spy()
     };
 
     return props;
