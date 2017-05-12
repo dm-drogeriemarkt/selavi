@@ -2,6 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
+const errorCode = require('rest/interceptor/errorCode');
 
 import {Provider} from "react-redux";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -32,11 +33,17 @@ class App extends React.Component {
 
     componentDidMount() {
 
-        var client = rest.wrap(mime);
+        var client = rest.wrap(mime).wrap(errorCode);
         client({path: '/selavi/services'}).then(response => {
             store.dispatch({
                 type: 'FETCH_MICROSERVICES_SUCCESS',
                 response: response
+            });
+        });
+        client({path: '/selavi/user'}).then(response => {
+            store.dispatch({
+                type: 'LOGIN_SUCCESS',
+                loggedInUser: response.entity
             });
         });
     }
