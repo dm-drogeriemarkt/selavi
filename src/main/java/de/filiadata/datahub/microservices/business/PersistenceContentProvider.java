@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class PersistenceContentProvider{
+public class PersistenceContentProvider {
 
     private final ServicePropertiesRepository servicePropertiesRepository;
     private final MicroserviceDtoFactory microserviceDtoFactory;
