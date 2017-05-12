@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 @Configuration
@@ -22,12 +23,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
             .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/services/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/services/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/services/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/services/**").hasRole("ADMIN")
+                .antMatchers("/").permitAll()
+                .antMatchers("/lib/**").permitAll()
+                .antMatchers("/style.css").permitAll()
+                .antMatchers("/bundle.js").permitAll()
+                .antMatchers("/bitbucket/**").permitAll()
+                .antMatchers("/person/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/services").permitAll()
+                .antMatchers(HttpMethod.POST, "/services/**").hasRole("SECDE-ZOE-TEST-ADMINS")
+                .antMatchers(HttpMethod.PUT, "/services/**").hasRole("SECDE-ZOE-TEST-ADMINS")
+                .antMatchers(HttpMethod.DELETE, "/services/**").hasRole("SECDE-ZOE-TEST-ADMINS")
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
