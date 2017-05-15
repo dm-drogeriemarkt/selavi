@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.microservices.business.DefaultNodeContentFactory;
+import de.filiadata.datahub.microservices.business.MicroserviceDtoFactory;
+import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MicroserviceRepository {
+public class ServiceRegistryRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MicroserviceRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServiceRegistryRepository.class);
 
     private static final String APPLICATION = "application";
     private static final String NAME = "name";
@@ -43,25 +45,27 @@ public class MicroserviceRepository {
     private static final String TARGET = "target";
     private static final String TYPE = "type";
 
-    private RestTemplate restTemplate;
-    private DefaultNodeContentFactory defaultNodeContentFactory;
-    private Boolean offlineMode;
-    private String registryUrl;
+    private final RestTemplate restTemplate;
+    private final DefaultNodeContentFactory defaultNodeContentFactory;
+    private final MicroserviceDtoFactory microserviceDtoFactory;
+    private final Boolean offlineMode;
+    private final String registryUrl;
 
     @Autowired
-    public MicroserviceRepository(RestTemplate restTemplate,
-                                  DefaultNodeContentFactory defaultNodeContentFactory,
-                                  @Value("${development.offline-mode:false}") String offlineMode,
-                                  @Value("${registry.url}") String registryUrl) {
+    public ServiceRegistryRepository(RestTemplate restTemplate,
+                                     DefaultNodeContentFactory defaultNodeContentFactory,
+                                     @Value("${development.offline-mode:false}") String offlineMode,
+                                     MicroserviceDtoFactory microserviceDtoFactory, @Value("${registry.url}") String registryUrl) {
         this.restTemplate = restTemplate;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.offlineMode = Boolean.parseBoolean(offlineMode);
+        this.microserviceDtoFactory = microserviceDtoFactory;
         this.registryUrl = registryUrl;
     }
 
 
-    @Cacheable("microservices")
-    public Map<String, ObjectNode> findAllServices() {
+    @Cacheable("allmicroservices")
+    public Map<String, MicroserviceDto> findAllServices() {
         LOG.info("Load services from Registry ...");
         final String nodeApplications = "applications";
 
@@ -92,17 +96,17 @@ public class MicroserviceRepository {
         return createResult(applicationsNode);
     }
 
-    private Map<String, ObjectNode> createResult(ArrayNode applicationsNode) {
-        final Map<String, ObjectNode> result = new HashMap<>();
+    private Map<String, MicroserviceDto> createResult(ArrayNode applicationsNode) {
+        final Map<String, MicroserviceDto> microserviceDtoMap = new HashMap<>();
         applicationsNode.forEach(application -> {
             final String applicationName = application.get(NAME).textValue();
             final ObjectNode applicationNode = defaultNodeContentFactory.create(applicationName);
             applicationNode.set(HOSTS, readHostInfos(application));
             applicationNode.set(CONSUMES, readConsumers(application));
             addMetadataPropertiesToBaseNode(applicationNode, application);
-            result.put(applicationName, applicationNode);
+            microserviceDtoMap.put(applicationName, microserviceDtoFactory.getMicroserviceDtoFromJSON(applicationNode.toString()));
         });
-        return result;
+        return microserviceDtoMap;
     }
 
 
