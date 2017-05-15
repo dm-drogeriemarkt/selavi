@@ -2,6 +2,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
+const errorCode = require('rest/interceptor/errorCode');
 
 import {Provider} from "react-redux";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -13,6 +14,7 @@ import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceSnackbar from "./components/microserviceSnackbar";
 import AddEditDialog from "./components/addEditDialog";
 import MicroserviceDeleteServiceDialog from "./components/microserviceDeleteServiceDialog";
+import LoginDialog from "./components/loginDialog";
 import store from "./stores/microserviceStore";
 import {getRequiredPropertyNames} from "./shared/requiredPropertyUtil";
 
@@ -31,11 +33,17 @@ class App extends React.Component {
 
     componentDidMount() {
 
-        var client = rest.wrap(mime);
+        var client = rest.wrap(mime).wrap(errorCode);
         client({path: '/selavi/services'}).then(response => {
             store.dispatch({
                 type: 'FETCH_MICROSERVICES_SUCCESS',
                 response: response
+            });
+        });
+        client({path: '/selavi/user'}).then(response => {
+            store.dispatch({
+                type: 'LOGIN_SUCCESS',
+                loggedInUser: response.entity
             });
         });
     }
@@ -82,6 +90,9 @@ class App extends React.Component {
             { label: "Basic", inputFields: relationBasicFields }
         ];
 
+        // TODO: display MicroserviceCountLabel in lower left corner, on top of mindmap
+        // <MicroserviceCountLabel serviceRequiredProperties={this.props.serviceRequiredProperties}/>
+
         return (
             <div className="appcontainer">
                 <div className="appheader">
@@ -102,6 +113,7 @@ class App extends React.Component {
                                                   editMenuMode="EDIT_RELATION"
                                                   entityDisplayName="Link"/>
                     <MicroserviceDeleteServiceDialog/>
+                    <LoginDialog/>
                 </div>
             </div>
         )

@@ -178,6 +178,43 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'LOGIN': {
+            const newState = Object.assign({}, state, {
+                menuMode: 'LOGIN',
+                loginErrorMessage: undefined,
+                loggedInUser: undefined
+            });
+            return newState;
+        }
+        case 'LOGIN_SUCCESS': {
+            const newState = Object.assign({}, state, {
+                menuMode: undefined,
+                loginErrorMessage: undefined,
+                loggedInUser: action.loggedInUser
+            });
+            return newState;
+        }
+        case 'LOGIN_FAILED': {
+            const newState = Object.assign({}, state, {
+                menuMode: 'LOGIN',
+                loginErrorMessage: action.message,
+                loggedInUser: undefined
+            });
+            return newState;
+        }
+        case 'LOGOUT_SUCCESS': {
+            const newState = Object.assign({}, state, {
+                loggedInUser: undefined,
+                logoutErrorMessage : undefined
+            });
+            return newState;
+        }
+        case 'LOGOUT_FAILED': {
+            const newState = Object.assign({}, state, {
+                logoutErrorMessage: action.message
+            });
+            return newState;
+        }
         default:
             return state;
     }
