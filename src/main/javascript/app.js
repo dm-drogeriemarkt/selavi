@@ -90,9 +90,6 @@ class App extends React.Component {
             { label: "Basic", inputFields: relationBasicFields }
         ];
 
-        // TODO: display MicroserviceCountLabel in lower left corner, on top of mindmap
-        // <MicroserviceCountLabel serviceRequiredProperties={this.props.serviceRequiredProperties}/>
-
         return (
             <div className="appcontainer">
                 <div className="appheader">
