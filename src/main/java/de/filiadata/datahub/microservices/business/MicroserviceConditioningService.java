@@ -111,7 +111,7 @@ public class MicroserviceConditioningService {
     }
 
     private boolean microServiceHasConsumes(List<ConsumeDto> sourceDtos, ConsumeDto dtoToAdd) {
-        if (sourceDtos.isEmpty()) {
+        if (sourceDtos == null || sourceDtos.isEmpty()) {
             return false;
         }
         for (final ConsumeDto sourceDto : sourceDtos) {

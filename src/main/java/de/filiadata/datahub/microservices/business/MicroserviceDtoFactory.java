@@ -3,12 +3,15 @@ package de.filiadata.datahub.microservices.business;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.filiadata.datahub.microservices.domain.ConsumeDto;
+import de.filiadata.datahub.microservices.domain.HostDto;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Service
 public class MicroserviceDtoFactory {
@@ -25,7 +28,12 @@ public class MicroserviceDtoFactory {
     public MicroserviceDto getMicroserviceDtoFromJSON(final String json) {
 
         try {
-            return mapper.readValue(json, MicroserviceDto.class);
+            final MicroserviceDto microserviceDto = mapper.readValue(json, MicroserviceDto.class);
+            if (microserviceDto.getConsumes() == null) {
+                microserviceDto.setConsumes(new ArrayList<ConsumeDto>());
+                microserviceDto.setHosts(new ArrayList<HostDto>());
+            }
+            return microserviceDto;
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

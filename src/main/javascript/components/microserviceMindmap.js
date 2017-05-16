@@ -172,7 +172,7 @@ export class MicroserviceMindmap extends React.Component {
                 edgeArray.push({
                     from: el.id,
                     to: consumer.target,
-                    label: consumer.type,
+                    label: consumer.type != null ? consumer.type : "",
                     font: {align: 'middle'}
                 });
             });
