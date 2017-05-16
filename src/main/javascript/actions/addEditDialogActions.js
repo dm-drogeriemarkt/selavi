@@ -1,5 +1,6 @@
 const rest = require('rest');
 const mime = require('rest/interceptor/mime');
+const errorCode = require('rest/interceptor/errorCode');
 
 export function onSubmit(entity, path, method) {
     return function (dispatch) {
@@ -12,13 +13,18 @@ export function onSubmit(entity, path, method) {
             method: method
         };
 
-        var client = rest.wrap(mime);
+        var client = rest.wrap(mime).wrap(errorCode);
         client(request).then(response => {
             client({path: '/selavi/services'}).then(response => {
                 dispatch({
                     type: 'FETCH_MICROSERVICES_SUCCESS',
                     response: response
                 });
+            });
+        }, response => {
+            dispatch({
+                type: 'ADD_EDIT_FAILED',
+                message: response.entity.message
             });
         });
     }

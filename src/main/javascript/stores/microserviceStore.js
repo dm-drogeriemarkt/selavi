@@ -87,6 +87,13 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'ADD_EDIT_FAILED': {
+            const newState = Object.assign({}, state, {
+                menuMode: undefined,
+                globalErrorMessage: action.message
+            });
+            return newState;
+        }
         case 'DELETE_SERVICE': {
             const newState = Object.assign({}, state, {
                 deleteServiceId: state.contextMenuServiceId,
@@ -161,6 +168,7 @@ function updateStore(state = initialState, action) {
                 menuMode: undefined,
                 addPropertyServiceId: undefined,
                 deleteServiceErrorMessage: undefined,
+                globalErrorMessage: undefined,
                 entity: undefined,
                 topComitters: undefined
             });
@@ -205,13 +213,13 @@ function updateStore(state = initialState, action) {
         case 'LOGOUT_SUCCESS': {
             const newState = Object.assign({}, state, {
                 loggedInUser: undefined,
-                logoutErrorMessage : undefined
+                globalErrorMessage : undefined
             });
             return newState;
         }
         case 'LOGOUT_FAILED': {
             const newState = Object.assign({}, state, {
-                logoutErrorMessage: action.message
+                globalErrorMessage: action.message
             });
             return newState;
         }

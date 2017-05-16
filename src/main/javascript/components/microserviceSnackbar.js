@@ -6,7 +6,17 @@ import Snackbar from 'material-ui/Snackbar';
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
-        logoutErrorMessage: state.logoutErrorMessage
+        globalErrorMessage: state.globalErrorMessage
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onRequestClose: function() {
+            dispatch({
+                type: 'CANCEL_MENU_ACTION'
+            });
+        }
     };
 };
 
@@ -19,9 +29,9 @@ class MicroserviceSnackbar extends React.Component {
         if (this.props.menuMode === 'ADD_LINK') {
             open = true;
             message = "Add link mode: draw connection between services!"
-        } else if (this.props.logoutErrorMessage) {
+        } else if (this.props.globalErrorMessage) {
             open = true;
-            message = this.props.logoutErrorMessage
+            message = this.props.globalErrorMessage
         }
         
         return (
@@ -29,9 +39,10 @@ class MicroserviceSnackbar extends React.Component {
                 open={open}
                 message={message}
                 autoHideDuration={0}
+                onRequestClose={this.props.onRequestClose.bind(this)}
             />
         );
     }
 }
 
-export default connect(mapStateToProps) (MicroserviceSnackbar);
+export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceSnackbar);
