@@ -94,15 +94,17 @@ public class MicroserviceMergeService {
     }
 
     private void mergeConsumes(final List<ConsumeDto> consumes, final List<ConsumeDto> consumesToMerge) {
-        final Map<String, ConsumeDto> consumeDtoMap = consumesToMerge.stream().collect(Collectors.toMap(ConsumeDto::getTarget, consumeDto -> consumeDto));
-        final Iterator<ConsumeDto> iter = consumes.iterator();
-        while (iter.hasNext()) {
-            final ConsumeDto consumeDto = iter.next();
-            if (consumeDtoMap.get(consumeDto.getTarget()) != null) {
-                iter.remove();
+        if (consumesToMerge != null) {
+            final Map<String, ConsumeDto> consumeDtoMap = consumesToMerge.stream().collect(Collectors.toMap(ConsumeDto::getTarget, consumeDto -> consumeDto));
+            final Iterator<ConsumeDto> iter = consumes.iterator();
+            while (iter.hasNext()) {
+                final ConsumeDto consumeDto = iter.next();
+                if (consumeDtoMap.get(consumeDto.getTarget()) != null) {
+                    iter.remove();
+                }
             }
+            consumes.addAll(consumesToMerge);
         }
-        consumes.addAll(consumesToMerge);
     }
 
 
