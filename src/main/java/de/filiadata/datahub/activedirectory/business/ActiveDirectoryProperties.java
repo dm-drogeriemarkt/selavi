@@ -11,4 +11,5 @@ public class ActiveDirectoryProperties {
     private String userDn;
     private String password;
     private String base;
+    private String domain;
 }

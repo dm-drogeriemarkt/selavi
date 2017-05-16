@@ -1,14 +1,19 @@
 package de.filiadata.datahub.common;
 
-import de.filiadata.auth.activedirectory.ActiveDirectoryProvider;
+import de.filiadata.auth.activedirectory.cache.CachingAuthenticationProvider;
+import de.filiadata.datahub.activedirectory.business.ActiveDirectoryProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.ldap.authentication.ad.Hotfix3960ActiveDirectoryLdapAuthenticationProvider;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
@@ -17,8 +22,10 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @ActiveDirectoryProvider
-    private AuthenticationProvider provider;
+    private GrantedAuthoritiesMapper authoritiesMapper;
+
+    @Autowired
+    private ActiveDirectoryProperties properties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -48,5 +55,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .csrf()
                 .disable();
+    }
+
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public CachingAuthenticationProvider activeDirectoryLdapAuthenticationProvider() {
+        Hotfix3960ActiveDirectoryLdapAuthenticationProvider provider;
+        provider = new Hotfix3960ActiveDirectoryLdapAuthenticationProvider(properties.getDomain(), properties.getUrl(), properties.getBase());
+        provider.setSearchFilter("(&(objectClass=user)(samAccountName={1}))");
+        provider.setAuthoritiesMapper(authoritiesMapper);
+        return new CachingAuthenticationProvider(provider);
     }
 }
