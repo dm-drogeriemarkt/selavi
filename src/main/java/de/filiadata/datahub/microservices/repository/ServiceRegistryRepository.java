@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.microservices.business.DefaultNodeContentFactory;
 import de.filiadata.datahub.microservices.business.MicroserviceDtoFactory;
+import de.filiadata.datahub.microservices.business.ServiceRegistryProperties;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +56,12 @@ public class ServiceRegistryRepository {
     public ServiceRegistryRepository(RestTemplate restTemplate,
                                      DefaultNodeContentFactory defaultNodeContentFactory,
                                      @Value("${development.offline-mode:false}") String offlineMode,
-                                     MicroserviceDtoFactory microserviceDtoFactory, @Value("${registry.url}") String registryUrl) {
+                                     MicroserviceDtoFactory microserviceDtoFactory, ServiceRegistryProperties serviceRegistryProperties) {
         this.restTemplate = restTemplate;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.offlineMode = Boolean.parseBoolean(offlineMode);
         this.microserviceDtoFactory = microserviceDtoFactory;
-        this.registryUrl = registryUrl;
+        this.registryUrl = serviceRegistryProperties.getUrl().get("dev");
     }
 
 
