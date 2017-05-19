@@ -26,6 +26,6 @@ public class MicroserviceDto {
     private String documentationLink;
     private String buildMonitorLink;
     private String monitoringLink;
-    private boolean isExternal;
+    private boolean external;
 
 }

@@ -86,6 +86,9 @@ public class MicroserviceMergeService {
         if (StringUtils.isNotEmpty(serviceToMerge.getMonitoringLink())){
             sourceService.setMonitoringLink(serviceToMerge.getMonitoringLink());
         }
+        if (serviceToMerge.isExternal()) {
+            sourceService.setExternal(true);
+        }
 
         mergeHosts(sourceService, serviceToMerge);
         mergeConsumes(sourceService.getConsumes(), serviceToMerge.getConsumes());
