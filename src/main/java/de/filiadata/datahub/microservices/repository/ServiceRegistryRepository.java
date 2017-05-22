@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class ServiceRegistryRepository {
 
         ResponseEntity<ObjectNode> responseEntity;
         try {
-            responseEntity = requestServices();
+            responseEntity = requestServices(stage);
         } catch (RestClientException ex) {
             LOG.warn("Error fetching microservices from registry, returning empty map...", ex);
             return Collections.emptyMap();
@@ -214,12 +215,15 @@ public class ServiceRegistryRepository {
         }
     }
 
-    private ResponseEntity<ObjectNode> requestServices() {
+    private ResponseEntity<ObjectNode> requestServices(String stage) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
 
-        // TODO: support multiple stages
-        String registryUrl = registryUrls.get("dev");
+        if (!registryUrls.containsKey(stage)) {
+            throw new InvalidStageNameException("Invalid stage name \"" + stage  + "\"");
+        }
+
+        String registryUrl = registryUrls.get(stage);
 
         final HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
         return restTemplate.exchange(registryUrl, HttpMethod.GET, httpEntity, ObjectNode.class);
