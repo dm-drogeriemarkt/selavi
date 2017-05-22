@@ -12,7 +12,8 @@ const mapStateToProps = (state) => {
         menuMode: state.menuMode,
         filterString: state.filterString,
         microserviceListResizeCount: state.microserviceListResizeCount,
-        debugMode: state.debugMode
+        debugMode: state.debugMode,
+        stage: state.stage
     };
 };
 
@@ -49,7 +50,7 @@ export class MicroserviceMindmap extends React.Component {
             // right click does not select node!
             this._network.selectNodes([nodeId]);
             // network.selectNodes(...) does _not_ fire events!
-            this.props.onSelectMicroserviceNode({nodes: [nodeId]});
+            this.onSelectMicroserviceNodeHandler({nodes: [nodeId]});
         } else {
             this._network.unselectAll();
 
@@ -86,6 +87,10 @@ export class MicroserviceMindmap extends React.Component {
     onAddLinkHandler(edgeData, callback) {
         callback(edgeData);
         this.props.onAddLink(edgeData);
+    }
+
+    onSelectMicroserviceNodeHandler(params) {
+        this.props.onSelectMicroserviceNode({nodes: params.nodes, stage: this.props.stage});
     }
 
     componentDidMount() {
@@ -234,7 +239,7 @@ export class MicroserviceMindmap extends React.Component {
 
             this._network = new vis.Network(this.refs.vizcontainer, data, options);
 
-            var boundOnSelectMicroserviceNode = this.props.onSelectMicroserviceNode.bind(this);
+            var boundOnSelectMicroserviceNode = this.onSelectMicroserviceNodeHandler.bind(this);
             var boundOnContextMenuOpen = this.onContextMenuHandler.bind(this);
             var boundOnClick = this.onClickHandler.bind(this);
 

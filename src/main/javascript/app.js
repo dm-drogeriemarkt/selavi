@@ -23,18 +23,10 @@ injectTapEventPlugin();
 
 class App extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            microservices: [],
-            consumers: []
-        };
-    }
-
     componentDidMount() {
 
         var client = rest.wrap(mime).wrap(errorCode);
-        client({path: '/selavi/services'}).then(response => {
+        client({path: '/selavi/services/' + store.getState().stage}).then(response => {
             store.dispatch({
                 type: 'FETCH_MICROSERVICES_SUCCESS',
                 response: response
