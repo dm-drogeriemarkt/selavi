@@ -33,7 +33,7 @@ public class MicroserviceConditioningService {
         return microserviceContentProviderService.getAllMicroservices().values();
     }
 
-    public void addNewService(MicroserviceDto microserviceDto) {
+    public void addNewService(String stage, MicroserviceDto microserviceDto) {
         Assert.notNull(microserviceDto.getId());
         if (microserviceContentProviderService.getAllMicroservices().get(microserviceDto.getId()) != null) {
             throw new ServiceAddException();
@@ -43,7 +43,7 @@ public class MicroserviceConditioningService {
 
     }
 
-    public void updateService(MicroserviceDto clientDto) {
+    public void updateService(String stage, MicroserviceDto clientDto) {
         final MicroserviceDto serverDto = microserviceContentProviderService.getMicroservicesFromPersistence().get(clientDto.getId());
         if (serverDto != null) {
             clientDto.setConsumes(serverDto.getConsumes());
@@ -52,7 +52,7 @@ public class MicroserviceConditioningService {
         servicePropertiesRepository.save(new ServiceProperties(clientDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(clientDto)));
     }
 
-    public void deleteService(String serviceName) {
+    public void deleteService(String stage, String serviceName) {
         Assert.notNull(serviceName);
         final ServiceProperties serviceProperties = servicePropertiesRepository.findOne(serviceName);
         if (serviceProperties == null) {
@@ -69,7 +69,7 @@ public class MicroserviceConditioningService {
 
     }
 
-    public void addNewRelation(String serviceName, ConsumeDto consumeDto) {
+    public void addNewRelation(String stage, String serviceName, ConsumeDto consumeDto) {
         final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
         if (!microServiceHasConsumes(microserviceDto.getConsumes(), consumeDto)) {
             microserviceDto.getConsumes().add(consumeDto);
@@ -78,14 +78,14 @@ public class MicroserviceConditioningService {
     }
 
 
-    public void editRelation(String serviceName, ConsumeDto consumeDto) {
-        deleteRelation(serviceName, consumeDto.getTarget());
+    public void editRelation(String stage, String serviceName, ConsumeDto consumeDto) {
+        deleteRelation(stage, serviceName, consumeDto.getTarget());
         final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
         microserviceDto.getConsumes().add(consumeDto);
         servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
     }
 
-    public void deleteRelation(String serviceName, String relatedServiceName) {
+    public void deleteRelation(String stage, String serviceName, String relatedServiceName) {
         final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
         final Iterator<ConsumeDto> iter = microserviceDto.getConsumes().iterator();
         while (iter.hasNext()) {
