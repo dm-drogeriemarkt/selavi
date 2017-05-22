@@ -5,6 +5,7 @@ import de.filiadata.datahub.microservices.repository.ServiceRegistryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ServiceRegistryContentProvider {
@@ -17,6 +18,10 @@ public class ServiceRegistryContentProvider {
 
     public Map<String, MicroserviceDto> getAllMicroservices() {
         return serviceRegistryRepository.findAllServices();
+    }
+
+    public Set<String> getAllStageNames() {
+        return serviceRegistryRepository.getAllStageNames();
     }
 
 }

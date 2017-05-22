@@ -13,7 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ServiceRegistryRepository {
@@ -50,7 +55,7 @@ public class ServiceRegistryRepository {
     private final DefaultNodeContentFactory defaultNodeContentFactory;
     private final MicroserviceDtoFactory microserviceDtoFactory;
     private final Boolean offlineMode;
-    private final String registryUrl;
+    private final Map<String, String> registryUrls;
 
     @Autowired
     public ServiceRegistryRepository(RestTemplate restTemplate,
@@ -61,7 +66,7 @@ public class ServiceRegistryRepository {
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.offlineMode = Boolean.parseBoolean(offlineMode);
         this.microserviceDtoFactory = microserviceDtoFactory;
-        this.registryUrl = serviceRegistryProperties.getUrl().get("dev");
+        this.registryUrls = serviceRegistryProperties.getUrl();
     }
 
 
@@ -95,6 +100,10 @@ public class ServiceRegistryRepository {
 
         final ArrayNode applicationsNode = (ArrayNode) rootNode.get(APPLICATION);
         return createResult(applicationsNode);
+    }
+
+    public Set<String> getAllStageNames() {
+        return this.registryUrls.keySet();
     }
 
     private Map<String, MicroserviceDto> createResult(ArrayNode applicationsNode) {
@@ -208,6 +217,9 @@ public class ServiceRegistryRepository {
     private ResponseEntity<ObjectNode> requestServices() {
         final HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
+
+        // TODO: support multiple stages
+        String registryUrl = registryUrls.get("dev");
 
         final HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
         return restTemplate.exchange(registryUrl, HttpMethod.GET, httpEntity, ObjectNode.class);

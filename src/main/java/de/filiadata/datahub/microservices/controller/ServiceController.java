@@ -1,6 +1,7 @@
 package de.filiadata.datahub.microservices.controller;
 
 import de.filiadata.datahub.microservices.business.MicroserviceConditioningService;
+import de.filiadata.datahub.microservices.business.ServiceRegistryContentProvider;
 import de.filiadata.datahub.microservices.domain.ConsumeDto;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import io.swagger.annotations.ApiOperation;
@@ -14,10 +15,18 @@ import java.util.Collection;
 public class ServiceController {
 
     private final MicroserviceConditioningService microserviceConditioningService;
+    private final ServiceRegistryContentProvider serviceRegistryContentProvider;
 
     @Autowired
-    public ServiceController(MicroserviceConditioningService microserviceConditioningService) {
+    public ServiceController(MicroserviceConditioningService microserviceConditioningService, ServiceRegistryContentProvider serviceRegistryContentProvider) {
         this.microserviceConditioningService = microserviceConditioningService;
+        this.serviceRegistryContentProvider = serviceRegistryContentProvider;
+    }
+
+    @ApiOperation(value = "Get the names of all available deployment stages (eg, 'dev', 'rls', 'prod', ...)")
+    @RequestMapping(value = "/stages", method = RequestMethod.GET)
+    public Collection<String> getAllStageNames() {
+        return serviceRegistryContentProvider.getAllStageNames();
     }
 
     @ApiOperation(value = "Read all microservices from the registry and enrich them with saved additional properties from db.")
