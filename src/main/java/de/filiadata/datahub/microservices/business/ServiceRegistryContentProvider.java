@@ -16,8 +16,8 @@ public class ServiceRegistryContentProvider {
         this.serviceRegistryRepository = serviceRegistryRepository;
     }
 
-    public Map<String, MicroserviceDto> getAllMicroservices() {
-        return serviceRegistryRepository.findAllServices();
+    public Map<String, MicroserviceDto> getAllMicroservices(String stage) {
+        return serviceRegistryRepository.findAllServices(stage);
     }
 
     public Set<String> getAllStageNames() {

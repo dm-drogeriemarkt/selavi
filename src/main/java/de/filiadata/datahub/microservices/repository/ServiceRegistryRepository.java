@@ -71,7 +71,7 @@ public class ServiceRegistryRepository {
 
 
     @Cacheable("allmicroservices")
-    public Map<String, MicroserviceDto> findAllServices() {
+    public Map<String, MicroserviceDto> findAllServices(String stage) {
         LOG.info("Load services from Registry ...");
         final String nodeApplications = "applications";
 

@@ -44,9 +44,9 @@ public class BitbucketService {
         this.microserviceContentProviderService = microserviceContentProviderService;
     }
 
-    public List<TopCommitter> getNamedTopCommitter(String microserviceId) {
+    public List<TopCommitter> getNamedTopCommitter(String stage, String microserviceId) {
         final List<TopCommitter> result = new ArrayList<>();
-        final Map<BitbucketAuthorDto, Long> topCommitters = getTopCommitters(microserviceId);
+        final Map<BitbucketAuthorDto, Long> topCommitters = getTopCommitters(stage, microserviceId);
 
         LOG.info("Top commiter dtos: {}", topCommitters);
 
@@ -58,8 +58,8 @@ public class BitbucketService {
         return result;
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(String microserviceId) {
-        final MicroserviceDto microserviceDto = microserviceContentProviderService.getAllMicroservices().get(microserviceId);
+    public Map<BitbucketAuthorDto, Long> getTopCommitters(String stage, String microserviceId) {
+        final MicroserviceDto microserviceDto = microserviceContentProviderService.getAllMicroservices(stage).get(microserviceId);
 
         final String bitbucketUrl = microserviceDto.getBitbucketUrl();
         final String ignoredCommitters = microserviceDto.getIgnoredCommitters();
@@ -71,12 +71,6 @@ public class BitbucketService {
         return Collections.emptyMap();
 
 
-    }
-
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(final String url, String ignoredCommiters) {
-        final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(url + "/commits?limit=500");
-
-        return handleResponse(responseEntity, ignoredCommiters);
     }
 
     private Map<BitbucketAuthorDto, Long> handleResponse(ResponseEntity<BitbucketCommitsDto> responseEntity, String ignoredCommiters2) {

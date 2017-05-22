@@ -17,9 +17,9 @@ public class BitbucketController {
         this.bitbucketService = bitbucketService;
     }
 
-    @GetMapping("/bitbucket/{microserviceId}")
-    public List<TopCommitter> getBitbucketInformation(@PathVariable final String microserviceId) {
-        return bitbucketService.getNamedTopCommitter(microserviceId);
+    @GetMapping("/bitbucket/{stage}/{microserviceId}")
+    public List<TopCommitter> getBitbucketInformation(@PathVariable final String stage, @PathVariable final String microserviceId) {
+        return bitbucketService.getNamedTopCommitter(stage, microserviceId);
     }
 
 }

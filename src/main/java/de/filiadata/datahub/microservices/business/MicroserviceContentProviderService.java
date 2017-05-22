@@ -18,19 +18,19 @@ public class MicroserviceContentProviderService {
         this.microserviceMergeService = microserviceMergeService;
     }
 
-    public Map<String, MicroserviceDto> getAllMicroservices(){
-        final Map<String, MicroserviceDto> microservicesFromRegistry = getMicroservicesFromServiceRegistry();
-        final Map<String, MicroserviceDto> microservicesFromPersistence = getMicroservicesFromPersistence();
+    public Map<String, MicroserviceDto> getAllMicroservices(String stage){
+        final Map<String, MicroserviceDto> microservicesFromRegistry = getMicroservicesFromServiceRegistry(stage);
+        final Map<String, MicroserviceDto> microservicesFromPersistence = getMicroservicesFromPersistence(stage);
 
 
         return microserviceMergeService.mergeCompleteMicroservices(microservicesFromRegistry, microservicesFromPersistence);
     }
 
-    public Map<String, MicroserviceDto> getMicroservicesFromPersistence(){
-        return persistenceContentProvider.getAllMicroservices();
+    public Map<String, MicroserviceDto> getMicroservicesFromPersistence(String stage){
+        return persistenceContentProvider.getAllMicroservices(stage);
     }
 
-    public Map<String, MicroserviceDto> getMicroservicesFromServiceRegistry(){
-        return serviceRegistryContentProvider.getAllMicroservices();
+    public Map<String, MicroserviceDto> getMicroservicesFromServiceRegistry(String stage){
+        return serviceRegistryContentProvider.getAllMicroservices(stage);
     }
 }
