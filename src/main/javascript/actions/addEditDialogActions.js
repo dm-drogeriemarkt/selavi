@@ -2,7 +2,7 @@ const rest = require('rest');
 const mime = require('rest/interceptor/mime');
 const errorCode = require('rest/interceptor/errorCode');
 
-export function onSubmit(entity, path, method) {
+export function onSubmit(entity, path, method, stage) {
     return function (dispatch) {
         var request = {
             entity: entity,
@@ -15,7 +15,7 @@ export function onSubmit(entity, path, method) {
 
         var client = rest.wrap(mime).wrap(errorCode);
         client(request).then(response => {
-            client({path: '/selavi/services'}).then(response => {
+            client({path: '/selavi/services/' + stage}).then(response => {
                 dispatch({
                     type: 'FETCH_MICROSERVICES_SUCCESS',
                     response: response

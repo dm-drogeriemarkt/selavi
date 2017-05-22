@@ -74,7 +74,7 @@ function updateStore(state = initialState, action) {
                 menuMode: 'ADD_RELATION',
                 entity: relation,
                 topComitters: undefined,
-                addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations"
+                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + action.consumerId + "/relations"
             });
             return newState;
         }
@@ -84,7 +84,7 @@ function updateStore(state = initialState, action) {
                 topComitters: state.bitbucketDetails[state.contextMenuServiceId],
                 contextMenuServiceId: undefined,
                 menuMode: 'EDIT_SERVICE',
-                addEditDialogFormAction: "/selavi/services/" + state.contextMenuServiceId + "/properties"
+                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + state.contextMenuServiceId + "/properties"
             });
             return newState;
         }
@@ -125,7 +125,7 @@ function updateStore(state = initialState, action) {
                 contextMenuFromId: undefined,
                 contextMenuToId: undefined,
                 menuMode: 'EDIT_RELATION',
-                addEditDialogFormAction: "/selavi/services/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
+                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
             });
             return newState;
         }
@@ -158,7 +158,7 @@ function updateStore(state = initialState, action) {
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
                 menuMode: 'ADD_SERVICE',
-                addEditDialogFormAction: "/selavi/services",
+                addEditDialogFormAction: "/selavi/services/" + state.stage,
                 entity: undefined,
                 topComitters: undefined
             });
