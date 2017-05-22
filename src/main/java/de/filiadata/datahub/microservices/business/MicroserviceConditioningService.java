@@ -29,7 +29,7 @@ public class MicroserviceConditioningService {
     }
 
 
-    public Collection<MicroserviceDto> getAllMicroserviceDtos() {
+    public Collection<MicroserviceDto> getAllMicroserviceDtos(String stage) {
         return microserviceContentProviderService.getAllMicroservices().values();
     }
 

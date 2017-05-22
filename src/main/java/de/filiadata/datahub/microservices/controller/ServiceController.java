@@ -32,7 +32,7 @@ public class ServiceController {
     @ApiOperation(value = "Read all microservices from the specified stage of the registry and enrich them with saved additional properties from db.")
     @RequestMapping(value = "/{stage}", method = RequestMethod.GET)
     public Collection<MicroserviceDto> readAllServices(@PathVariable String stage) {
-        return microserviceConditioningService.getAllMicroserviceDtos();
+        return microserviceConditioningService.getAllMicroserviceDtos(stage);
     }
 
     @ApiOperation(value = "Add a new service as node to add properties and relations to other services.")
