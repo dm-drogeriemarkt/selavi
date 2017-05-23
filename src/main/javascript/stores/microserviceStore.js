@@ -31,8 +31,11 @@ const initialState = {
 function updateStore(state = initialState, action) {
     switch (action.type) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
+            const stage = action.stage ? action.stage : state.stage;
+
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
+                stage: stage,
                 menuMode: undefined,
                 entity: undefined,
                 topComitters: undefined
