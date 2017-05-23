@@ -18,7 +18,7 @@ export class StageSelector extends React.Component {
         const selectedStageIndex = this.props.availableStages.indexOf(this.props.stage);
 
         return (
-            <DropDownMenu style={{zIndex: 999, position: 'absolute'}} value={selectedStageIndex}>
+            <DropDownMenu style={{zIndex: 999, position: 'absolute', top: '0.5em', right: '0.5em'}} value={selectedStageIndex}>
                 {menuItems}
             </DropDownMenu>
         );
