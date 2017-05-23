@@ -28,11 +28,11 @@ public class ServiceProperties implements Serializable {
     @Column(nullable = false, length = Integer.MAX_VALUE)
     private String content;
 
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     @Getter
     @Setter
-    public class ServicePropertiesPk implements Serializable {
+    public static class ServicePropertiesPk implements Serializable {
         @Column(nullable = false)
         private String id;
 
