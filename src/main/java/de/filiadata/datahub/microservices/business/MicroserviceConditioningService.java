@@ -54,7 +54,7 @@ public class MicroserviceConditioningService {
 
     public void deleteService(String stage, String serviceName) {
         Assert.notNull(serviceName);
-        final ServiceProperties serviceProperties = servicePropertiesRepository.findOne(serviceName);
+        final ServiceProperties serviceProperties = servicePropertiesRepository.findOne(new ServiceProperties.ServicePropertiesPk(serviceName, stage));
         if (serviceProperties == null) {
             throw new ServiceDeleteException();
         }

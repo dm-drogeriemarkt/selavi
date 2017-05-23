@@ -49,17 +49,19 @@ describe('microserviceDeleteServiceDialogActions', function () {
             const dispatchSpy = sinon.spy();
 
             const submitFn = onSubmit({
-                type: 'DELETE_SERVICE'
+                type: 'DELETE_SERVICE',
+                deleteServiceId: 'myFancyService',
+                stage: 'dev'
             });
             submitFn(dispatchSpy);
 
             sinon.assert.calledOnce(clientStub);
-            sinon.assert.calledWith(clientStub, { method: 'DELETE', path: "/selavi/services/undefined" });
+            sinon.assert.calledWith(clientStub, { method: 'DELETE', path: "/selavi/services/dev/myFancyService" });
 
             thenHandler('response_to_delete_service');
 
             sinon.assert.calledTwice(clientStub);
-            sinon.assert.calledWith(clientStub, { path: "/selavi/services" });
+            sinon.assert.calledWith(clientStub, { path: "/selavi/services/dev" });
 
             // different handler function than before!
             thenHandler('response_to_get_services');
@@ -72,12 +74,14 @@ describe('microserviceDeleteServiceDialogActions', function () {
             const dispatchSpy = sinon.spy();
 
             const submitFn = onSubmit({
-                type: 'DELETE_SERVICE'
+                type: 'DELETE_SERVICE',
+                deleteServiceId: 'myFancyService',
+                stage: 'dev'
             });
             submitFn(dispatchSpy);
 
             sinon.assert.calledOnce(clientStub);
-            sinon.assert.calledWith(clientStub, { method: 'DELETE', path: "/selavi/services/undefined" });
+            sinon.assert.calledWith(clientStub, { method: 'DELETE', path: "/selavi/services/dev/myFancyService" });
 
             errorHandler({ entity: {message: 'response_to_delete_failure'}});
 
