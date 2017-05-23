@@ -39,7 +39,7 @@ public class ServiceRegistryRepositoryTest {
     }
 
     @Test
-    public void getAllStageNames() throws Exception {
+    public void getAllStageNames() {
 
         serviceRegistryProperties.getUrl().put("foo", "bar");
         serviceRegistryProperties.getUrl().put("hello", "world");
@@ -49,5 +49,14 @@ public class ServiceRegistryRepositoryTest {
         assertThat(allStageNames.size(), is(2));
         assertThat(allStageNames, hasItem("foo"));
         assertThat(allStageNames, hasItem("hello"));
+    }
+
+    @Test(expected = InvalidStageNameException.class)
+    public void requestServicesThrowsExceptionWhenStageIsInvalid() {
+
+        serviceRegistryProperties.getUrl().put("foo", "bar");
+        serviceRegistryProperties.getUrl().put("hello", "world");
+
+        serviceRegistryRepository.findAllServices("i_am_an_invalid_stage");
     }
 }
