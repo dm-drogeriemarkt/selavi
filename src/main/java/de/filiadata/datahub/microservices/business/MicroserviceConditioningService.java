@@ -19,13 +19,11 @@ public class MicroserviceConditioningService {
     private final MicroserviceContentProviderService microserviceContentProviderService;
     private final MicroserviceDtoFactory microserviceDtoFactory;
     private final ServicePropertiesRepository servicePropertiesRepository;
-    private final MicroserviceMergeService microserviceMergeService;
 
-    public MicroserviceConditioningService(MicroserviceContentProviderService microserviceContentProviderService, MicroserviceDtoFactory microserviceDtoFactory, ServicePropertiesRepository servicePropertiesRepository, MicroserviceMergeService microserviceMergeService) {
+    public MicroserviceConditioningService(MicroserviceContentProviderService microserviceContentProviderService, MicroserviceDtoFactory microserviceDtoFactory, ServicePropertiesRepository servicePropertiesRepository) {
         this.microserviceContentProviderService = microserviceContentProviderService;
         this.microserviceDtoFactory = microserviceDtoFactory;
         this.servicePropertiesRepository = servicePropertiesRepository;
-        this.microserviceMergeService = microserviceMergeService;
     }
 
 
