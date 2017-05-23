@@ -3,9 +3,8 @@ import thunk from "redux-thunk";
 
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
-    // TODO: init stages!
-    stage: 'dev',
-    availableStages: ['dev','rls','prod'],
+    stage: undefined,
+    availableStages: [],
     microservices: [],
     bitbucketDetails: {},
     topComitters: undefined,
@@ -39,6 +38,21 @@ function updateStore(state = initialState, action) {
                 menuMode: undefined,
                 entity: undefined,
                 topComitters: undefined
+            });
+            return newState;
+        }
+        case 'FETCH_AVAILABLE_STAGES_SUCCESS': {
+            var stage;
+
+            if (action.response.entity.indexOf('dev') != -1) {
+                stage = 'dev';
+            } else {
+                stage = action.response.entity[0];
+            }
+
+            const newState = Object.assign({}, state, {
+                availableStages: action.response.entity,
+                stage: stage
             });
             return newState;
         }
