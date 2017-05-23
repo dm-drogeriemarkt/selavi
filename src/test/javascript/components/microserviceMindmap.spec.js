@@ -215,6 +215,7 @@ describe('<MicroserviceMindmap/>', function () {
     it('opens context menu on right-click on a service, and selects the service', function () {
 
         var props = createProps();
+        props.stage = 'dev';
 
         const wrapper = shallow(<MicroserviceMindmap {...props}/>);
         wrapper.instance().forceUpdate();
@@ -254,7 +255,8 @@ describe('<MicroserviceMindmap/>', function () {
 
         sinon.assert.calledOnce(props.onSelectMicroserviceNode);
         sinon.assert.calledWith(props.onSelectMicroserviceNode, {
-            nodes: ['my_node_id']
+            nodes: ['my_node_id'],
+            stage: 'dev'
         });
     });
 
