@@ -3,7 +3,9 @@ import thunk from "redux-thunk";
 
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
+    // TODO: init stages!
     stage: 'dev',
+    availableStages: ['dev','rls','prod'],
     microservices: [],
     bitbucketDetails: {},
     topComitters: undefined,
