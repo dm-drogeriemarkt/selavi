@@ -19,13 +19,13 @@ public class PersistenceContentProvider {
         this.microserviceDtoFactory = microserviceDtoFactory;
     }
 
-    public Map<String, MicroserviceDto> getAllMicroservices() {
+    public Map<String, MicroserviceDto> getAllMicroservices(String stage) {
         final Map<String, MicroserviceDto> microserviceDtoMap = new HashMap<>();
-        final Iterable<ServiceProperties> allServiceProperties = servicePropertiesRepository.findAll();
+        final Iterable<ServiceProperties> allServiceProperties = servicePropertiesRepository.findByPkStage(stage);
         allServiceProperties.forEach(serviceProperties -> {
             final MicroserviceDto microserviceDto = microserviceDtoFactory.getMicroserviceDtoFromJSON(serviceProperties.getContent());
             if (microserviceDto != null){
-                microserviceDtoMap.put(serviceProperties.getId(), microserviceDto);
+                microserviceDtoMap.put(serviceProperties.getPk().getId(), microserviceDto);
             }
         });
 

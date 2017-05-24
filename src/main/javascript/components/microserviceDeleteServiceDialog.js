@@ -13,7 +13,8 @@ const mapStateToProps = (state) => {
         deleteServiceId: state.deleteServiceId,
         deleteLinkFromId: state.deleteLinkFromId,
         deleteLinkToId: state.deleteLinkToId,
-        deleteServiceErrorMessage: state.deleteServiceErrorMessage
+        deleteServiceErrorMessage: state.deleteServiceErrorMessage,
+        stage: state.stage
     };
 };
 
@@ -29,7 +30,8 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
             type: this.props.menuMode,
             deleteServiceId: this.props.deleteServiceId,
             deleteLinkFromId: this.props.deleteLinkFromId,
-            deleteLinkToId: this.props.deleteLinkToId
+            deleteLinkToId: this.props.deleteLinkToId,
+            stage: this.props.stage
         }
 
         this.props.onSubmit(params);

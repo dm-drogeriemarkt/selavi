@@ -27,26 +27,26 @@ public class MicroserviceContentProviderServiceUnitTest {
     @Test
     public void getAllMicroservices() throws Exception {
         final Map<String, MicroserviceDto> resultMap = getResultMap();
-        when(persistenceContentProvider.getAllMicroservices()).thenReturn(resultMap);
-        when(serviceRegistryContentProvider.getAllMicroservices()).thenReturn(resultMap);
+        when(persistenceContentProvider.getAllMicroservices("dev")).thenReturn(resultMap);
+        when(serviceRegistryContentProvider.getAllMicroservices("dev")).thenReturn(resultMap);
         final MicroserviceContentProviderService microserviceContentProviderService = new MicroserviceContentProviderService(serviceRegistryContentProvider, persistenceContentProvider, microserviceMergeService);
-        final Map<String, MicroserviceDto> allMicroservices = microserviceContentProviderService.getAllMicroservices();
+        final Map<String, MicroserviceDto> allMicroservices = microserviceContentProviderService.getAllMicroservices("dev");
         verify(microserviceMergeService, times(1)).mergeCompleteMicroservices(resultMap, resultMap);
     }
 
     @Test
     public void getMicroservicesFromPersistence() throws Exception {
         final MicroserviceContentProviderService microserviceContentProviderService = new MicroserviceContentProviderService(serviceRegistryContentProvider, persistenceContentProvider, microserviceMergeService);
-        microserviceContentProviderService.getMicroservicesFromPersistence();
-        verify(persistenceContentProvider, times(1)).getAllMicroservices();
+        microserviceContentProviderService.getMicroservicesFromPersistence("dev");
+        verify(persistenceContentProvider, times(1)).getAllMicroservices("dev");
 
     }
 
     @Test
     public void getMicroservicesFromServiceRegistry() throws Exception {
         final MicroserviceContentProviderService microserviceContentProviderService = new MicroserviceContentProviderService(serviceRegistryContentProvider, persistenceContentProvider, microserviceMergeService);
-        microserviceContentProviderService.getMicroservicesFromServiceRegistry();
-        verify(serviceRegistryContentProvider, times(1)).getAllMicroservices();
+        microserviceContentProviderService.getMicroservicesFromServiceRegistry("dev");
+        verify(serviceRegistryContentProvider, times(1)).getAllMicroservices("dev");
 
     }
 

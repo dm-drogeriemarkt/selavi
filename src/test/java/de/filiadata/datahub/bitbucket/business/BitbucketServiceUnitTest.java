@@ -38,7 +38,7 @@ public class BitbucketServiceUnitTest {
         final MicroserviceDto dto = new MicroserviceDto();
         dto.setBitbucketUrl(BITBUCKET_URL);
         dto.setIgnoredCommitters(IGNORED_COMMITERS);
-        when(microserviceContentProviderService.getAllMicroservices().get("mocro01")).thenReturn(dto);
+        when(microserviceContentProviderService.getAllMicroservices("dev").get("mocro01")).thenReturn(dto);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class BitbucketServiceUnitTest {
         }))).thenReturn(getResponseEntity());
 
         final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, microserviceContentProviderService);
-        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
+        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("dev","mocro01");
         assertThat(topCommiters.size(), is(3));
     }
 
@@ -57,7 +57,7 @@ public class BitbucketServiceUnitTest {
         }))).thenReturn(getEmptyResponseEntity());
 
         final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, microserviceContentProviderService);
-        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
+        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("dev", "mocro01");
 
         assertTrue(topCommiters.isEmpty());
     }
@@ -71,7 +71,7 @@ public class BitbucketServiceUnitTest {
         }))).thenReturn(getResponseEntity());
 
         final BitbucketService bitbucketService = new BitbucketService(restTemplate, "foo:bar", 3, microserviceContentProviderService);
-        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("mocro01");
+        final List<TopCommitter> topCommiters = bitbucketService.getNamedTopCommitter("dev", "mocro01");
         assertThat(topCommiters.get(0).getEmailAddress(), is("foo1@bar.de"));
         assertThat(topCommiters.get(1).getEmailAddress(), is("foo4@bar.de"));
         assertThat(topCommiters.get(2).getEmailAddress(), is("foo2@bar.de"));

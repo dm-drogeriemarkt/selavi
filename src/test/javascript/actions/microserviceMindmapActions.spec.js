@@ -42,12 +42,13 @@ describe('microserviceMindmapActions', function () {
             const dispatchSpy = sinon.spy();
 
             const selectMicroserviceNodeFn = onSelectMicroserviceNode({
-                nodes: ['my_service_id']
+                nodes: ['my_service_id'],
+                stage: 'dev'
             });
             selectMicroserviceNodeFn(dispatchSpy);
 
             sinon.assert.calledOnce(clientStub);
-            sinon.assert.calledWith(clientStub, {method: 'GET', path: "/selavi/bitbucket/my_service_id"});
+            sinon.assert.calledWith(clientStub, {method: 'GET', path: "/selavi/bitbucket/dev/my_service_id"});
 
             thenHandler('response_to_get_bitbucket_committers');
 

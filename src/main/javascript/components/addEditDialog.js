@@ -22,7 +22,8 @@ const mapStateToProps = (state) => {
         entity: state.entity,
         topComitters: state.topComitters,
         addEditDialogFormAction: state.addEditDialogFormAction,
-        autocompleteDataSource: state.autocompleteDataSource
+        autocompleteDataSource: state.autocompleteDataSource,
+        stage: state.stage
     };
 };
 
@@ -64,7 +65,7 @@ export class AddEditDialog extends React.Component {
                 method = 'POST';
             }
 
-            this.props.onSubmit(entity, this.props.addEditDialogFormAction, method);
+            this.props.onSubmit(entity, this.props.addEditDialogFormAction, method, this.props.stage);
         }
     }
 

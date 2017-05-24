@@ -38,6 +38,7 @@ th {
 .microserviceMindmap {
     flex-grow: 2;
     display: flex;
+    position: relative;
 }
 
 .vizContainer {

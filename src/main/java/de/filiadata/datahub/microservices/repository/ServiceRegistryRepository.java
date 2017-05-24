@@ -6,13 +6,19 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.filiadata.datahub.microservices.business.DefaultNodeContentFactory;
 import de.filiadata.datahub.microservices.business.MicroserviceDtoFactory;
+import de.filiadata.datahub.microservices.business.ServiceRegistryProperties;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ServiceRegistryRepository {
@@ -49,23 +56,23 @@ public class ServiceRegistryRepository {
     private final DefaultNodeContentFactory defaultNodeContentFactory;
     private final MicroserviceDtoFactory microserviceDtoFactory;
     private final Boolean offlineMode;
-    private final String registryUrl;
+    private final Map<String, String> registryUrls;
 
     @Autowired
     public ServiceRegistryRepository(RestTemplate restTemplate,
                                      DefaultNodeContentFactory defaultNodeContentFactory,
                                      @Value("${development.offline-mode:false}") String offlineMode,
-                                     MicroserviceDtoFactory microserviceDtoFactory, @Value("${registry.url}") String registryUrl) {
+                                     MicroserviceDtoFactory microserviceDtoFactory, ServiceRegistryProperties serviceRegistryProperties) {
         this.restTemplate = restTemplate;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.offlineMode = Boolean.parseBoolean(offlineMode);
         this.microserviceDtoFactory = microserviceDtoFactory;
-        this.registryUrl = registryUrl;
+        this.registryUrls = serviceRegistryProperties.getUrl();
     }
 
 
     @Cacheable("allmicroservices")
-    public Map<String, MicroserviceDto> findAllServices() {
+    public Map<String, MicroserviceDto> findAllServices(String stage) {
         LOG.info("Load services from Registry ...");
         final String nodeApplications = "applications";
 
@@ -76,7 +83,7 @@ public class ServiceRegistryRepository {
 
         ResponseEntity<ObjectNode> responseEntity;
         try {
-            responseEntity = requestServices();
+            responseEntity = requestServices(stage);
         } catch (RestClientException ex) {
             LOG.warn("Error fetching microservices from registry, returning empty map...", ex);
             return Collections.emptyMap();
@@ -94,6 +101,10 @@ public class ServiceRegistryRepository {
 
         final ArrayNode applicationsNode = (ArrayNode) rootNode.get(APPLICATION);
         return createResult(applicationsNode);
+    }
+
+    public Set<String> getAllStageNames() {
+        return this.registryUrls.keySet();
     }
 
     private Map<String, MicroserviceDto> createResult(ArrayNode applicationsNode) {
@@ -204,9 +215,15 @@ public class ServiceRegistryRepository {
         }
     }
 
-    private ResponseEntity<ObjectNode> requestServices() {
+    private ResponseEntity<ObjectNode> requestServices(String stage) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
+
+        if (!registryUrls.containsKey(stage)) {
+            throw new InvalidStageNameException("Invalid stage name \"" + stage  + "\"");
+        }
+
+        String registryUrl = registryUrls.get(stage);
 
         final HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
         return restTemplate.exchange(registryUrl, HttpMethod.GET, httpEntity, ObjectNode.class);

@@ -3,6 +3,8 @@ import thunk from "redux-thunk";
 
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
+    stage: undefined,
+    availableStages: [],
     microservices: [],
     bitbucketDetails: {},
     topComitters: undefined,
@@ -28,11 +30,29 @@ const initialState = {
 function updateStore(state = initialState, action) {
     switch (action.type) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
+            const stage = action.stage ? action.stage : state.stage;
+
             const newState = Object.assign({}, state, {
                 microservices: action.response.entity,
+                stage: stage,
                 menuMode: undefined,
                 entity: undefined,
                 topComitters: undefined
+            });
+            return newState;
+        }
+        case 'FETCH_AVAILABLE_STAGES_SUCCESS': {
+            var stage;
+
+            if (action.response.entity.indexOf('dev') != -1) {
+                stage = 'dev';
+            } else {
+                stage = action.response.entity[0];
+            }
+
+            const newState = Object.assign({}, state, {
+                availableStages: action.response.entity,
+                stage: stage
             });
             return newState;
         }
@@ -73,7 +93,7 @@ function updateStore(state = initialState, action) {
                 menuMode: 'ADD_RELATION',
                 entity: relation,
                 topComitters: undefined,
-                addEditDialogFormAction: "/selavi/services/" + action.consumerId + "/relations"
+                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + action.consumerId + "/relations"
             });
             return newState;
         }
@@ -83,7 +103,7 @@ function updateStore(state = initialState, action) {
                 topComitters: state.bitbucketDetails[state.contextMenuServiceId],
                 contextMenuServiceId: undefined,
                 menuMode: 'EDIT_SERVICE',
-                addEditDialogFormAction: "/selavi/services/" + state.contextMenuServiceId + "/properties"
+                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + state.contextMenuServiceId + "/properties"
             });
             return newState;
         }
@@ -124,7 +144,7 @@ function updateStore(state = initialState, action) {
                 contextMenuFromId: undefined,
                 contextMenuToId: undefined,
                 menuMode: 'EDIT_RELATION',
-                addEditDialogFormAction: "/selavi/services/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
+                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
             });
             return newState;
         }
@@ -157,7 +177,7 @@ function updateStore(state = initialState, action) {
         case 'ADD_SERVICE': {
             const newState = Object.assign({}, state, {
                 menuMode: 'ADD_SERVICE',
-                addEditDialogFormAction: "/selavi/services",
+                addEditDialogFormAction: "/selavi/services/" + state.stage,
                 entity: undefined,
                 topComitters: undefined
             });

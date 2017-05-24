@@ -5,7 +5,7 @@ export function onSelectMicroserviceNode(params) {
     return function (dispatch) {
         var client = rest.wrap(mime);
         client({
-            path: '/selavi/bitbucket/' + params.nodes[0],
+            path: '/selavi/bitbucket/' + params.stage + '/' + params.nodes[0],
             method: 'GET',
         }).then(response => {
             dispatch({

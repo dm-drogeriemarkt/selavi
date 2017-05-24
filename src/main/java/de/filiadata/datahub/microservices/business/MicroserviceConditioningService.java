@@ -19,42 +19,40 @@ public class MicroserviceConditioningService {
     private final MicroserviceContentProviderService microserviceContentProviderService;
     private final MicroserviceDtoFactory microserviceDtoFactory;
     private final ServicePropertiesRepository servicePropertiesRepository;
-    private final MicroserviceMergeService microserviceMergeService;
 
-    public MicroserviceConditioningService(MicroserviceContentProviderService microserviceContentProviderService, MicroserviceDtoFactory microserviceDtoFactory, ServicePropertiesRepository servicePropertiesRepository, MicroserviceMergeService microserviceMergeService) {
+    public MicroserviceConditioningService(MicroserviceContentProviderService microserviceContentProviderService, MicroserviceDtoFactory microserviceDtoFactory, ServicePropertiesRepository servicePropertiesRepository) {
         this.microserviceContentProviderService = microserviceContentProviderService;
         this.microserviceDtoFactory = microserviceDtoFactory;
         this.servicePropertiesRepository = servicePropertiesRepository;
-        this.microserviceMergeService = microserviceMergeService;
     }
 
 
-    public Collection<MicroserviceDto> getAllMicroserviceDtos() {
-        return microserviceContentProviderService.getAllMicroservices().values();
+    public Collection<MicroserviceDto> getAllMicroserviceDtos(String stage) {
+        return microserviceContentProviderService.getAllMicroservices(stage).values();
     }
 
-    public void addNewService(MicroserviceDto microserviceDto) {
+    public void addNewService(String stage, MicroserviceDto microserviceDto) {
         Assert.notNull(microserviceDto.getId());
-        if (microserviceContentProviderService.getAllMicroservices().get(microserviceDto.getId()) != null) {
+        if (microserviceContentProviderService.getAllMicroservices(stage).get(microserviceDto.getId()) != null) {
             throw new ServiceAddException();
         }
 
-        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
+        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), stage, microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
 
     }
 
-    public void updateService(MicroserviceDto clientDto) {
-        final MicroserviceDto serverDto = microserviceContentProviderService.getMicroservicesFromPersistence().get(clientDto.getId());
+    public void updateService(String stage, MicroserviceDto clientDto) {
+        final MicroserviceDto serverDto = microserviceContentProviderService.getMicroservicesFromPersistence(stage).get(clientDto.getId());
         if (serverDto != null) {
             clientDto.setConsumes(serverDto.getConsumes());
             clientDto.setHosts(serverDto.getHosts());
         }
-        servicePropertiesRepository.save(new ServiceProperties(clientDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(clientDto)));
+        servicePropertiesRepository.save(new ServiceProperties(clientDto.getId(), stage, microserviceDtoFactory.getJsonFromMicroserviceDto(clientDto)));
     }
 
-    public void deleteService(String serviceName) {
+    public void deleteService(String stage, String serviceName) {
         Assert.notNull(serviceName);
-        final ServiceProperties serviceProperties = servicePropertiesRepository.findById(serviceName);
+        final ServiceProperties serviceProperties = servicePropertiesRepository.findOne(new ServiceProperties.ServicePropertiesPk(serviceName, stage));
         if (serviceProperties == null) {
             throw new ServiceDeleteException();
         }
@@ -69,24 +67,24 @@ public class MicroserviceConditioningService {
 
     }
 
-    public void addNewRelation(String serviceName, ConsumeDto consumeDto) {
-        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
+    public void addNewRelation(String stage, String serviceName, ConsumeDto consumeDto) {
+        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(stage, serviceName);
         if (!microServiceHasConsumes(microserviceDto.getConsumes(), consumeDto)) {
             microserviceDto.getConsumes().add(consumeDto);
-            servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
+            servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), stage, microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
         }
     }
 
 
-    public void editRelation(String serviceName, ConsumeDto consumeDto) {
-        deleteRelation(serviceName, consumeDto.getTarget());
-        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
+    public void editRelation(String stage, String serviceName, ConsumeDto consumeDto) {
+        deleteRelation(stage, serviceName, consumeDto.getTarget());
+        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(stage, serviceName);
         microserviceDto.getConsumes().add(consumeDto);
-        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
+        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), stage, microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
     }
 
-    public void deleteRelation(String serviceName, String relatedServiceName) {
-        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(serviceName);
+    public void deleteRelation(String stage, String serviceName, String relatedServiceName) {
+        final MicroserviceDto microserviceDto = getMicroserviceDtoFromPersistenceOrCreateNew(stage, serviceName);
         final Iterator<ConsumeDto> iter = microserviceDto.getConsumes().iterator();
         while (iter.hasNext()) {
             final ConsumeDto consumeDto = iter.next();
@@ -95,12 +93,12 @@ public class MicroserviceConditioningService {
             }
         }
 
-        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
+        servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), stage, microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
     }
 
 
-    private MicroserviceDto getMicroserviceDtoFromPersistenceOrCreateNew(final String serviceName) {
-        MicroserviceDto microserviceDto = microserviceContentProviderService.getMicroservicesFromPersistence().get(serviceName);
+    private MicroserviceDto getMicroserviceDtoFromPersistenceOrCreateNew(final String stage, final String serviceName) {
+        MicroserviceDto microserviceDto = microserviceContentProviderService.getMicroservicesFromPersistence(stage).get(serviceName);
         if (microserviceDto == null) {
             microserviceDto = new MicroserviceDto();
             microserviceDto.setId(serviceName);

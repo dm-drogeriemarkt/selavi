@@ -20,4 +20,30 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="selavi-10" author="sven">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="service_properties" columnName="stage"/>
+            </not>
+        </preConditions>
+
+        <!-- since we dont know the name of the unique constraint for id column,
+        we copy the values to a new column, drop the old column and rename the new column -->
+        <addColumn tableName="service_properties">
+            <column name="new_id" type="varchar(255)" valueComputed="id">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <dropColumn tableName="service_properties" columnName="id"/>
+        <renameColumn tableName="service_properties" oldColumnName="new_id" newColumnName="id" columnDataType="varchar(255)"/>
+
+        <addColumn tableName="service_properties">
+            <column name="stage" type="varchar(255)" value="dev">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addPrimaryKey tableName="service_properties" columnNames="id, stage"/>
+    </changeSet>
 </databaseChangeLog>
