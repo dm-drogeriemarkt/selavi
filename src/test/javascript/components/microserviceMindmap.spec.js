@@ -88,7 +88,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "bar-consumer",
                 label: "bar-consumer",
-                isExternal: true,
+                external: true,
                 consumes: [
                     {"target": "foo-service", "type": "REST"}
                 ],
@@ -145,7 +145,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "bar-consumer",
                 label: "bar-consumer",
-                isExternal: true,
+                external: true,
                 consumes: [
                     {"target": "foo-service", "type": "REST"}
                 ],
@@ -337,7 +337,7 @@ function createProps() {
         {
             id: "bar-consumer",
             label: "bar-consumer",
-            isExternal: true,
+            external: true,
             consumes: [
                 {"target": "foo-service", "type": "REST"}
             ]

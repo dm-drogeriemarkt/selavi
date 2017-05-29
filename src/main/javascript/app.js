@@ -60,7 +60,7 @@ class App extends React.Component {
             "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false},
             "ipAddress": {label: "IP address(es)", hint: "eg. \"172.23.68.213\"", required: false},
             "networkZone": {label: "Network zone", hint: "eg. \"LAN\"", required: false},
-            "isExternal": {type: "toggle", label: "External service (eg., not a microservice)"}
+            "external": {type: "toggle", label: "External service (eg., not a microservice)"}
         };
 
         const serviceDocumentationInputFields = {

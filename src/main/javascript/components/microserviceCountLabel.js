@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 export class MicroserviceCountLabel extends React.Component {
     render() {
 
-        const externalCount = this.props.microservices.filter((microservice) => microservice.isExternal).length;
+        const externalCount = this.props.microservices.filter((microservice) => microservice.external).length;
         const internalCount = this.props.microservices.length - externalCount;
 
         const internalLabel = (internalCount === 1 ? "microservice" : "microservices");

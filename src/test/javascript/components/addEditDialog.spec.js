@@ -38,7 +38,7 @@ describe('<AddEditDialog/>', function () {
         props.entity =        {
             id: "bar-consumer",
             label: "bar-consumer",
-            isExternal: true,
+            external: true,
             consumes: [
                 "foo-service"
             ]
@@ -67,7 +67,7 @@ describe('<AddEditDialog/>', function () {
         props.entity =        {
             id: "bar-consumer",
             label: "bar-consumer",
-            isExternal: true,
+            external: true,
             consumes: [
                 "foo-service"
             ]

@@ -105,7 +105,7 @@ class MicroserviceList extends React.Component {
                     style.color = "lightgrey"
                     primaryText = <span>{microservice.id} &#x0272A;</span>
                 } else {
-                    if (microservice.isExternal) {
+                    if (microservice.external) {
                         primaryText = <span>{microservice.id} <span style={{color: "#f69805"}}>&#x0272A;</span></span>
                     } else {
                         primaryText = <span>{microservice.id} <span style={{color: "#19c786"}}>&#x0272A;</span></span>

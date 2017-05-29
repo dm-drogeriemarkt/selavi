@@ -124,7 +124,7 @@ export class MicroserviceMindmap extends React.Component {
                 } else {
                     this._network.body.data.nodes.update([{
                         id: microservice.id,
-                        color: microservice.isExternal ? _colors.EXTERNAL : _colors.MICROSERVICE,
+                        color: microservice.external ? _colors.EXTERNAL : _colors.MICROSERVICE,
                         font: {color: "#000000"}
                     }]);
                 }
@@ -152,7 +152,7 @@ export class MicroserviceMindmap extends React.Component {
 
     updateMindmap() {
         var microservices = this.props.microservices.map(microservice => {
-            if (microservice.isExternal) {
+            if (microservice.external) {
                 microservice.group = "external";
             } else {
                 microservice.group = "microservice";
