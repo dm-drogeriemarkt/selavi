@@ -53,7 +53,7 @@ class App extends React.Component {
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
             "fdOwner": {label: "Contact Person *", hint: "eg. \"Altmann, Erik\"", required: true, searchEndpoint: "/selavi/person/search"},
             "tags": {label: "Tags", hint: "eg. \"dm-pos-belege, produktdaten\"", required: false},
-            "description": {label: "Description", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: false, multiLine: true},
+            "description": {label: "Description *", hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"", required: true, multiLine: true},
         };
 
         const serviceTechInputFields = {
@@ -64,10 +64,10 @@ class App extends React.Component {
         };
 
         const serviceDocumentationInputFields = {
-            "documentationLink": {label: "Link to documentation", hint: "eg. \"https://wiki.dm.de/ZOE\"", required: false, isLink: true},
+            "documentationLink": {label: "Link to documentation *", hint: "eg. \"https://wiki.dm.de/ZOE\"", required: true, isLink: true},
             "buildMonitorLink": {label: "Link to Build Monitor", hint: "eg. \"https://zoe-jenkins.dm.de\"", required: false, isLink: true},
             "monitoringLink": {label: "Link to Monitoring", hint: "eg. \"https://elk-kibana.dm.de\"", required: false, isLink: true},
-            "bitbucketUrl": {label: "Bitbucket URL", hint: "eg. \"https://stash.dm.de/projects/ZOE/repos/zoe\"", required: false, isLink: true}
+            "bitbucketUrl": {label: "Bitbucket URL *", hint: "eg. \"https://stash.dm.de/projects/ZOE/repos/zoe\"", required: true, isLink: true}
         };
 
 

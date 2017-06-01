@@ -211,6 +211,7 @@ export class AddEditDialog extends React.Component {
         for (var i = 0; i < this.props.inputTabs.length; i++) {
 
             let inputs = [];
+            let hasInvalidInput = false;
 
             for (var key in this.props.inputTabs[i].inputFields) {
 
@@ -252,11 +253,22 @@ export class AddEditDialog extends React.Component {
                         searchEndpoint: textField.searchEndpoint,
                         isLink: textField.isLink
                     }));
+
+                    if (this.state.validationMessages[key]) {
+                        hasInvalidInput = true;
+                    }
                 }
             }
 
+            let tabstyle;
+
+            if (hasInvalidInput) {
+                tabstyle = { color: "rgb(244, 67, 54)" };
+            }
+
             defaultPropertyInputTabs.push(<Tab key={"add_edit_dialog_tab_" + i}
-                                               label={this.props.inputTabs[i].label} >
+                                               label={this.props.inputTabs[i].label}
+                                               style={tabstyle}>
                 {inputs}
             </Tab>);
         }

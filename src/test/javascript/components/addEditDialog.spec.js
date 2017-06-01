@@ -165,6 +165,42 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.instance().refs.input_label.props.errorText).to.equal("Field is required!");
     });
 
+    xit('marks tabs containing invalid fields', function () {
+
+        let props = createProps();
+        props.inputTabs.push({
+                label: "my_valid_tab",
+                inputFields: {
+                    "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: false}
+                }
+            },
+            {
+                label: "my_invalid_tab",
+                inputFields: {
+                    "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+                }
+            });
+
+        const wrapper = mount(<AddEditDialog {...props}/>, {
+            context: {
+                muiTheme: getMuiTheme(),
+            },
+            childContextTypes: {
+                muiTheme: React.PropTypes.object.isRequired,
+            },
+        });
+
+        wrapper.instance()._handleOnSubmit();
+        
+        // TODO: fix this test
+        // currently, its not possible to test anything on the children of material ui's Dialog component (eg, the Tab)
+        // when using enzyme's mount(): https://github.com/callemall/material-ui/issues/6290
+
+        chai.expect(wrapper.find('Tab').length).to.equal(2);
+        chai.expect(wrapper.find('Tab').at(0).props().style).to.be.undefined
+        chai.expect(wrapper.find('Tab').at(1).style).to.equal({ color: "rgb(244, 67, 54)" });
+    });
+
     it('creates entity object and calls props.onSubmit() when validation succeeds', function () {
 
         let props = createProps();
