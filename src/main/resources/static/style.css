@@ -27,7 +27,7 @@ th {
     flex-direction: row;
 }
 
-.microserviceMindmap, .microserviceFilterbox, .microserviceList {
+.microserviceMindmap, .microserviceFilterbox {
     border-style: solid;
     border-radius: 0;
     border-width: 2px;
@@ -49,18 +49,6 @@ th {
     overflow: scroll;
     max-height: 89%;
     width: 20em;
-}
-
-/* retina sizes for microserviceList are at the end of this stylesheet */
-.microserviceList {
-    overflow-x: scroll;
-    overflow-y: visible;
-    width: 350px;
-    transition: width 300ms ease-in-out;
-}
-
-.microserviceList.wide {
-    width: 650px;
 }
 
 .microserviceMenu {
@@ -119,15 +107,6 @@ th {
     padding: 0.5em;
 }
 
-.microserviceListEntry.selected {
-    font-style: italic;
-    font-weight: bold;
-}
-
-.microserviceListEntry.filteredOut {
-    color: lightgrey;
-}
-
 .contextMenu {
     background-color: lightgrey;
     display: flex;
@@ -148,20 +127,4 @@ th {
 
 .contextMenu[hidden] {
     display: none;
-}
-
-@media
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (   min--moz-device-pixel-ratio: 2),
-only screen and (     -o-min-device-pixel-ratio: 2/1),
-only screen and (        min-device-pixel-ratio: 2),
-only screen and (                min-resolution: 192dpi),
-only screen and (                min-resolution: 2dppx) {
-    .microserviceList {
-        width: 700px;
-    }
-
-    .microserviceList.wide {
-        width: 1300px;
-    }
 }
