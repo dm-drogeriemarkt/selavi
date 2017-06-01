@@ -9,7 +9,6 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import injectTapEventPlugin from "react-tap-event-plugin";
 
 import MicroserviceFilterBox from "./components/microserviceFilterbox";
-import MicroserviceList from "./components/microserviceList";
 import MicroserviceMindmap from "./components/microserviceMindmap";
 import MicroserviceSnackbar from "./components/microserviceSnackbar";
 import AddEditDialog from "./components/addEditDialog";
@@ -95,7 +94,6 @@ class App extends React.Component {
                 </div>
                 <div className="appcontent">
                     <MicroserviceMindmap serviceRequiredProperties={serviceRequiredProperties}/>
-                    <MicroserviceList/>
                 </div>
                 <div className="appfooter">
                     <MicroserviceSnackbar/>
