@@ -2,6 +2,7 @@ const React = require('react');
 import {connect} from "react-redux";
 import MicroserviceMindmapContextMenu from "./microserviceMindmapContextMenu";
 import MicroserviceCountLabel from "./microserviceCountLabel";
+import MicroserviceDocumentationLink from "./microserviceDocumentationLink";
 import StageSelector from "./stageSelector";
 import {onAddLink, onContextMenuOpen, onSelectMicroserviceNode} from "./../actions/microserviceMindmapActions";
 import {shouldFilterOut} from "./../shared/filterUtils";
@@ -263,6 +264,7 @@ export class MicroserviceMindmap extends React.Component {
                 <div ref="vizcontainer" className="vizContainer"></div>
                 <StageSelector/>
                 <MicroserviceCountLabel serviceRequiredProperties={this.props.serviceRequiredProperties}/>
+                <MicroserviceDocumentationLink />
             </div>
         );
     }
