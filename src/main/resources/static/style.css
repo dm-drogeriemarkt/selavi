@@ -52,58 +52,6 @@ th {
     width: 20em;
 }
 
-.microserviceMenu {
-    display: flex;
-    flex-direction: column;
-    padding: 0.5em;
-}
-
-.microserviceMenu > * {
-    margin-bottom: 0.5em;
-}
-
-.microserviceMenu > *:last-child {
-    margin-bottom: 0em;
-}
-
-.microserviceMenu form {
-    display: flex;
-    flex-direction: column;
-    width: 25em;
-}
-
-.microserviceMenu form input {
-    margin-bottom: 0.5em;
-}
-
-.microserviceMenu form input:last-child {
-    margin-bottom: 0em;
-}
-
-.microserviceMenu form .formButtons {
-    display: flex;
-    flex-direction: row;
-}
-
-.microserviceMenu form .formButtons input {
-    width: 10em;
-    margin-right: 0.5em;
-}
-
-.microserviceMenu .buttons {
-    display: flex;
-    flex-direction: column;
-    width: 10em;
-}
-
-.microserviceMenu .buttons button {
-    margin-bottom: 0.5em;
-}
-
-.microserviceMenu .buttons button:last-child {
-    margin-bottom: 0em;
-}
-
 .microserviceFilterbox {
     padding: 0.5em;
 }
