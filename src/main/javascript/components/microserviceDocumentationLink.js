@@ -1,11 +1,6 @@
 const React = require('react');
 import {connect} from "react-redux";
 
-const mapStateToProps = (state) => {
-    return {
-        microservices: state.microservices
-    };
-};
 
 export class MicroserviceDocumentationLink extends React.Component {
     render() {
@@ -19,4 +14,4 @@ export class MicroserviceDocumentationLink extends React.Component {
     }
 }
 
-export default connect(mapStateToProps) (MicroserviceDocumentationLink);
+export default MicroserviceDocumentationLink;
