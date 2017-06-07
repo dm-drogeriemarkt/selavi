@@ -71,21 +71,15 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-class MicroserviceFilterbox extends React.Component {
+export class MicroserviceFilterbox extends React.Component {
     render() {
-
-        var linkMenuItem;
-
-        if (this.props.menuMode === 'ADD_LINK') {
-            linkMenuItem = (<MenuItem primaryText="Cancel add link" onTouchTap={this.props.onCancel.bind(this)} />);
-        } else {
-            linkMenuItem = (<MenuItem primaryText="Add link" onTouchTap={this.props.onAddLink.bind(this)} />);
-        }
 
         var avatarToolGroup;
         const avatarStyle = {margin: 5};
 
         var loginLogoutMenuItem;
+        var addServiceMenuItem;
+        var linkMenuItem;
 
         if (this.props.loggedInUser) {
             avatarToolGroup = (<ToolbarGroup>
@@ -93,6 +87,14 @@ class MicroserviceFilterbox extends React.Component {
             </ToolbarGroup>);
 
             loginLogoutMenuItem = (<MenuItem primaryText="Logout" onTouchTap={this.props.onLogout.bind(this)} />);
+
+            if (this.props.menuMode === 'ADD_LINK') {
+                linkMenuItem = (<MenuItem primaryText="Cancel add link" onTouchTap={this.props.onCancel.bind(this)} />);
+            } else {
+                linkMenuItem = (<MenuItem primaryText="Add link" onTouchTap={this.props.onAddLink.bind(this)} />);
+            }
+
+            addServiceMenuItem = (<MenuItem primaryText="Add Service" onTouchTap={this.props.onAddService.bind(this)} />);
         } else {
             avatarToolGroup = (<ToolbarGroup>
                 <Avatar icon={<SentimentNeutralIcon/>} style={avatarStyle}/>Not logged in
@@ -113,7 +115,7 @@ class MicroserviceFilterbox extends React.Component {
                 <ToolbarGroup>
                     <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon /></IconButton>}>
                         {loginLogoutMenuItem}
-                        <MenuItem primaryText="Add Service" onTouchTap={this.props.onAddService.bind(this)} />
+                        {addServiceMenuItem}
                         {linkMenuItem}
                     </IconMenu>
                 </ToolbarGroup>
