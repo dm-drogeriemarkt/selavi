@@ -22,6 +22,8 @@ describe('<MicroserviceMindmap/>', function () {
     var networkUnselectAllSpy = sinon.spy();
     var networkGetEdgeAtSpy = sinon.stub();
     var networkGetConnectedNodes = sinon.stub();
+    var networkDataAddEdgeSpy = sinon.stub();
+    var networkStartSimulationSpy = sinon.stub();
 
     var windowAddEventListenerSpy = sinon.spy();
 
@@ -40,7 +42,15 @@ describe('<MicroserviceMindmap/>', function () {
                 selectNodes: networkSelectNodesSpy,
                 unselectAll: networkUnselectAllSpy,
                 getEdgeAt: networkGetEdgeAtSpy,
-                getConnectedNodes: networkGetConnectedNodes
+                getConnectedNodes: networkGetConnectedNodes,
+                body: {
+                    data: {
+                        edges: {
+                            add: networkDataAddEdgeSpy
+                        }
+                    }
+                },
+                startSimulation: networkStartSimulationSpy
             })
         };
 
@@ -96,18 +106,15 @@ describe('<MicroserviceMindmap/>', function () {
             }
         ]
 
-        const expectedEdges = [
-            {
-                from: "bar-consumer",
-                to: "foo-service",
-                label: "REST",
-                font: {align: 'middle'}
-            }
-        ]
+        const expectedEdge = {
+            from: "bar-consumer",
+            to: "foo-service",
+            label: "REST",
+            font: {align: 'middle'}
+        };
 
-        sinon.assert.calledTwice(global.vis.DataSet);
+        sinon.assert.calledOnce(global.vis.DataSet);
         sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
-        sinon.assert.calledWith(global.vis.DataSet, expectedEdges);
 
         sinon.assert.calledOnce(global.vis.Network);
 
@@ -124,6 +131,9 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledWith(networkOnSpy, "select");
 
         sinon.assert.calledWith(windowAddEventListenerSpy, "resize", sinon.match.func);
+
+        sinon.assert.calledWith(networkDataAddEdgeSpy, expectedEdge);
+        sinon.assert.calledOnce(networkStartSimulationSpy);
     });
 
     it('highlights services that are missing a required property', function () {
@@ -162,7 +172,7 @@ describe('<MicroserviceMindmap/>', function () {
 
         const wrapper = shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
 
-        sinon.assert.calledTwice(global.vis.DataSet);
+        sinon.assert.calledOnce(global.vis.DataSet);
         sinon.assert.calledOnce(global.vis.Network);
 
         global.vis.DataSet.reset();
@@ -172,7 +182,7 @@ describe('<MicroserviceMindmap/>', function () {
 
         wrapper.setProps(props);
 
-        sinon.assert.calledTwice(global.vis.DataSet);
+        sinon.assert.calledOnce(global.vis.DataSet);
         sinon.assert.calledOnce(networkSetDataSpy);
         sinon.assert.notCalled(global.vis.Network);
     });

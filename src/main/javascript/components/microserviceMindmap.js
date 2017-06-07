@@ -170,27 +170,9 @@ export class MicroserviceMindmap extends React.Component {
         // create an array with nodes
         var nodes = new vis.DataSet(microservices);
 
-        var edgeArray = [];
-
-        microservices.filter(function (el) {
-            return el.consumes;
-        }).forEach(function (el) {
-            el.consumes.forEach(function (consumer) {
-                edgeArray.push({
-                    from: el.id,
-                    to: consumer.target,
-                    label: consumer.type != null ? consumer.type : "",
-                    font: {align: 'middle'}
-                });
-            });
-        });
-
-        var edges = new vis.DataSet(edgeArray);
-
         // create a network
         var data = {
-            nodes: nodes,
-            edges: edges
+            nodes: nodes
         };
 
         if (!this._network) {
@@ -253,6 +235,23 @@ export class MicroserviceMindmap extends React.Component {
             this._network.setData(data);
             this._resize();
         }
+
+        // add edges to existing network (a lot faster than adding them with the node data)
+        microservices.filter(function (el) {
+            return el.consumes;
+        }).forEach(function (el) {
+            el.consumes.forEach(function (consumer) {
+                this._network.body.data.edges.add({
+                    from: el.id,
+                    to: consumer.target,
+                    label: consumer.type != null ? consumer.type : "",
+                    font: {align: 'middle'}
+                });
+            }, this);
+        }, this);
+
+        // because we add the edges to an existing network, things are kind of tangled up, so we start a simulation manually (to un-tangle everything)
+        this._network.startSimulation();
     }
 
     render() {
