@@ -1,7 +1,7 @@
 const React = require('react');
 
 import { connect } from 'react-redux';
-import { onAddProperty, onDeleteService, onDeleteLink, onEditLink } from './../actions/microserviceMindmapContextMenuActions';
+import { onAddProperty, onDeleteService, onDeleteLink, onEditLink, onShowService } from './../actions/microserviceMindmapContextMenuActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -19,7 +19,8 @@ const mapDispatchToProps = {
     onAddProperty,
     onDeleteService,
     onDeleteLink,
-    onEditLink
+    onEditLink,
+    onShowService
 };
 
 export class MicroserviceMindmapContextMenu extends React.Component {
@@ -47,7 +48,7 @@ export class MicroserviceMindmapContextMenu extends React.Component {
         } else if (this.props.contextMenuServiceId) {
             return (
                 <nav style={style} className="contextMenu">
-                    <button onClick={this.props.onAddProperty}>Show Service</button>
+                    <button onClick={this.props.onShowService}>Show Service</button>
                 </nav>
             );
         }

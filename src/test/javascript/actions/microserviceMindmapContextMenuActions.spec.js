@@ -1,6 +1,6 @@
 import chai from 'chai';
 
-import { onAddProperty, onDeleteService, onDeleteLink, onEditLink } from '../../../main/javascript/actions/microserviceMindmapContextMenuActions';
+import { onAddProperty, onDeleteService, onDeleteLink, onEditLink, onShowService } from '../../../main/javascript/actions/microserviceMindmapContextMenuActions';
 
 describe('microserviceMindmapContextMenuActions', function () {
     it('onAddProperty dispatches EDIT_SERVICE', function() {
@@ -25,5 +25,11 @@ describe('microserviceMindmapContextMenuActions', function () {
         const result = onEditLink();
 
         chai.expect(result.type).to.equal('EDIT_LINK');
+    });
+
+    it('onShowService dispatches SHOW_SERVICE', function() {
+        const result = onShowService();
+
+        chai.expect(result.type).to.equal('SHOW_SERVICE');
     });
 });

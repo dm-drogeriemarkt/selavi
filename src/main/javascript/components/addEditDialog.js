@@ -175,7 +175,7 @@ export class AddEditDialog extends React.Component {
 
     render() {
 
-        const actions = [
+        var actions = [
             <FlatButton
                 label="Cancel"
                 primary={true}
@@ -192,12 +192,27 @@ export class AddEditDialog extends React.Component {
         var _entity = this.props.entity || {};
         var title = "";
 
+        var readOnly = false;
+
         if (this.props.menuMode === this.props.addMenuMode) {
             isOpen = true;
             title = "Add " + this.props.entityDisplayName;
         } else if (this.props.menuMode === this.props.editMenuMode) {
             isOpen = true;
             title = "Edit " + _entity.label;
+        } else if (this.props.menuMode === this.props.showMenuMode) {
+            isOpen = true;
+            title = "Show " + _entity.label;
+
+            actions = [
+                <FlatButton
+                    label="Close"
+                    primary={true}
+                    onTouchTap={this._handleOnCancel.bind(this)}
+                />
+            ];
+
+            readOnly = true;
         } else {
             // dialog is closed, we can short-cut here
             return null;
@@ -229,6 +244,7 @@ export class AddEditDialog extends React.Component {
                                                        ref={"input_" + key}
                                                        label={toggle.label}
                                                        defaultToggled={value}
+                                                       disabled={readOnly}
                                                        style={{marginTop: "2em", maxWidth: "23em"}}/>)
 
                 } else {
@@ -249,7 +265,7 @@ export class AddEditDialog extends React.Component {
                         hint: textField.hint,
                         multiLine: textField.multiLine,
                         value: value,
-                        disabled: textField.disabled,
+                        disabled: textField.disabled || readOnly,
                         searchEndpoint: textField.searchEndpoint,
                         isLink: textField.isLink
                     }));
@@ -287,12 +303,14 @@ export class AddEditDialog extends React.Component {
                         key: key,
                         label: key,
                         hint: key,
-                        value: _entity[key]
+                        value: _entity[key],
+                        disabled: readOnly
                     }));
                 } else if (typeof(_entity[key]) === "boolean") {
                     customPropertyInputs.push(<Toggle ref={"input_" + key}
                                                       label={key}
                                                       defaultToggled={_entity[key]}
+                                                      disabled={readOnly}
                                                       style={{marginTop: "2em", maxWidth: "23em"}}/>)
                 } else {
                     console.log("unkown property type for key \"" + key + "\" with value \"" + JSON.stringify(_entity[key]) + "\"");
@@ -339,6 +357,10 @@ export class AddEditDialog extends React.Component {
             </Dialog>
         );
     }
+}
+
+AddEditDialog.defaultProps = {
+    showMenuMode: "_DISABLED_"
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddEditDialog);

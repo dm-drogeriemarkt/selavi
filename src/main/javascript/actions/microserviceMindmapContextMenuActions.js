@@ -21,3 +21,9 @@ export function onEditLink() {
         type: 'EDIT_LINK'
     };
 }
+
+export function onShowService() {
+    return {
+        type: 'SHOW_SERVICE'
+    };
+}

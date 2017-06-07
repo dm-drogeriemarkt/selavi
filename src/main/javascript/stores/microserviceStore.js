@@ -107,6 +107,15 @@ function updateStore(state = initialState, action) {
             });
             return newState;
         }
+        case 'SHOW_SERVICE': {
+            const newState = Object.assign({}, state, {
+                entity: state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0],
+                topComitters: state.bitbucketDetails[state.contextMenuServiceId],
+                contextMenuServiceId: undefined,
+                menuMode: 'SHOW_SERVICE'
+            });
+            return newState;
+        }
         case 'ADD_EDIT_FAILED': {
             const newState = Object.assign({}, state, {
                 menuMode: undefined,

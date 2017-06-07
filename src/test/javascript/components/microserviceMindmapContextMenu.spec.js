@@ -116,7 +116,7 @@ describe('<MicroserviceMindmapContextMenu/>', function () {
 
                 wrapper.find('button').at(0).simulate('click');
 
-                sinon.assert.calledOnce(props.onAddProperty);
+                sinon.assert.calledOnce(props.onShowService);
             });
         });
 
@@ -141,6 +141,7 @@ function createProps() {
         contextMenuFromId: undefined,
         contextMenuToId: undefined,
         onAddProperty: sinon.spy(),
+        onShowService: sinon.spy(),
         onDeleteService: sinon.spy(),
         onDeleteLink: sinon.spy(),
         onEditLink: sinon.spy(),

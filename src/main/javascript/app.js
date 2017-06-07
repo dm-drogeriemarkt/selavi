@@ -100,6 +100,7 @@ class App extends React.Component {
                     <AddEditDialog inputTabs={serviceInputTabs}
                                                   addMenuMode="ADD_SERVICE"
                                                   editMenuMode="EDIT_SERVICE"
+                                                  showMenuMode="SHOW_SERVICE"
                                                   entityDisplayName="Service"/>
                     <AddEditDialog inputTabs={relationInputTabs}
                                                   addMenuMode="ADD_RELATION"

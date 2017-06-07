@@ -103,6 +103,42 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(false);
     });
 
+    it('disables all input fields when menuMode is SHOW_SERVICE', function () {
+
+        let props = createProps();
+        props.inputTabs.push({
+            label: "my_input_tab",
+            inputFields: {
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
+            }});
+        props.menuMode = 'SHOW_SERVICE';
+        props.showMenuMode = 'SHOW_SERVICE';
+
+        const wrapper = shallow(<AddEditDialog {...props}/>);
+
+        chai.expect(wrapper.find('TextField').length).to.equal(2);
+        chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal("Service ID *");
+        chai.expect(wrapper.find('TextField').at(0).props().disabled).to.equal(true);
+        chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal("Label *");
+        chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(true);
+    });
+
+    it('displays "show..." as title when menuMode is SHOW_SERVICE', function () {
+
+        let props = createProps();
+        props.menuMode = 'SHOW_SERVICE';
+        props.showMenuMode = 'SHOW_SERVICE';
+        props.entity = {
+            label: 'hello_world'
+        }
+
+        const wrapper = shallow(<AddEditDialog {...props}/>);
+
+        chai.expect(wrapper.find('Dialog').props().title).to.equal('Show hello_world');
+    });
+
+
     it('renders multi-line text fields', function () {
 
         let props = createProps();
