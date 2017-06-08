@@ -82,8 +82,16 @@ export class MicroserviceFilterbox extends React.Component {
         var linkMenuItem;
 
         if (this.props.loggedInUser) {
+            var avatar;
+
+            if (this.props.loggedInUser.thumbnailPhoto) {
+                avatar = <Avatar src={"data:image/png;base64," + this.props.loggedInUser.thumbnailPhoto} style={avatarStyle}/>;
+            } else {
+                avatar = <Avatar icon={<SentimentVerySatisfiedIcon/>} style={avatarStyle}/>;
+            }
+
             avatarToolGroup = (<ToolbarGroup>
-                <Avatar icon={<SentimentVerySatisfiedIcon/>} style={avatarStyle}/>{this.props.loggedInUser}
+                {avatar}{this.props.loggedInUser.displayName}
             </ToolbarGroup>);
 
             loginLogoutMenuItem = (<MenuItem primaryText="Logout" onTouchTap={this.props.onLogout.bind(this)} />);

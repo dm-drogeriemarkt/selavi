@@ -14,6 +14,31 @@ describe('<MicroserviceFilterbox/>', function () {
         chai.expect(wrapper.find('ToolbarTitle').props().text).to.equal('SeLaVi - Service Landscape Visualizer');
     });
 
+    it('displays user name and avatar when user is logged in', function () {
+        const props = createProps();
+        props.loggedInUser = {
+            displayName: "my_user_id",
+            thumbnailPhoto: "i_am_a_byte_array"
+        };
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+        chai.expect(wrapper.find('Avatar').props().src).to.equal('data:image/png;base64,i_am_a_byte_array');
+        chai.expect(wrapper.find('ToolbarGroup').at(0).childAt(1).text()).to.equal('my_user_id');
+    });
+
+    it('displays fallback icon when user has no photo', function () {
+        const props = createProps();
+        props.loggedInUser = {
+            displayName: "my_user_id",
+            thumbnailPhoto: undefined
+        };
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+        chai.expect(wrapper.find('Avatar').props().icon.type.displayName).to.equal('SocialSentimentVerySatisfied');
+        chai.expect(wrapper.find('ToolbarGroup').at(0).childAt(1).text()).to.equal('my_user_id');
+    });
+
+
     it('displays only login button in menu when no user is logged in', function () {
         const props = createProps();
 

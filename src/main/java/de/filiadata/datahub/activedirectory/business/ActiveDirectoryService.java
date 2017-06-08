@@ -28,16 +28,16 @@ public class ActiveDirectoryService {
                 query().where("objectclass").is("user")
                         .and("objectclass").not().is("computer")
                         .and("sAMAccountName").isPresent()
-//                        .and("sAMAccountName").not().like("*Admin*")
-//                        .and("mail").isPresent()
+                        .and("sAMAccountName").not().like("*Admin*")
+                        .and("mail").isPresent()
                         .and("name").like(ldapQuery),
                 new AttributesMapper<Person>() {
                     public Person mapFromAttributes(Attributes attrs)
                             throws NamingException, javax.naming.NamingException {
                         Person.PersonBuilder builder = Person.builder()
                                 .uid((String) attrs.get("sAMAccountName").get())
-                                .displayName((String) attrs.get("displayname").get());
-//                                .eMail((String) attrs.get("mail").get());
+                                .displayName((String) attrs.get("displayname").get())
+                                .eMail((String) attrs.get("mail").get());
 
                         if (attrs.get("thumbnailphoto") != null) {
                             builder.thumbnailPhoto((byte[]) attrs.get("thumbnailphoto").get());
