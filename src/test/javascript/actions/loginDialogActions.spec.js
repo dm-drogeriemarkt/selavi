@@ -64,10 +64,16 @@ describe('loginDialogActions', function () {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" }
             });
 
-            thenHandler('response_to_login');
+            const loggedInUser = {
+                displayName: 'foo'
+            };
+
+            thenHandler({
+                entity: loggedInUser
+            });
 
             sinon.assert.calledOnce(dispatchSpy);
-            sinon.assert.calledWith(dispatchSpy, { loggedInUser: 'foo', type: "LOGIN_SUCCESS" });
+            sinon.assert.calledWith(dispatchSpy, { loggedInUser: loggedInUser, type: "LOGIN_SUCCESS" });
         });
 
         it('POSTs /login request and dispatches LOGIN_FAILED event on error', function() {

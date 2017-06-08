@@ -23,7 +23,7 @@ export function onSubmit(params) {
         client(request).then(response => {
             dispatch({
                 type: 'LOGIN_SUCCESS',
-                loggedInUser: params.entity.username
+                loggedInUser: response.entity
             });
         }, response => {
             dispatch({
