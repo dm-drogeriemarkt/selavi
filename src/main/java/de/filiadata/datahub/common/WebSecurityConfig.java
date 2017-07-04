@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.ldap.authentication.ad.Hotfix3960ActiveDirectoryLdapAuthenticationProvider;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
@@ -57,7 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
                 .and()
             .csrf()
-                .disable();
+                .disable()
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 
     @Bean
