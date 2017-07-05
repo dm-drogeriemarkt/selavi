@@ -76,6 +76,70 @@ describe('<LoginDialog/>', function () {
         chai.expect(wrapper.find('Snackbar').props().open).to.equal(true);
         chai.expect(wrapper.find('Snackbar').props().message).to.equal('heute leider nur fuer stammgaeste');
     });
+
+    it('displays spinner when login is in progress (and hides it when login dialog is closed)', function () {
+        const props = createProps();
+
+        props.menuMode = 'LOGIN';
+
+        const wrapper = shallow(<LoginDialog {...props}/>);
+
+        // fake refs
+        wrapper.instance().refs = {
+            input_username: { getValue: () => {} },
+            input_password: { getValue: () => {} }
+        };
+
+        chai.expect(wrapper.find('CircularProgress').length).to.equal(0);
+
+        wrapper.instance().onSubmit();
+
+        chai.expect(wrapper.find('CircularProgress').length).to.equal(1);
+
+        wrapper.setProps({
+            menuMode: 'something_else'
+        });
+
+        chai.expect(wrapper.find('CircularProgress').length).to.equal(0);
+    });
+
+    it('attaches keyboard event handler on mount, submits login on enter key', function () {
+        const props = createProps();
+
+        props.menuMode = 'LOGIN';
+
+        let keyboardHandlerFn;
+
+        sinon.stub(document, 'addEventListener', (type, listener, useCapture) => {
+            if (type === 'keydown') {
+                keyboardHandlerFn = listener;
+            }
+        });
+
+        const wrapper = shallow(<LoginDialog {...props}/>);
+
+        chai.expect(keyboardHandlerFn).to.be.defined;
+
+        // fake refs
+        wrapper.instance().refs = {
+            input_username: { getValue: () => "login" },
+            input_password: { getValue: () => "using_keyboard" }
+        };
+
+        keyboardHandlerFn({
+            key: 'Enter'
+        });
+
+        // make sure onSubmit is not called twice by accident
+        keyboardHandlerFn({
+            key: 'Enter'
+        });
+
+        sinon.assert.calledOnce(props.onSubmit);
+        sinon.assert.calledWith(props.onSubmit, { entity: { username: "login", password: "using_keyboard" } });
+        
+        document.addEventListener.restore();
+    });
 });
 
 function createProps() {
