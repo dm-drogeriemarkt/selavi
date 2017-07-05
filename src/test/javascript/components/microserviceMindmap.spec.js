@@ -127,6 +127,9 @@ describe('<MicroserviceMindmap/>', function () {
         chai.expect(global.vis.Network.args[0][2].layout.randomSeed).to.equal(2);
         chai.expect(global.vis.Network.args[0][2].groups.microservice.color.background).to.equal("#bef24d");
         chai.expect(global.vis.Network.args[0][2].groups.external.color.background).to.equal("#f2d12d");
+        chai.expect(global.vis.Network.args[0][2].groups.filteredOut.color.background).to.equal("#f0f0f0");
+        chai.expect(global.vis.Network.args[0][2].groups.filteredOut.color.background).to.equal("#f0f0f0");
+        chai.expect(global.vis.Network.args[0][2].groups.filteredOut.font.color).to.equal("#c4c3c6");
 
         sinon.assert.callCount(networkOnSpy, 5);
         sinon.assert.calledWith(networkOnSpy, "selectNode", sinon.match.func);

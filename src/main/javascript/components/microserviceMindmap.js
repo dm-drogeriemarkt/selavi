@@ -188,10 +188,12 @@ export class MicroserviceMindmap extends React.Component {
                 },
                 groups: {
                     "microservice": {
-                        color: _colors.MICROSERVICE
+                        color: _colors.MICROSERVICE,
+                        font: {color: "#000000"}
                     },
                     "external": {
-                        color: _colors.EXTERNAL
+                        color: _colors.EXTERNAL,
+                        font: {color: "#000000"}
                     },
                     "filteredOut": {
                         color: _colors.GREY,
