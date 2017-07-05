@@ -23,6 +23,7 @@ describe('<MicroserviceMindmap/>', function () {
     var networkGetEdgeAtSpy = sinon.stub();
     var networkGetConnectedNodes = sinon.stub();
     var networkDataAddEdgeSpy = sinon.stub();
+    var networkDataUpdateNodesSpy = sinon.stub();
     var networkStartSimulationSpy = sinon.stub();
 
     var windowAddEventListenerSpy = sinon.spy();
@@ -47,6 +48,9 @@ describe('<MicroserviceMindmap/>', function () {
                     data: {
                         edges: {
                             add: networkDataAddEdgeSpy
+                        },
+                        nodes: {
+                            update: networkDataUpdateNodesSpy
                         }
                     }
                 },
@@ -164,6 +168,63 @@ describe('<MicroserviceMindmap/>', function () {
         ]
 
         sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+    });
+
+    it('displays filtered-out services in grey', function () {
+
+        const props = createProps();
+        props.filterString = "foo";
+
+        shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+
+        const expectedAllNodes = [
+            {
+                id: "foo-service",
+                label: "foo-service",
+                group: "microservice"
+            },
+            {
+                id: "bar-consumer",
+                label: "bar-consumer",
+                external: true,
+                consumes: [
+                    {"target": "foo-service", "type": "REST"}
+                ],
+                group: "filteredOut",
+            }
+        ]
+
+        sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+    });
+
+    it('updates nodes in network (instead of adding a complete dataset) when filtering', function () {
+
+        const props = createProps();
+
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+
+        props.filterString = "foo";
+        wrapper.setProps(props);
+
+        const expectedAllNodes = [
+            {
+                id: "foo-service",
+                label: "foo-service",
+                group: "microservice"
+            },
+            {
+                id: "bar-consumer",
+                label: "bar-consumer",
+                external: true,
+                consumes: [
+                    {"target": "foo-service", "type": "REST"}
+                ],
+                group: "filteredOut",
+            }
+        ]
+
+        sinon.assert.notCalled(networkSetDataSpy);
+        sinon.assert.calledWith(networkDataUpdateNodesSpy, expectedAllNodes);
     });
 
     it('only creates vis network once', function () {
