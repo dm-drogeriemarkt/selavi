@@ -39,6 +39,13 @@ export class LoginDialog extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.menuMode === 'LOGIN' && nextProps.menuMode != 'LOGIN') {
             this.setState({inProgress: false});
+        } else if (this.props.menuMode != 'LOGIN' && nextProps.menuMode === 'LOGIN') {
+            // not really sure why this is necessary:
+            // first, this.refs.input_username is undefined when accessed in componentWillReceiveProps directly, but is available when using setTimeout(fn, 0)
+            // second, setTimeout(fn, 0) is not working either: someone steals focus after a couple of milliseconds
+            window.setTimeout((that) => {
+                that.refs.input_username.focus();
+            }, 200, this);
         }
     }
 

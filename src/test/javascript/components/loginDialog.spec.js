@@ -140,6 +140,39 @@ describe('<LoginDialog/>', function () {
         
         document.addEventListener.restore();
     });
+
+    it('brings username text field into focus', function () {
+        const props = createProps();
+
+        const wrapper = mount(<LoginDialog {...props}/>, {
+            context: {
+                muiTheme: getMuiTheme(),
+            },
+            childContextTypes: {
+                muiTheme: React.PropTypes.object.isRequired,
+            },
+        });
+
+        let callbackFn;
+
+        sinon.stub(window, "setTimeout", (cb, timeout, param) => {
+            callbackFn = cb;
+        });
+
+        wrapper.setProps({
+            menuMode: 'LOGIN'
+        });
+
+        chai.expect(callbackFn).to.be.defined;
+
+        chai.expect(wrapper.instance().refs.input_username.state.isFocused).to.be.false;
+
+        callbackFn(wrapper.instance());
+
+        chai.expect(wrapper.instance().refs.input_username.state.isFocused).to.be.true;
+
+        window.setTimeout.restore();
+    });
 });
 
 function createProps() {
