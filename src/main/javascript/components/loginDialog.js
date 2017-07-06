@@ -40,9 +40,11 @@ export class LoginDialog extends React.Component {
         if (this.props.menuMode === 'LOGIN' && nextProps.menuMode != 'LOGIN') {
             this.setState({inProgress: false});
         } else if (this.props.menuMode != 'LOGIN' && nextProps.menuMode === 'LOGIN') {
-            // not really sure why this is necessary:
-            // first, this.refs.input_username is undefined when accessed in componentWillReceiveProps directly, but is available when using setTimeout(fn, 0)
+            // this is a hack of some sort to give focus to username textfield when the login Dialog is shown:
+            // first, this.refs.input_username is undefined when accessed in componentWillReceiveProps (or any other react lifecycle method) directly, but is available when using setTimeout(fn, 0)
+            // => this is probably because material-ui Dialog is using an internal RenderToLayer component to lazily render its contents
             // second, setTimeout(fn, 0) is not working either: someone steals focus after a couple of milliseconds
+            // => likely the same reason (input element being rendered somewhere else in reacts virtual dom before being brought into view)
             window.setTimeout((that) => {
                 that.refs.input_username.focus();
             }, 200, this);
