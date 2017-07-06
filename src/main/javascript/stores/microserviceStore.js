@@ -1,6 +1,9 @@
 import {applyMiddleware, createStore} from "redux";
 import thunk from "redux-thunk";
 
+// TODO: is this a good place to handle url search params?
+const urlSearchParams = new URLSearchParams(document.location.search.substring(1));
+
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
     stage: undefined,
@@ -19,15 +22,14 @@ const initialState = {
     deleteServiceErrorMessage: undefined,
     contextMenuVisible: false,
     menuMode: undefined,
-    filterString: '',
+    filterString: urlSearchParams.get('filter'),
     microserviceListResizeCount: 0,
     addEditDialogFormAction: undefined,
-    // TODO: either remove this when its not needed anymore, or maybe use react-router to handle url
-    debugMode: (document.location.search === '?debug')
+    debugMode: urlSearchParams.has('debug')
 }
 
 // reducer function, creates a new state object from the previous state and the action
-function updateStore(state = initialState, action) {
+export function updateStore(state = initialState, action) {
     switch (action.type) {
         case 'FETCH_MICROSERVICES_SUCCESS': {
             const stage = action.stage ? action.stage : state.stage;
@@ -43,8 +45,11 @@ function updateStore(state = initialState, action) {
         }
         case 'FETCH_AVAILABLE_STAGES_SUCCESS': {
             var stage;
-
-            if (action.response.entity.indexOf('dev') != -1) {
+            var stageFromUrl = urlSearchParams.get('stage');
+            
+            if (action.response.entity.indexOf(stageFromUrl) != -1) {
+                stage = stageFromUrl;
+            } else if (action.response.entity.indexOf('dev') != -1) {
                 stage = 'dev';
             } else {
                 stage = action.response.entity[0];

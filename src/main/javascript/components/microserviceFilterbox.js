@@ -14,11 +14,15 @@ import SentimentNeutralIcon from 'material-ui/svg-icons/social/sentiment-neutral
 import SentimentVerySatisfiedIcon from 'material-ui/svg-icons/social/sentiment-very-satisfied';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
-        loggedInUser: state.loggedInUser
+        loggedInUser: state.loggedInUser,
+        filterString: state.filterString,
+        stage: state.stage
     };
 };
 
@@ -72,6 +76,26 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export class MicroserviceFilterbox extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {linkUrl: undefined}
+    }
+
+    handleLinkAlertOpen() {
+        var url = document.location.origin + document.location.pathname + "?stage=" + this.props.stage;
+
+        if (this.props.filterString) {
+            url += ("&filter=" + this.props.filterString);
+        }
+
+        this.setState({linkUrl: url});
+    }
+
+    handleLinkAlertClose() {
+        this.setState({linkUrl: undefined});
+    }
+
     render() {
 
         var avatarToolGroup;
@@ -118,15 +142,29 @@ export class MicroserviceFilterbox extends React.Component {
                     <ToolbarTitle text="SeLaVi - Service Landscape Visualizer" />
                 </ToolbarGroup>
                 <ToolbarGroup>
-                    <TextField hintText="Filter services..." onChange={this.props.onType.bind(this)}></TextField>
+                    <TextField hintText="Filter services..." value={this.props.filterString} onChange={this.props.onType.bind(this)}></TextField>
                 </ToolbarGroup>
                 <ToolbarGroup>
                     <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon /></IconButton>}>
                         {loginLogoutMenuItem}
                         {addServiceMenuItem}
                         {linkMenuItem}
+                        <MenuItem primaryText="Share link" onTouchTap={this.handleLinkAlertOpen.bind(this)} />
                     </IconMenu>
                 </ToolbarGroup>
+                <Dialog
+                    title="Link to current SeLaVi view"
+                    actions={<FlatButton
+                        label="Ok"
+                        primary={true}
+                        onTouchTap={this.handleLinkAlertClose.bind(this)}
+                    />}
+                    modal={false}
+                    open={!!this.state.linkUrl}
+                    onRequestClose={this.handleLinkAlertClose.bind(this)}
+                >
+                    <span>{this.state.linkUrl}</span>
+                </Dialog>
             </Toolbar>
         );
     }

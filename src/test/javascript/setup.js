@@ -15,3 +15,4 @@ if (!global.touchTapSetup) {
     global.touchTapSetup = true;
 }
 
+require('url-search-params-polyfill');
