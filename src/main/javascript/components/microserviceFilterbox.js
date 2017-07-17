@@ -142,7 +142,7 @@ export class MicroserviceFilterbox extends React.Component {
                     <ToolbarTitle text="SeLaVi - Service Landscape Visualizer" />
                 </ToolbarGroup>
                 <ToolbarGroup>
-                    <TextField hintText="Filter services..." value={this.props.filterString} onChange={this.props.onType.bind(this)}></TextField>
+                    <TextField hintText="Filter services... (label, tags)" value={this.props.filterString} onChange={this.props.onType.bind(this)}></TextField>
                 </ToolbarGroup>
                 <ToolbarGroup>
                     <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon /></IconButton>}>

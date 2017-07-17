@@ -42,10 +42,10 @@ describe('filterUtils', function () {
 
             chai.expect(result).to.be.true;
         });
-        it('returns false if team matches filter string, and its the only field', function () {
+        it('returns false if tags matches filter string, and its the only field', function () {
 
             const service = {
-                team: 'team foo'
+                tags: 'team foo'
             };
 
             const filterString = 'foo';
@@ -54,10 +54,10 @@ describe('filterUtils', function () {
 
             chai.expect(result).to.be.false;
         });
-        it('returns true if team does not match filter string, and its the only field', function () {
+        it('returns true if tags does not match filter string, and its the only field', function () {
 
             const service = {
-                team: 'team bar'
+                tags: 'team bar'
             };
 
             const filterString = 'foo';
@@ -82,7 +82,7 @@ describe('filterUtils', function () {
         it('returns true if none of the searched fields contains a string', function () {
 
             const service = {
-                team: {
+                tags: {
                     teamName: 'team foo'
                 }
             };

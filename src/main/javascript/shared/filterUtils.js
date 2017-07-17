@@ -1,7 +1,7 @@
 // these are the data fields that we want to search
 const _fields = [
     'label',
-    'team'
+    'tags'
 ]
 
 export function shouldFilterOut(microservice, filterString) {
