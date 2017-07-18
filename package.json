@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Service Landscape Visualizer",
   "dependencies": {
-    "material-ui": "^0.16.5",
+    "material-ui": "^0.18.6",
     "react": "^15.4.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.6",
