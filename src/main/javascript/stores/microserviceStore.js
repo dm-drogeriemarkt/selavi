@@ -22,7 +22,7 @@ const initialState = {
     deleteServiceErrorMessage: undefined,
     contextMenuVisible: false,
     menuMode: undefined,
-    filterString: urlSearchParams.get('filter'),
+    filterString: urlSearchParams.get('filter') || '',
     microserviceListResizeCount: 0,
     addEditDialogFormAction: undefined,
     debugMode: urlSearchParams.has('debug')
