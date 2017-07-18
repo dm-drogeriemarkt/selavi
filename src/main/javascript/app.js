@@ -42,7 +42,7 @@ class App extends React.Component {
                 type: 'LOGIN_SUCCESS',
                 loggedInUser: response.entity
             });
-        });
+        }, response => console.log('Not logged in...'));
     }
 
     render() {
