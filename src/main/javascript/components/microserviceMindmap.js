@@ -210,7 +210,7 @@ export class MicroserviceMindmap extends React.Component {
                 physics: {
                     barnesHut: {
                         // how much are nodes allowed to overlap? 1 = maximum, 0 = minimum distance
-                        avoidOverlap: 1,
+                        avoidOverlap: 0.8,
                         // damping slows things down, keeps nodes from floating away, 1 = maximum, 0 = minimum
                         damping: 0.7
                     },
