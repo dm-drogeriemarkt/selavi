@@ -3,7 +3,7 @@ package de.filiadata.datahub.bitbucket.business;
 import de.filiadata.datahub.bitbucket.domain.BitbucketAuthorDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitsDto;
 import de.filiadata.datahub.bitbucket.domain.BitbucketCommitterDto;
-import de.filiadata.datahub.bitbucket.domain.TopCommitter;
+import de.filiadata.datahub.bitbucket.domain.TopCommitterDto;
 import de.filiadata.datahub.microservices.business.MicroserviceContentProviderService;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import org.apache.commons.lang.StringUtils;
@@ -44,15 +44,15 @@ public class BitbucketService {
         this.microserviceContentProviderService = microserviceContentProviderService;
     }
 
-    public List<TopCommitter> getNamedTopCommitter(String stage, String microserviceId) {
-        final List<TopCommitter> result = new ArrayList<>();
+    public List<TopCommitterDto> getNamedTopCommitter(String stage, String microserviceId) {
+        final List<TopCommitterDto> result = new ArrayList<>();
         final Map<BitbucketAuthorDto, Long> topCommitters = getTopCommitters(stage, microserviceId);
 
         LOG.info("Top commiter dtos: {}", topCommitters);
 
         for (final Map.Entry<BitbucketAuthorDto, Long> entry : topCommitters.entrySet()) {
             final BitbucketAuthorDto dto = entry.getKey();
-            result.add(TopCommitter.builder().emailAddress(dto.getEmailAddress()).id(dto.getId()).name(dto.getName()).numberOfCommits(entry.getValue()).build());
+            result.add(TopCommitterDto.builder().emailAddress(dto.getEmailAddress()).id(dto.getId()).name(dto.getName()).numberOfCommits(entry.getValue()).build());
         }
 
         return result;
