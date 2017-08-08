@@ -1,7 +1,8 @@
 package de.filiadata.datahub.microservices.business;
 
-import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceAddException;
-import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceDeleteException;
+import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceAlreadyExistsException;
+import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceNotDeletableException;
+import de.filiadata.datahub.microservices.business.semanticexceptions.ServiceNotFoundException;
 import de.filiadata.datahub.microservices.domain.ConsumeDto;
 import de.filiadata.datahub.microservices.domain.MicroserviceDto;
 import de.filiadata.datahub.microservices.domain.ServiceProperties;
@@ -35,7 +36,7 @@ public class MicroserviceConditioningService {
     public void addNewService(String stage, MicroserviceDto microserviceDto) {
         Assert.notNull(microserviceDto.getId());
         if (microserviceContentProviderService.getAllMicroservices(stage).get(microserviceDto.getId()) != null) {
-            throw new ServiceAddException();
+            throw new ServiceAlreadyExistsException();
         }
 
         servicePropertiesRepository.save(new ServiceProperties(microserviceDto.getId(), stage, microserviceDtoFactory.getJsonFromMicroserviceDto(microserviceDto)));
@@ -55,17 +56,16 @@ public class MicroserviceConditioningService {
         Assert.notNull(serviceName);
         final ServiceProperties serviceProperties = servicePropertiesRepository.findOne(new ServiceProperties.ServicePropertiesPk(serviceName, stage));
         if (serviceProperties == null) {
-            throw new ServiceDeleteException();
+            throw new ServiceNotFoundException();
         }
 
         final MicroserviceDto microserviceDtoFromJSON = microserviceDtoFactory.getMicroserviceDtoFromJSON(serviceProperties.getContent());
         if (!microserviceDtoFromJSON.isExternal()) {
-            throw new ServiceDeleteException();
+            throw new ServiceNotDeletableException();
 
         }
 
         servicePropertiesRepository.delete(serviceProperties);
-
     }
 
     public void addNewRelation(String stage, String serviceName, ConsumeDto consumeDto) {
