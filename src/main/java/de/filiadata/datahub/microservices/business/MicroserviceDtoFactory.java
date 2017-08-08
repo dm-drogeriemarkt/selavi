@@ -30,8 +30,8 @@ public class MicroserviceDtoFactory {
         try {
             final MicroserviceDto microserviceDto = mapper.readValue(json, MicroserviceDto.class);
             if (microserviceDto.getConsumes() == null) {
-                microserviceDto.setConsumes(new ArrayList<ConsumeDto>());
-                microserviceDto.setHosts(new ArrayList<HostDto>());
+                microserviceDto.setConsumes(new ArrayList<>());
+                microserviceDto.setHosts(new ArrayList<>());
             }
             return microserviceDto;
         } catch (IOException e) {
