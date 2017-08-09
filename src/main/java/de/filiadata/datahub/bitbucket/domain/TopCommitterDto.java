@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TopCommitter {
+public class TopCommitterDto {
 
     private Long id;
     private String name;
