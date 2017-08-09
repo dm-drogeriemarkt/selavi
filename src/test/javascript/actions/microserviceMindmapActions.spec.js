@@ -1,23 +1,22 @@
-import chai from "chai";
+import chai from 'chai';
 import {
-    onSelectMicroserviceNode,
+    onAddLink,
     onContextMenuOpen,
-    onAddLink
-} from "../../../main/javascript/actions/microserviceMindmapActions";
-const sinon = require('sinon');
-
-const rest = require('rest');
+    onSelectMicroserviceNode
+} from '../../../main/javascript/actions/microserviceMindmapActions';
+import sinon from 'sinon';
+import rest from 'rest';
 
 describe('microserviceMindmapActions', function () {
 
-    describe('onSelectMicroserviceNode', function() {
-        var thenHandler, errorHandler, clientStub;
+    describe('onSelectMicroserviceNode', function () {
+        let thenHandler, errorHandler, clientStub;
 
-        before(function() {
-            const thenSpy = function(handlerParam, errorHandlerParam) {
+        before(function () {
+            const thenSpy = function (handlerParam, errorHandlerParam) {
                 thenHandler = handlerParam;
                 errorHandler = errorHandlerParam;
-            }
+            };
             clientStub = sinon.stub().returns({
                 then: sinon.spy(thenSpy)
             });
@@ -25,20 +24,20 @@ describe('microserviceMindmapActions', function () {
             sinon.stub(rest, 'wrap').returns(clientStub);
         });
 
-        afterEach(function() {
+        afterEach(function () {
             clientStub.reset();
 
             // cleanup, make sure tests don't interfere with each other
             thenHandler = undefined;
             errorHandler = undefined;
             rest.wrap.reset()
-        })
+        });
 
-        after(function() {
+        after(function () {
             rest.wrap.restore();
         });
 
-        it('fetches bitbucket committers from backend, and dispatches FETCH_MICROSERVICES_SUCCESS event', function() {
+        it('fetches bitbucket committers from backend, and dispatches FETCH_MICROSERVICES_SUCCESS event', function () {
             const dispatchSpy = sinon.spy();
 
             const selectMicroserviceNodeFn = onSelectMicroserviceNode({
@@ -48,18 +47,22 @@ describe('microserviceMindmapActions', function () {
             selectMicroserviceNodeFn(dispatchSpy);
 
             sinon.assert.calledOnce(clientStub);
-            sinon.assert.calledWith(clientStub, {method: 'GET', path: "/selavi/bitbucket/dev/my_service_id"});
+            sinon.assert.calledWith(clientStub, { method: 'GET', path: "/selavi/bitbucket/dev/my_service_id" });
 
             thenHandler('response_to_get_bitbucket_committers');
 
             sinon.assert.calledOnce(dispatchSpy);
-            sinon.assert.calledWith(dispatchSpy, { response: 'response_to_get_bitbucket_committers', type: 'MICROSERVICE_NODE_SELECTED', selectedServiceId: 'my_service_id' });
+            sinon.assert.calledWith(dispatchSpy, {
+                response: 'response_to_get_bitbucket_committers',
+                type: 'MICROSERVICE_NODE_SELECTED',
+                selectedServiceId: 'my_service_id'
+            });
         });
     });
 
-    describe('onContextMenuOpen', function() {
-        it('dispatches CONTEXT_MENU_OPEN for services', function() {
-            const result = onContextMenuOpen({nodeId: 42, top: 100, left: 200});
+    describe('onContextMenuOpen', function () {
+        it('dispatches CONTEXT_MENU_OPEN for services', function () {
+            const result = onContextMenuOpen({ nodeId: 42, top: 100, left: 200 });
 
             chai.expect(result.type).to.equal('CONTEXT_MENU_OPEN');
             chai.expect(result.contextMenuServiceId).to.equal(42);
@@ -69,8 +72,8 @@ describe('microserviceMindmapActions', function () {
             chai.expect(result.left).to.equal(200);
         });
 
-        it('dispatches CONTEXT_MENU_OPEN for relations', function() {
-            const result = onContextMenuOpen({edgeFromId: 42, edgeToId: 43, top: 100, left: 200});
+        it('dispatches CONTEXT_MENU_OPEN for relations', function () {
+            const result = onContextMenuOpen({ edgeFromId: 42, edgeToId: 43, top: 100, left: 200 });
 
             chai.expect(result.type).to.equal('CONTEXT_MENU_OPEN');
             chai.expect(result.contextMenuServiceId).to.be.undefined;
@@ -80,8 +83,8 @@ describe('microserviceMindmapActions', function () {
             chai.expect(result.left).to.equal(200);
         });
 
-        it('dispatches CONTEXT_MENU_OPEN when nothing is selected', function() {
-            const result = onContextMenuOpen({top: 100, left: 200});
+        it('dispatches CONTEXT_MENU_OPEN when nothing is selected', function () {
+            const result = onContextMenuOpen({ top: 100, left: 200 });
 
             chai.expect(result.type).to.equal('CONTEXT_MENU_OPEN');
             chai.expect(result.contextMenuServiceId).to.be.undefined;
@@ -92,8 +95,8 @@ describe('microserviceMindmapActions', function () {
         });
     });
 
-    describe('onAddLink', function() {
-        it('dispatches ADD_RELATION', function() {
+    describe('onAddLink', function () {
+        it('dispatches ADD_RELATION', function () {
             const dispatchSpy = sinon.spy();
 
             const addLinkFn = onAddLink({
@@ -102,7 +105,11 @@ describe('microserviceMindmapActions', function () {
             addLinkFn(dispatchSpy);
 
             sinon.assert.calledOnce(dispatchSpy);
-            sinon.assert.calledWith(dispatchSpy, { type: 'ADD_RELATION', consumerId: 'my_service_id', consumedServiceId: 'my_target_id' });
+            sinon.assert.calledWith(dispatchSpy, {
+                type: 'ADD_RELATION',
+                consumerId: 'my_service_id',
+                consumedServiceId: 'my_target_id'
+            });
         });
     });
 });

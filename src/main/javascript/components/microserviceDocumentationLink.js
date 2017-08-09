@@ -1,17 +1,24 @@
-const React = require('react');
-import {connect} from "react-redux";
+import React from 'react';
 
+const style = { color: "#f69805" };
 
-export class MicroserviceDocumentationLink extends React.Component {
-    render() {
+const documentationStyle = {
+    color: "rgba(0, 0, 0, 0.4)",
+    zIndex: 999,
+    position: 'absolute',
+    right: '0.5em',
+    bottom: '0.5em'
+};
 
-        return (
-            <span style={{color: "rgba(0, 0, 0, 0.4)", zIndex: 999, position: 'absolute', right: '0.5em', bottom: '0.5em'}}>
-                <a href="https://example.com/display/ZOE/Anbindung+neuer+Webservices" target="_blank" alt="Zur Dokumentation" style={{textDecoration: 'none'}}><span style={{color: "#f69805"}}>&#x025A4;</span><span style={{color: "#f69805"}}>Doku</span></a>
+const MicroserviceDocumentationLink = () => {
+    return (
+      <span style={documentationStyle}>
+                <a href="https://example.com/display/ZOE/Anbindung+neuer+Webservices" target="_blank"
+                   alt="Zur Dokumentation" style={{ textDecoration: 'none' }}><span
+                  style={style}>&#x025A4;</span><span style={style}>Doku</span></a>
             </span>
 
-        );
-    }
-}
+    );
+};
 
 export default MicroserviceDocumentationLink;

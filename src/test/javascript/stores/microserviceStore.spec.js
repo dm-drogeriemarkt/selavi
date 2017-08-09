@@ -1,13 +1,13 @@
-var sinon = require('sinon');
+import sinon from 'sinon';
 import chai from 'chai';
 
 describe('microserviceStore', function () {
 
-    beforeEach(function() {
+    beforeEach(function () {
         sinon.stub(URLSearchParams.prototype, 'get');
     });
 
-    afterEach(function() {
+    afterEach(function () {
         URLSearchParams.prototype.get.restore();
     });
 
@@ -17,16 +17,16 @@ describe('microserviceStore', function () {
 
         const store = require("../../../main/javascript/stores/microserviceStore");
 
-        const initialState = store.updateStore(undefined, {type: "no_op"});
+        const initialState = store.updateStore(undefined, { type: "no_op" });
 
         chai.expect(initialState.filterString).to.equal("foobar");
     });
 
     describe('FETCH_AVAILABLE_STAGES_SUCCESS', function () {
 
-        var store;
+        let store;
 
-        beforeEach(function() {
+        beforeEach(function () {
             store = require("../../../main/javascript/stores/microserviceStore");
         });
 
@@ -34,19 +34,28 @@ describe('microserviceStore', function () {
 
             URLSearchParams.prototype.get.withArgs('stage').returns('foobar');
 
-            const newState = store.updateStore({}, {type: 'FETCH_AVAILABLE_STAGES_SUCCESS', response: {entity: ['dev', 'stage', 'foobar']}});
+            const newState = store.updateStore({}, {
+                type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+                response: { entity: ['dev', 'stage', 'foobar'] }
+            });
 
             chai.expect(newState.stage).to.equal("foobar");
         });
         it('pre-selects dev stage if present', function () {
 
-            const newState = store.updateStore({}, {type: 'FETCH_AVAILABLE_STAGES_SUCCESS', response: {entity: ['stage', 'foobar', 'dev']}});
+            const newState = store.updateStore({}, {
+                type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+                response: { entity: ['stage', 'foobar', 'dev'] }
+            });
 
             chai.expect(newState.stage).to.equal("dev");
         });
         it('pre-selects first stage in list otherwise', function () {
 
-            const newState = store.updateStore({}, {type: 'FETCH_AVAILABLE_STAGES_SUCCESS', response: {entity: ['stage', 'foobar', 'prod']}});
+            const newState = store.updateStore({}, {
+                type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+                response: { entity: ['stage', 'foobar', 'prod'] }
+            });
 
             chai.expect(newState.stage).to.equal("stage");
         });

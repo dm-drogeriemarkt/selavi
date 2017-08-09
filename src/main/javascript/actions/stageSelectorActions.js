@@ -1,11 +1,11 @@
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
-const errorCode = require('rest/interceptor/errorCode');
+import errorCode from 'rest/interceptor/errorCode';
+import rest from 'rest';
+import mime from 'rest/interceptor/mime';
 
 export function onStageSelected(stage) {
     return function (dispatch) {
-        var client = rest.wrap(mime).wrap(errorCode);
-        client({path: '/selavi/services/' + stage}).then(response => {
+        let client = rest.wrap(mime).wrap(errorCode);
+        client({ path: '/selavi/services/' + stage }).then(response => {
             dispatch({
                 type: 'FETCH_MICROSERVICES_SUCCESS',
                 stage: stage,

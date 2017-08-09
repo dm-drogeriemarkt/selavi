@@ -1,10 +1,10 @@
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
-const errorCode = require('rest/interceptor/errorCode');
+import rest from 'rest';
+import mime from 'rest/interceptor/mime';
+import errorCode from 'rest/interceptor/errorCode';
 
 export function onSubmit(entity, path, method, stage) {
     return function (dispatch) {
-        var request = {
+        let request = {
             entity: entity,
             headers: {
                 'Content-Type': 'application/json'
@@ -13,9 +13,9 @@ export function onSubmit(entity, path, method, stage) {
             method: method
         };
 
-        var client = rest.wrap(mime).wrap(errorCode);
-        client(request).then(response => {
-            client({path: '/selavi/services/' + stage}).then(response => {
+        let client = rest.wrap(mime).wrap(errorCode);
+        client(request).then(() => {
+            client({ path: '/selavi/services/' + stage }).then(response => {
                 dispatch({
                     type: 'FETCH_MICROSERVICES_SUCCESS',
                     response: response

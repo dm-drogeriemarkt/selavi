@@ -2,7 +2,7 @@
 const _fields = [
     'label',
     'tags'
-]
+];
 
 export function shouldFilterOut(microservice, filterString) {
 
@@ -11,7 +11,7 @@ export function shouldFilterOut(microservice, filterString) {
         return false;
     }
 
-    for (var i = 0; i < _fields.length; i++) {
+    for (let i = 0; i < _fields.length; i++) {
         if (_match(microservice[_fields[i]], filterString)) {
             return false;
         }
@@ -28,9 +28,9 @@ export function isFilterHit(fieldName, fieldValue, filterString) {
         return false;
     }
 
-    var isSearchedField = false;
+    let isSearchedField = false;
 
-    for (var i = 0; i < _fields.length; i++) {
+    for (let i = 0; i < _fields.length; i++) {
         if (fieldName === _fields[i]) {
             isSearchedField = true;
             break;
@@ -52,6 +52,6 @@ function _match(fieldValue, filterString) {
         return false;
     }
 
-    return (fieldValue.toLowerCase().indexOf(filterString.toLowerCase()) != -1);
+    return (fieldValue.toLowerCase().indexOf(filterString.toLowerCase()) !== -1);
 }
 

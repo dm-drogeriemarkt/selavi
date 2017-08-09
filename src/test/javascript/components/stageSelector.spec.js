@@ -1,9 +1,8 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow} from "enzyme";
-import {StageSelector} from "../../../main/javascript/components/stageSelector";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { shallow } from 'enzyme';
+import { StageSelector } from '../../../main/javascript/components/stageSelector';
 
 describe('<StageSelector/>', function () {
 
@@ -33,11 +32,9 @@ describe('<StageSelector/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         onStageSelected: sinon.spy(),
         stage: undefined,
         availableStages: undefined
     };
-
-    return props;
 }

@@ -1,8 +1,6 @@
-var sinon = require('sinon');
-
 import chai from 'chai';
 
-import { shouldFilterOut, isFilterHit } from '../../../main/javascript/shared/filterUtils';
+import { isFilterHit, shouldFilterOut } from '../../../main/javascript/shared/filterUtils';
 
 describe('filterUtils', function () {
     describe('shouldFilterOut', function () {
@@ -103,7 +101,7 @@ describe('filterUtils', function () {
                 value: 'foo'
             };
 
-            chai.expect(function() {
+            chai.expect(function () {
                 shouldFilterOut(service, filterString)
             }).to.throw('filterString.toLowerCase is not a function');
         });
@@ -140,7 +138,7 @@ describe('filterUtils', function () {
                 value: 'foo'
             };
 
-            chai.expect(function() {
+            chai.expect(function () {
                 isFilterHit("label", "foobar", filterString)
             }).to.throw('filterString.toLowerCase is not a function');
         });

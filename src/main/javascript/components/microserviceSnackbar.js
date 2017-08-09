@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 import { connect } from 'react-redux';
 
 import Snackbar from 'material-ui/Snackbar';
@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onRequestClose: function() {
+        onRequestClose: function () {
             dispatch({
                 type: 'CANCEL_MENU_ACTION'
             });
@@ -23,8 +23,8 @@ const mapDispatchToProps = (dispatch) => {
 class MicroserviceSnackbar extends React.Component {
     render() {
 
-        var open = false;
-        var message= "";
+        let open = false;
+        let message = "";
 
         if (this.props.menuMode === 'ADD_LINK') {
             open = true;
@@ -33,16 +33,16 @@ class MicroserviceSnackbar extends React.Component {
             open = true;
             message = this.props.globalErrorMessage
         }
-        
+
         return (
-            <Snackbar
-                open={open}
-                message={message}
-                autoHideDuration={0}
-                onRequestClose={this.props.onRequestClose.bind(this)}
-            />
+          <Snackbar
+            open={open}
+            message={message}
+            autoHideDuration={0}
+            onRequestClose={this.props.onRequestClose.bind(this)}
+          />
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceSnackbar);
+export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceSnackbar);

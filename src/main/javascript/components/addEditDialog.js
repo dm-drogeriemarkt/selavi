@@ -1,20 +1,20 @@
-const React = require('react');
-import {connect} from "react-redux";
-import Dialog from "material-ui/Dialog";
-import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
-import Toggle from "material-ui/Toggle";
-import {List, ListItem} from "material-ui/List";
-import {Tabs, Tab} from 'material-ui/Tabs';
+import React from 'react';
+import { connect } from 'react-redux';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import Toggle from 'material-ui/Toggle';
+import { List, ListItem } from 'material-ui/List';
+import { Tab, Tabs } from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import MenuItem from 'material-ui/MenuItem';
 
-import LinkTextField from "./linkTextField";
-import {onCancel, onSubmit} from "./../actions/addEditDialogActions";
+import LinkTextField from './linkTextField';
+import { onCancel, onSubmit } from './../actions/addEditDialogActions';
+import rest from 'rest';
+import mime from 'rest/interceptor/mime';
 
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
 
 const mapStateToProps = (state) => {
     return {
@@ -36,14 +36,14 @@ export class AddEditDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {validationMessages: {}, autocompleteDataSource: []};
+        this.state = { validationMessages: {}, autocompleteDataSource: [] };
     }
 
     _handleOnSubmit() {
         if (this._validate()) {
             let entity = {};
 
-            for (var key in this.refs) {
+            for (let key in this.refs) {
                 if (key.substr(0, 6) === "input_") {
                     if (this.refs[key] instanceof TextField || this.refs[key] instanceof LinkTextField) {
                         entity[key.substr(6)] = this.refs[key].getValue();
@@ -70,26 +70,27 @@ export class AddEditDialog extends React.Component {
     }
 
     _handleOnCancel() {
-        this.setState({validationMessages: {}});
+        this.setState({ validationMessages: {} });
         this.props.onCancel();
     }
 
     _handleAutocompleteInput(searchText, searchEndpoint) {
         if (searchText && searchText.length > 2) {
-            var client = rest.wrap(mime);
+            let client = rest.wrap(mime);
             let encodedSearchUri = encodeURI(searchEndpoint + "?searchQuery=" + searchText);
-            client({path: encodedSearchUri}).then(response => {
+            client({ path: encodedSearchUri }).then(response => {
                 this.setState({
                     autocompleteDataSource: response.entity.map((person) => {
-                        let avatar = person.thumbnailPhoto && <Avatar src={"data:image/png;base64," + person.thumbnailPhoto} />;
+                        let avatar = person.thumbnailPhoto &&
+                          <Avatar src={"data:image/png;base64," + person.thumbnailPhoto}/>;
 
                         return {
                             text: person.displayName,
                             value: (
-                                <MenuItem
-                                    primaryText={person.displayName}
-                                    rightAvatar={avatar}
-                                />
+                              <MenuItem
+                                primaryText={person.displayName}
+                                rightAvatar={avatar}
+                              />
                             ),
                         }
                     })
@@ -104,11 +105,11 @@ export class AddEditDialog extends React.Component {
 
     _validate() {
 
-        var validationMessages = {};
-        var isValid = true;
+        let validationMessages = {};
+        let isValid = true;
 
-        for (var i = 0; i < this.props.inputTabs.length; i++) {
-            for (var key in this.props.inputTabs[i].inputFields) {
+        for (let i = 0; i < this.props.inputTabs.length; i++) {
+            for (let key in this.props.inputTabs[i].inputFields) {
                 if (this.props.inputTabs[i].inputFields[key].required) {
                     if (typeof this.refs["input_" + key].getValue === "function") {
                         if (!this.refs["input_" + key].getValue()) {
@@ -125,12 +126,12 @@ export class AddEditDialog extends React.Component {
             }
         }
 
-        this.setState({validationMessages: validationMessages});
+        this.setState({ validationMessages: validationMessages });
         return isValid;
     }
 
     _createTextField(options) {
-        let style = {marginLeft: "1em"};
+        let style = { marginLeft: "1em" };
 
         if (options.multiLine) {
             style.width = "33em"
@@ -138,61 +139,61 @@ export class AddEditDialog extends React.Component {
 
         if (options.searchEndpoint) {
             return (<AutoComplete key={"add_edit_dialog_" + options.key}
-                                                  style={style}
-                                                  ref={"input_" + options.key}
-                                                  floatingLabelText={options.label}
-                                                  hintText={options.hint}
-                                                  errorText={this.state.validationMessages[options.key]}
-                                                  searchText={options.value}
-                                                  disabled={options.disabled}
-                                                  multiLine={options.multiLine}
-                                                  dataSource={this.state.autocompleteDataSource}
-                                                  onUpdateInput={(searchText) => {
-                                                      this._handleAutocompleteInput(searchText, options.searchEndpoint);
-                                                  }}
-                                                  filter={AutoComplete.caseInsensitiveFilter}/>);
+                                  style={style}
+                                  ref={"input_" + options.key}
+                                  floatingLabelText={options.label}
+                                  hintText={options.hint}
+                                  errorText={this.state.validationMessages[options.key]}
+                                  searchText={options.value}
+                                  disabled={options.disabled}
+                                  multiLine={options.multiLine}
+                                  dataSource={this.state.autocompleteDataSource}
+                                  onUpdateInput={(searchText) => {
+                                      this._handleAutocompleteInput(searchText, options.searchEndpoint);
+                                  }}
+                                  filter={AutoComplete.caseInsensitiveFilter}/>);
         } else if (options.isLink) {
             return (<LinkTextField key={"add_edit_dialog_" + options.key}
-                                                   style={style}
-                                                   ref={"input_" + options.key}
-                                                   floatingLabelText={options.label}
-                                                   hintText={options.hint}
-                                                   errorText={this.state.validationMessages[options.key]}
-                                                   defaultValue={options.value}
-                                                   disabled={options.disabled}></LinkTextField>);
+                                   style={style}
+                                   ref={"input_" + options.key}
+                                   floatingLabelText={options.label}
+                                   hintText={options.hint}
+                                   errorText={this.state.validationMessages[options.key]}
+                                   defaultValue={options.value}
+                                   disabled={options.disabled}/>);
         } else {
             return (<TextField key={"add_edit_dialog_" + options.key}
-                                               style={style}
-                                               ref={"input_" + options.key}
-                                               floatingLabelText={options.label}
-                                               hintText={options.hint}
-                                               errorText={this.state.validationMessages[options.key]}
-                                               defaultValue={options.value}
-                                               disabled={options.disabled}
-                                               multiLine={options.multiLine}></TextField>);
+                               style={style}
+                               ref={"input_" + options.key}
+                               floatingLabelText={options.label}
+                               hintText={options.hint}
+                               errorText={this.state.validationMessages[options.key]}
+                               defaultValue={options.value}
+                               disabled={options.disabled}
+                               multiLine={options.multiLine}/>);
         }
     }
 
     render() {
 
-        var actions = [
+        let actions = [
             <FlatButton
-                label="Cancel"
-                primary={true}
-                onTouchTap={this._handleOnCancel.bind(this)}
+              label="Cancel"
+              primary={true}
+              onTouchTap={this._handleOnCancel.bind(this)}
             />,
             <FlatButton
-                label="Submit"
-                primary={true}
-                onTouchTap={this._handleOnSubmit.bind(this)}
+              label="Submit"
+              primary={true}
+              onTouchTap={this._handleOnSubmit.bind(this)}
             />
         ];
 
-        var isOpen = false;
-        var _entity = this.props.entity || {};
-        var title = "";
+        let isOpen = false;
+        let _entity = this.props.entity || {};
+        let title = "";
 
-        var readOnly = false;
+        let readOnly = false;
 
         if (this.props.menuMode === this.props.addMenuMode) {
             isOpen = true;
@@ -206,9 +207,9 @@ export class AddEditDialog extends React.Component {
 
             actions = [
                 <FlatButton
-                    label="Close"
-                    primary={true}
-                    onTouchTap={this._handleOnCancel.bind(this)}
+                  label="Close"
+                  primary={true}
+                  onTouchTap={this._handleOnCancel.bind(this)}
                 />
             ];
 
@@ -223,12 +224,12 @@ export class AddEditDialog extends React.Component {
         // pre-defined input field tabs
         let defaultPropertyInputTabs = [];
 
-        for (var i = 0; i < this.props.inputTabs.length; i++) {
+        for (let i = 0; i < this.props.inputTabs.length; i++) {
 
             let inputs = [];
             let hasInvalidInput = false;
 
-            for (var key in this.props.inputTabs[i].inputFields) {
+            for (let key in this.props.inputTabs[i].inputFields) {
 
                 if (this.props.inputTabs[i].inputFields[key].type === "toggle") {
                     let toggle = this.props.inputTabs[i].inputFields[key];
@@ -241,11 +242,11 @@ export class AddEditDialog extends React.Component {
                     }
 
                     inputs.push(<Toggle key={"add_edit_dialog_" + key}
-                                                       ref={"input_" + key}
-                                                       label={toggle.label}
-                                                       defaultToggled={value}
-                                                       disabled={readOnly}
-                                                       style={{marginTop: "2em", maxWidth: "23em"}}/>)
+                                        ref={"input_" + key}
+                                        label={toggle.label}
+                                        defaultToggled={value}
+                                        disabled={readOnly}
+                                        style={{ marginTop: "2em", maxWidth: "23em" }}/>)
 
                 } else {
                     // default to "text"
@@ -295,7 +296,7 @@ export class AddEditDialog extends React.Component {
         if (customProperties.length > 0) {
             let customPropertyInputs = [];
 
-            for (var idx in customProperties) {
+            for (let idx in customProperties) {
                 const key = customProperties[idx];
 
                 if (typeof(_entity[key]) === "string") {
@@ -311,15 +312,15 @@ export class AddEditDialog extends React.Component {
                                                       label={key}
                                                       defaultToggled={_entity[key]}
                                                       disabled={readOnly}
-                                                      style={{marginTop: "2em", maxWidth: "23em"}}/>)
+                                                      style={{ marginTop: "2em", maxWidth: "23em" }}/>)
                 } else {
                     console.log("unkown property type for key \"" + key + "\" with value \"" + JSON.stringify(_entity[key]) + "\"");
                 }
             }
 
             customPropertiesTab = <Tab key="add_edit_dialog_tab_custom_props"
-                                       label="Misc" >
-                    {customPropertyInputs}
+                                       label="Misc">
+                {customPropertyInputs}
             </Tab>
         }
 
@@ -330,12 +331,12 @@ export class AddEditDialog extends React.Component {
             let topComittersList = [];
             this.props.topComitters.forEach((propValue, index) => {
                 topComittersList.push(<ListItem key={_entity.id + '_bitbucket_' + index}
-                                           primaryText={propValue.emailAddress}
-                                           secondaryText={propValue.numberOfCommits}/>);
+                                                primaryText={propValue.emailAddress}
+                                                secondaryText={propValue.numberOfCommits}/>);
             });
 
             topComittersTab = <Tab key="add_edit_dialog_tab_top_committers"
-                                   label="Top Committers" >
+                                   label="Top Committers">
                 <List>
                     {topComittersList}
                 </List>
@@ -343,24 +344,24 @@ export class AddEditDialog extends React.Component {
         }
 
         return (
-            <Dialog
-                title={title}
-                actions={actions}
-                modal={true}
-                open={isOpen}
-                repositionOnUpdate={false}>
-                <Tabs>
-                    {defaultPropertyInputTabs}
-                    {topComittersTab}
-                    {customPropertiesTab}
-                </Tabs>
-            </Dialog>
+          <Dialog
+            title={title}
+            actions={actions}
+            modal={true}
+            open={isOpen}
+            repositionOnUpdate={false}>
+              <Tabs>
+                  {defaultPropertyInputTabs}
+                  {topComittersTab}
+                  {customPropertiesTab}
+              </Tabs>
+          </Dialog>
         );
     }
 }
 
 AddEditDialog.defaultProps = {
     showMenuMode: "_DISABLED_"
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddEditDialog);
