@@ -3,12 +3,10 @@ package de.filiadata.datahub.common;
 import de.filiadata.auth.activedirectory.cache.CachingAuthenticationProvider;
 import de.filiadata.datahub.activedirectory.business.ActiveDirectoryProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -63,13 +61,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 
-    @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public CachingAuthenticationProvider activeDirectoryLdapAuthenticationProvider() {
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         Hotfix3960ActiveDirectoryLdapAuthenticationProvider provider;
         provider = new Hotfix3960ActiveDirectoryLdapAuthenticationProvider(properties.getDomain(), properties.getUrl(), properties.getBase());
         provider.setSearchFilter("(&(objectClass=user)(samAccountName={1}))");
         provider.setAuthoritiesMapper(authoritiesMapper);
-        return new CachingAuthenticationProvider(provider);
+        auth.authenticationProvider(new CachingAuthenticationProvider(provider));
     }
 }
