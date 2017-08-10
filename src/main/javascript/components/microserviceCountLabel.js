@@ -21,13 +21,10 @@ export class MicroserviceCountLabel extends React.Component {
         const servicesMissingReqPropsLabel = (servicesMissingReqPropsCount === 1 ? "service" : "services") + " missing req. props";
 
         return (
-          <span
-            style={{ color: "rgba(0, 0, 0, 0.4)", zIndex: 999, position: 'absolute', left: '0.5em', bottom: '0.5em' }}>
-                {internalCount} {internalLabel} <span style={{ color: "#19c786" }}>&#x0272A;</span> | {externalCount}
-              external <span style={{ color: "#f69805" }}>&#x0272A;</span>{servicesMissingReqPropsCount > 0 &&
-          <span> | <span
-            style={{ textShadow: "0 0 4px #e50f03" }}>{servicesMissingReqPropsCount} {servicesMissingReqPropsLabel}</span></span>}
-            </span>
+          <span style={{ color: "rgba(0, 0, 0, 0.4)", zIndex: 999, position: 'absolute', left: '0.5em', bottom: '0.5em' }}>
+            {internalCount} {internalLabel} <span style={{ color: "#19c786" }}>&#x0272A;</span> | {externalCount} external <span style={{ color: "#f69805" }}>&#x0272A;</span>
+            {servicesMissingReqPropsCount > 0 && <span> | <span style={{ textShadow: "0 0 4px #e50f03" }}>{servicesMissingReqPropsCount} {servicesMissingReqPropsLabel}</span></span>}
+          </span>
         );
     }
 }
