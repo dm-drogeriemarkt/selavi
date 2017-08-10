@@ -1,9 +1,9 @@
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
+import rest from 'rest';
+import mime from 'rest/interceptor/mime';
 
 export function onSelectMicroserviceNode(params) {
     return function (dispatch) {
-        var client = rest.wrap(mime);
+        let client = rest.wrap(mime);
         client({
             path: '/selavi/bitbucket/' + params.stage + '/' + params.nodes[0],
             method: 'GET',

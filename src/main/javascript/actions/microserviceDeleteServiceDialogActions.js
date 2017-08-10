@@ -1,6 +1,6 @@
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
-const errorCode = require('rest/interceptor/errorCode');
+import rest from 'rest';
+import mime from 'rest/interceptor/mime';
+import errorCode from 'rest/interceptor/errorCode';
 
 export function onCancel() {
     return {
@@ -10,9 +10,9 @@ export function onCancel() {
 
 export function onSubmit(params) {
     return function (dispatch) {
-        var request = {
+        let request = {
             method: 'DELETE'
-        }
+        };
 
         if (params.type === 'DELETE_SERVICE') {
             request.path = '/selavi/services/' + params.stage + '/' + params.deleteServiceId;
@@ -20,9 +20,9 @@ export function onSubmit(params) {
             request.path = '/selavi/services/' + params.stage + '/' + params.deleteLinkFromId + '/relations/' + params.deleteLinkToId;
         }
 
-        var client = rest.wrap(mime).wrap(errorCode);
-        client(request).then(response => {
-            client({path: '/selavi/services/' + params.stage}).then(response => {
+        let client = rest.wrap(mime).wrap(errorCode);
+        client(request).then(() => {
+            client({ path: '/selavi/services/' + params.stage }).then(response => {
                 dispatch({
                     type: 'FETCH_MICROSERVICES_SUCCESS',
                     response: response

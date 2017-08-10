@@ -1,9 +1,8 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow} from "enzyme";
-import {MicroserviceMindmapContextMenu} from "../../../main/javascript/components/microserviceMindmapContextMenu";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { shallow } from 'enzyme';
+import { MicroserviceMindmapContextMenu } from '../../../main/javascript/components/microserviceMindmapContextMenu';
 
 describe('<MicroserviceMindmapContextMenu/>', function () {
 
@@ -136,7 +135,7 @@ describe('<MicroserviceMindmapContextMenu/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         contextMenuServiceId: undefined,
         contextMenuFromId: undefined,
         contextMenuToId: undefined,
@@ -147,6 +146,4 @@ function createProps() {
         onEditLink: sinon.spy(),
         loggedInUser: undefined
     };
-
-    return props;
 }

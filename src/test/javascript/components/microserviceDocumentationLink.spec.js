@@ -1,9 +1,7 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow} from "enzyme";
-import {MicroserviceDocumentationLink} from "../../../main/javascript/components/microserviceDocumentationLink";
+import React from 'react';
+import chai from 'chai';
+import { shallow } from 'enzyme';
+import MicroserviceDocumentationLink from '../../../main/javascript/components/microserviceDocumentationLink';
 
 
 describe('<MicroserviceDocumentationLink/>', function () {

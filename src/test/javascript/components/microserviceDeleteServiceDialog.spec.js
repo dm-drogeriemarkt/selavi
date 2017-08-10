@@ -1,9 +1,8 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow} from "enzyme";
-import {MicroserviceDeleteServiceDialog} from "../../../main/javascript/components/microserviceDeleteServiceDialog";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { shallow } from 'enzyme';
+import { MicroserviceDeleteServiceDialog } from '../../../main/javascript/components/microserviceDeleteServiceDialog';
 
 describe('<MicroserviceDeleteServiceDialog/>', function () {
 
@@ -29,13 +28,13 @@ describe('<MicroserviceDeleteServiceDialog/>', function () {
         chai.expect(wrapper.find('Snackbar').props().open).to.equal(false);
     });
 
-    describe('delete services', function() {
+    describe('delete services', function () {
 
         it('displays delete confirmation dialog when menuMode is DELETE_SERVICE', function () {
             const props = createProps();
 
             props.menuMode = 'DELETE_SERVICE';
-            props.deleteServiceId = 'foobar'
+            props.deleteServiceId = 'foobar';
 
             const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
 
@@ -59,7 +58,7 @@ describe('<MicroserviceDeleteServiceDialog/>', function () {
         });
     });
 
-    describe('delete links', function() {
+    describe('delete links', function () {
 
         it('displays delete confirmation dialog when menuMode is DELETE_LINK', function () {
             const props = createProps();
@@ -71,7 +70,8 @@ describe('<MicroserviceDeleteServiceDialog/>', function () {
             const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
 
             chai.expect(wrapper.find('Dialog').props().open).to.equal(true);
-            chai.expect(wrapper.find('Dialog').props().title).to.equal('Confirm deletion of link between services foobar and baz');
+            chai.expect(wrapper.find('Dialog').props().title).to
+                .equal('Confirm deletion of link between services foobar and baz');
             chai.expect(wrapper.find('Snackbar').props().open).to.equal(false);
         });
 
@@ -92,13 +92,11 @@ describe('<MicroserviceDeleteServiceDialog/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         onCancel: sinon.spy(),
         onSubmit: sinon.spy(),
         menuMode: undefined,
         deleteServiceId: undefined,
         deleteServiceErrorMessage: undefined
     };
-
-    return props;
 }

@@ -1,9 +1,8 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow, mount} from "enzyme";
-import {LoginDialog} from "../../../main/javascript/components/loginDialog";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { mount, shallow } from 'enzyme';
+import { LoginDialog } from '../../../main/javascript/components/loginDialog';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('<LoginDialog/>', function () {
@@ -86,8 +85,14 @@ describe('<LoginDialog/>', function () {
 
         // fake refs
         wrapper.instance().refs = {
-            input_username: { getValue: () => {} },
-            input_password: { getValue: () => {} }
+            input_username: {
+                getValue: () => {
+                }
+            },
+            input_password: {
+                getValue: () => {
+                }
+            }
         };
 
         chai.expect(wrapper.find('CircularProgress').length).to.equal(0);
@@ -137,7 +142,7 @@ describe('<LoginDialog/>', function () {
 
         sinon.assert.calledOnce(props.onSubmit);
         sinon.assert.calledWith(props.onSubmit, { entity: { username: "login", password: "using_keyboard" } });
-        
+
         document.addEventListener.restore();
     });
 
@@ -176,13 +181,11 @@ describe('<LoginDialog/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         onCancel: sinon.spy(),
         onSubmit: sinon.spy(),
         menuMode: undefined,
         deleteServiceId: undefined,
         deleteServiceErrorMessage: undefined
     };
-
-    return props;
 }

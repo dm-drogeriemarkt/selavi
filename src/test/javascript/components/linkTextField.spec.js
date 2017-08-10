@@ -1,10 +1,9 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow, mount} from "enzyme";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { mount, shallow } from 'enzyme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import LinkTextField from "../../../main/javascript/components/linkTextField";
+import LinkTextField from '../../../main/javascript/components/linkTextField';
 
 describe('<LinkTextField/>', function () {
 
@@ -101,10 +100,8 @@ describe('<LinkTextField/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         defaultValue: undefined,
         style: {}
     };
-
-    return props;
 }

@@ -1,6 +1,6 @@
-const rest = require('rest');
-const mime = require('rest/interceptor/mime');
-const errorCode = require('rest/interceptor/errorCode');
+import errorCode from 'rest/interceptor/errorCode';
+import rest from 'rest';
+import mime from 'rest/interceptor/mime';
 
 export function onCancel() {
     return {
@@ -10,16 +10,16 @@ export function onCancel() {
 
 export function onSubmit(params) {
     return function (dispatch) {
-        var request = {
+        let request = {
             method: 'POST',
             path: '/selavi/login',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             entity: params.entity
-        }
+        };
 
-        var client = rest.wrap(mime).wrap(errorCode);
+        let client = rest.wrap(mime).wrap(errorCode);
         client(request).then(response => {
             dispatch({
                 type: 'LOGIN_SUCCESS',

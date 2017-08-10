@@ -1,10 +1,9 @@
-const rest = require('rest');
-
-const sinon = require('sinon');
-import React from "react";
-import chai from "chai";
-import {shallow, mount} from "enzyme";
-import {AddEditDialog} from "../../../main/javascript/components/addEditDialog";
+import rest from 'rest';
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { mount, shallow } from 'enzyme';
+import { AddEditDialog } from '../../../main/javascript/components/addEditDialog';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('<AddEditDialog/>', function () {
@@ -15,9 +14,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+            }
+        });
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -35,7 +35,7 @@ describe('<AddEditDialog/>', function () {
     it('renders text fields for fields in selected service, and sets their default values', function () {
 
         let props = createProps();
-        props.entity =        {
+        props.entity = {
             id: "bar-consumer",
             label: "bar-consumer",
             external: true,
@@ -61,10 +61,11 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        }});
-        props.entity =        {
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+            }
+        });
+        props.entity = {
             id: "bar-consumer",
             label: "bar-consumer",
             external: true,
@@ -90,9 +91,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true, disabled: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true, disabled: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+            }
+        });
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -109,9 +111,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-            }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+            }
+        });
         props.menuMode = 'SHOW_SERVICE';
         props.showMenuMode = 'SHOW_SERVICE';
 
@@ -131,7 +134,7 @@ describe('<AddEditDialog/>', function () {
         props.showMenuMode = 'SHOW_SERVICE';
         props.entity = {
             label: 'hello_world'
-        }
+        };
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -145,9 +148,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true, multiLine: true}
-            }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true, multiLine: true }
+            }
+        });
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -163,9 +167,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true, isLink: true}
-            }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true, isLink: true }
+            }
+        });
 
         const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -179,9 +184,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-        }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+            }
+        });
 
         const wrapper = mount(<AddEditDialog {...props}/>, {
             context: {
@@ -205,17 +211,17 @@ describe('<AddEditDialog/>', function () {
 
         let props = createProps();
         props.inputTabs.push({
-                label: "my_valid_tab",
-                inputFields: {
-                    "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: false}
-                }
-            },
-            {
-                label: "my_invalid_tab",
-                inputFields: {
-                    "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-                }
-            });
+              label: "my_valid_tab",
+              inputFields: {
+                  "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: false }
+              }
+          },
+          {
+              label: "my_invalid_tab",
+              inputFields: {
+                  "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+              }
+          });
 
         const wrapper = mount(<AddEditDialog {...props}/>, {
             context: {
@@ -227,7 +233,7 @@ describe('<AddEditDialog/>', function () {
         });
 
         wrapper.instance()._handleOnSubmit();
-        
+
         // TODO: fix this test
         // currently, its not possible to test anything on the children of material ui's Dialog component (eg, the Tab)
         // when using enzyme's mount(): https://github.com/callemall/material-ui/issues/6290
@@ -243,9 +249,10 @@ describe('<AddEditDialog/>', function () {
         props.inputTabs.push({
             label: "my_input_tab",
             inputFields: {
-                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true}
-            }});
+                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true }
+            }
+        });
         props.entity = {
             id: "foo",
             label: "bar"
@@ -292,10 +299,10 @@ describe('<AddEditDialog/>', function () {
         chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(1).props().secondaryText).to.equal(1337);
     });
 
-    describe('autocomplete feature', function() {
-        var thenHandler, clientStub;
+    describe('autocomplete feature', function () {
+        let thenHandler, clientStub;
 
-        before(function() {
+        before(function () {
             const thenSpy = function (handlerParam) {
                 thenHandler = handlerParam;
             };
@@ -314,7 +321,7 @@ describe('<AddEditDialog/>', function () {
             rest.wrap.reset()
         });
 
-        after(function() {
+        after(function () {
             rest.wrap.restore();
         });
 
@@ -324,10 +331,11 @@ describe('<AddEditDialog/>', function () {
             props.inputTabs.push({
                 label: "my_input_tab",
                 inputFields: {
-                    "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                    "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
-                    "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
-            }});
+                    "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                    "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true },
+                    "fdOwner": { label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search" }
+                }
+            });
 
             const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -340,10 +348,11 @@ describe('<AddEditDialog/>', function () {
             props.inputTabs.push({
                 label: "my_input_tab",
                 inputFields: {
-                    "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
-                    "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
-                    "fdOwner": {label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search"}
-            }});
+                    "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
+                    "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true },
+                    "fdOwner": { label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search" }
+                }
+            });
 
             const wrapper = shallow(<AddEditDialog {...props}/>);
 
@@ -352,17 +361,23 @@ describe('<AddEditDialog/>', function () {
             sinon.assert.calledOnce(clientStub);
             sinon.assert.calledWith(clientStub, { path: "/selavi/person/search?searchQuery=M%C3%BCl" });
 
-            thenHandler({entity:[
+            thenHandler({
+                entity: [
                     { displayName: "Müller, Sven" },
                     { displayName: "Müller, Thomas", thumbnailPhoto: "i_am_a_base64_encoded_png" }
-                ]});
-            
+                ]
+            });
+
 
             chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource.length).to.equal(2);
-            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.primaryText).to.equal("Müller, Sven");
-            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.rightAvatar).to.be.undefined;
-            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.primaryText).to.equal("Müller, Thomas");
-            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.rightAvatar.props.src).to.equal("data:image/png;base64,i_am_a_base64_encoded_png");
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.primaryText).to
+                .equal("Müller, Sven");
+            chai.expect(wrapper.find('AutoComplete').at(0)
+                               .props().dataSource[0].value.props.rightAvatar).to.be.undefined;
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.primaryText).to
+                .equal("Müller, Thomas");
+            chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.rightAvatar.props.src).to
+                .equal("data:image/png;base64,i_am_a_base64_encoded_png");
         });
 
     });
@@ -370,15 +385,12 @@ describe('<AddEditDialog/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         menuMode: undefined,
         inputTabs: [],
         entity: undefined,
-        menuMode: undefined,
         editMenuMode: undefined,
         onCancel: sinon.spy(),
         onSubmit: sinon.spy()
     };
-
-    return props;
 }

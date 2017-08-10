@@ -1,11 +1,9 @@
-const React = require('react');
+import React from 'react';
 import { connect } from 'react-redux';
-
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Snackbar from 'material-ui/Snackbar';
-
-import {onCancel, onSubmit} from './../actions/microserviceDeleteServiceDialogActions';
+import { onCancel, onSubmit } from './../actions/microserviceDeleteServiceDialogActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -32,7 +30,7 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
             deleteLinkFromId: this.props.deleteLinkFromId,
             deleteLinkToId: this.props.deleteLinkToId,
             stage: this.props.stage
-        }
+        };
 
         this.props.onSubmit(params);
     }
@@ -41,19 +39,19 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
 
         const actions = [
             <FlatButton
-                label="Cancel"
-                primary={true}
-                onTouchTap={this.props.onCancel.bind(this)}
+              label="Cancel"
+              primary={true}
+              onTouchTap={this.props.onCancel.bind(this)}
             />,
             <FlatButton
-                label="Submit"
-                primary={true}
-                onTouchTap={this.onSubmit.bind(this)}
+              label="Submit"
+              primary={true}
+              onTouchTap={this.onSubmit.bind(this)}
             />,
         ];
 
-        var isOpen = false;
-        var title = '';
+        let isOpen = false;
+        let title = '';
 
         if (this.props.menuMode === 'DELETE_SERVICE') {
             isOpen = true;
@@ -67,21 +65,21 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
         const errorMessage = '' + this.props.deleteServiceErrorMessage;
 
         return (
-            <div>
-                <Dialog
-                    title={title}
-                    actions={actions}
-                    modal={true}
-                    open={isOpen}>
-                </Dialog>
-                <Snackbar
-                    open={isErrorMessageOpen}
-                    message={errorMessage}
-                    autoHideDuration={0}
-                />
-            </div>
+          <div>
+              <Dialog
+                title={title}
+                actions={actions}
+                modal={true}
+                open={isOpen}>
+              </Dialog>
+              <Snackbar
+                open={isErrorMessageOpen}
+                message={errorMessage}
+                autoHideDuration={0}
+              />
+          </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (MicroserviceDeleteServiceDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceDeleteServiceDialog);

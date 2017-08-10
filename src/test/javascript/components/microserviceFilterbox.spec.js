@@ -1,9 +1,8 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow} from "enzyme";
-import {MicroserviceFilterbox} from "../../../main/javascript/components/microserviceFilterbox";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { shallow } from 'enzyme';
+import { MicroserviceFilterbox } from '../../../main/javascript/components/microserviceFilterbox';
 
 describe('<MicroserviceFilterbox/>', function () {
 
@@ -79,7 +78,7 @@ describe('<MicroserviceFilterbox/>', function () {
 });
 
 function createProps() {
-    const props = {
+    return {
         loggedInUser: undefined,
         onLogin: sinon.spy(),
         onLogout: sinon.spy(),
@@ -87,6 +86,4 @@ function createProps() {
         onAddService: sinon.spy(),
         onType: sinon.spy()
     };
-
-    return props;
 }

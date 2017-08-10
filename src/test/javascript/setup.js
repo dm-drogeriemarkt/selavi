@@ -1,6 +1,5 @@
 require('babel-register')();
-
-var jsdom = require('jsdom').jsdom;
+const jsdom = require('jsdom').jsdom;
 
 // setup jsdom
 global.document = jsdom('<html><head><script></script></head><body></body></html>', {

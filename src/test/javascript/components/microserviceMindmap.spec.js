@@ -1,34 +1,33 @@
-var sinon = require('sinon');
-
-import React from "react";
-import chai from "chai";
-import {shallow} from "enzyme";
-import {MicroserviceMindmap} from "../../../main/javascript/components/microserviceMindmap";
+import sinon from 'sinon';
+import React from 'react';
+import chai from 'chai';
+import { shallow } from 'enzyme';
+import { MicroserviceMindmap } from '../../../main/javascript/components/microserviceMindmap';
 
 describe('<MicroserviceMindmap/>', function () {
 
-    var networkOnSpy = sinon.spy(function (event, handler) {
+    let networkOnSpy = sinon.spy(function (event, handler) {
         if (event === 'click') {
             clickEventHandler = handler;
         } else if (event === 'oncontext') {
             oncontextEventHandler = handler;
         }
     });
-    var networkSetDataSpy = sinon.spy();
-    var networkAddEdgeModeSpy = sinon.spy();
-    var networkDisableEditModeSpy = sinon.spy();
-    var networkGetNodeAtSpy = sinon.stub();
-    var networkSelectNodesSpy = sinon.spy();
-    var networkUnselectAllSpy = sinon.spy();
-    var networkGetEdgeAtSpy = sinon.stub();
-    var networkGetConnectedNodes = sinon.stub();
-    var networkDataAddEdgeSpy = sinon.stub();
-    var networkDataUpdateNodesSpy = sinon.stub();
-    var networkStartSimulationSpy = sinon.stub();
+    let networkSetDataSpy = sinon.spy();
+    let networkAddEdgeModeSpy = sinon.spy();
+    let networkDisableEditModeSpy = sinon.spy();
+    let networkGetNodeAtSpy = sinon.stub();
+    let networkSelectNodesSpy = sinon.spy();
+    let networkUnselectAllSpy = sinon.spy();
+    let networkGetEdgeAtSpy = sinon.stub();
+    let networkGetConnectedNodes = sinon.stub();
+    let networkDataAddEdgeSpy = sinon.stub();
+    let networkDataUpdateNodesSpy = sinon.stub();
+    let networkStartSimulationSpy = sinon.stub();
 
-    var windowAddEventListenerSpy = sinon.spy();
+    let windowAddEventListenerSpy = sinon.spy();
 
-    var clickEventHandler, oncontextEventHandler;
+    let clickEventHandler, oncontextEventHandler;
 
     before(function () {
         // global is node.js' window
@@ -75,7 +74,7 @@ describe('<MicroserviceMindmap/>', function () {
         networkUnselectAllSpy.reset();
         networkGetEdgeAtSpy.reset();
         networkGetConnectedNodes.reset();
-    })
+    });
 
     it('can be instantiated', function () {
 
@@ -91,7 +90,7 @@ describe('<MicroserviceMindmap/>', function () {
         // enzyme's shallow rendering does not call all lifecycle methods of the component, unless
         // lifecycleExperimental is set to 'true'. in our case, componentDidUpdate() was not called.
         // this might be resolved in the future, see https://github.com/airbnb/enzyme/pull/318
-        const wrapper = shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
 
         const expectedAllNodes = [
             {
@@ -104,17 +103,17 @@ describe('<MicroserviceMindmap/>', function () {
                 label: "bar-consumer",
                 external: true,
                 consumes: [
-                    {"target": "foo-service", "type": "REST"}
+                    { "target": "foo-service", "type": "REST" }
                 ],
                 group: "external"
             }
-        ]
+        ];
 
         const expectedEdge = {
             from: "bar-consumer",
             to: "foo-service",
             label: "REST",
-            font: {align: 'middle'}
+            font: { align: 'middle' }
         };
 
         sinon.assert.calledOnce(global.vis.DataSet);
@@ -148,7 +147,7 @@ describe('<MicroserviceMindmap/>', function () {
         const props = createProps();
         props.serviceRequiredProperties = ['consumes'];
 
-        shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+        shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
 
         const expectedAllNodes = [
             {
@@ -164,11 +163,11 @@ describe('<MicroserviceMindmap/>', function () {
                 label: "bar-consumer",
                 external: true,
                 consumes: [
-                    {"target": "foo-service", "type": "REST"}
+                    { "target": "foo-service", "type": "REST" }
                 ],
                 group: "external",
             }
-        ]
+        ];
 
         sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
     });
@@ -178,7 +177,7 @@ describe('<MicroserviceMindmap/>', function () {
         const props = createProps();
         props.filterString = "foo";
 
-        shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+        shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
 
         const expectedAllNodes = [
             {
@@ -191,11 +190,11 @@ describe('<MicroserviceMindmap/>', function () {
                 label: "bar-consumer",
                 external: true,
                 consumes: [
-                    {"target": "foo-service", "type": "REST"}
+                    { "target": "foo-service", "type": "REST" }
                 ],
                 group: "filteredOut",
             }
-        ]
+        ];
 
         sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
     });
@@ -204,7 +203,7 @@ describe('<MicroserviceMindmap/>', function () {
 
         const props = createProps();
 
-        const wrapper = shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
 
         props.filterString = "foo";
         wrapper.setProps(props);
@@ -220,11 +219,11 @@ describe('<MicroserviceMindmap/>', function () {
                 label: "bar-consumer",
                 external: true,
                 consumes: [
-                    {"target": "foo-service", "type": "REST"}
+                    { "target": "foo-service", "type": "REST" }
                 ],
                 group: "filteredOut",
             }
-        ]
+        ];
 
         sinon.assert.notCalled(networkSetDataSpy);
         sinon.assert.calledWith(networkDataUpdateNodesSpy, expectedAllNodes);
@@ -234,7 +233,7 @@ describe('<MicroserviceMindmap/>', function () {
 
         const props = createProps();
 
-        const wrapper = shallow(<MicroserviceMindmap {...props} />, {lifecycleExperimental: true});
+        const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
 
         sinon.assert.calledOnce(global.vis.DataSet);
         sinon.assert.calledOnce(global.vis.Network);
@@ -242,7 +241,7 @@ describe('<MicroserviceMindmap/>', function () {
         global.vis.DataSet.reset();
         global.vis.Network.reset();
 
-        props.microservices.push({id: "fart-service"});
+        props.microservices.push({ id: "fart-service" });
 
         wrapper.setProps(props);
 
@@ -253,7 +252,7 @@ describe('<MicroserviceMindmap/>', function () {
 
     it('adding a connection does not re-draw the graph', function () {
 
-        var props = createProps();
+        let props = createProps();
 
         const wrapper = shallow(<MicroserviceMindmap {...props} />);
 
@@ -288,7 +287,7 @@ describe('<MicroserviceMindmap/>', function () {
 
     it('opens context menu on right-click on a service, and selects the service', function () {
 
-        var props = createProps();
+        let props = createProps();
         props.stage = 'dev';
 
         const wrapper = shallow(<MicroserviceMindmap {...props}/>);
@@ -309,7 +308,7 @@ describe('<MicroserviceMindmap/>', function () {
                 clientY: 'clientY',
                 clientX: 'clientX'
             }
-        }
+        };
 
         networkGetNodeAtSpy.withArgs(domPointer).returns('my_node_id');
 
@@ -336,7 +335,7 @@ describe('<MicroserviceMindmap/>', function () {
 
     it('opens context menu on right-click on a link, and unselects all services', function () {
 
-        var props = createProps();
+        let props = createProps();
 
         const wrapper = shallow(<MicroserviceMindmap {...props}/>);
         wrapper.instance().forceUpdate();
@@ -356,7 +355,7 @@ describe('<MicroserviceMindmap/>', function () {
                 clientY: 'clientY',
                 clientX: 'clientX'
             }
-        }
+        };
 
         networkGetNodeAtSpy.withArgs(domPointer).returns(undefined);
         networkGetEdgeAtSpy.withArgs(domPointer).returns('my_link_id');
@@ -378,7 +377,7 @@ describe('<MicroserviceMindmap/>', function () {
 
     it('closes context menu on left-click', function () {
 
-        var props = createProps();
+        let props = createProps();
 
         const wrapper = shallow(<MicroserviceMindmap {...props}/>);
         wrapper.instance().forceUpdate();
@@ -413,18 +412,16 @@ function createProps() {
             label: "bar-consumer",
             external: true,
             consumes: [
-                {"target": "foo-service", "type": "REST"}
+                { "target": "foo-service", "type": "REST" }
             ]
         }
     ];
 
-    const props = {
+    return {
         onSelectMicroserviceNode: sinon.spy(),
         onAddLink: sinon.spy(),
         onContextMenuOpen: sinon.spy(),
         microservices: microservices,
         serviceRequiredProperties: []
     };
-
-    return props;
 }
