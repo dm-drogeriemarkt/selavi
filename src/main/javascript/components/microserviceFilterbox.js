@@ -101,7 +101,7 @@ export class MicroserviceFilterbox extends React.Component {
               </ToolbarGroup>
               <ToolbarGroup>
                   <TextField hintText="Filter services... (label, tags)" value={this.props.filterString}
-                             onChange={(e, value) => this.props.onType(value)}/>
+                             onChange={this.props.onType.bind(this)}/>
               </ToolbarGroup>
               <ToolbarGroup>
                   <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon /></IconButton>}>
