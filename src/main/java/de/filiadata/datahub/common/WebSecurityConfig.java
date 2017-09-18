@@ -1,6 +1,6 @@
 package de.filiadata.datahub.common;
 
-import de.filiadata.auth.activedirectory.cache.CachingAuthenticationProvider;
+import de.dm.auth.activedirectory.cache.CachingAuthenticationProvider;
 import de.filiadata.datahub.activedirectory.business.ActiveDirectoryProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

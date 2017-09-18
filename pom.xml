@@ -27,13 +27,13 @@
         <spring-hateoas.version>0.21.0.RELEASE</spring-hateoas.version>
         <hamcrest-library.version>1.3</hamcrest-library.version>
         <lombok.version>1.16.10</lombok.version>
-        <extended-actuator-health-endpoints.version>3.0.0</extended-actuator-health-endpoints.version>
+        <extended-actuator-health-endpoints.version>5.1.0</extended-actuator-health-endpoints.version>
         <logstash-logback-encoder.version>4.8</logstash-logback-encoder.version>
         <junit.version>4.12</junit.version>
         <springfox-swagger2.version>2.6.1</springfox-swagger2.version>
         <springfox-swagger-ui.version>2.6.1</springfox-swagger-ui.version>
         <spring-ldap-core.version>2.3.1.RELEASE</spring-ldap-core.version>
-        <activedirectory-spring-boot-starter.version>1.2.0</activedirectory-spring-boot-starter.version>
+        <activedirectory-spring-boot-starter.version>1.3.0</activedirectory-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -100,7 +100,7 @@
         </dependency>
 
         <dependency>
-            <groupId>de.filiadata.infrastructure</groupId>
+            <groupId>de.dm.infrastructure</groupId>
             <artifactId>extended-actuator-health-endpoints</artifactId>
             <version>${extended-actuator-health-endpoints.version}</version>
         </dependency>
@@ -116,7 +116,7 @@
         </dependency>
 
         <dependency>
-            <groupId>de.filiadata.auth</groupId>
+            <groupId>de.dm.auth</groupId>
             <artifactId>activedirectory-spring-boot-starter</artifactId>
             <version>${activedirectory-spring-boot-starter.version}</version>
         </dependency>
