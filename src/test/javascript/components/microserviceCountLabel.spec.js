@@ -9,7 +9,7 @@ describe('<MicroserviceCountLabel/>', function () {
         const props = createProps();
 
         const wrapper = shallow(<MicroserviceCountLabel {...props}/>);
-        chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1external ✪');
+        chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪');
     });
 
     it('displays count of services that are missing required properties', function () {
@@ -17,7 +17,7 @@ describe('<MicroserviceCountLabel/>', function () {
         props.serviceRequiredProperties.push('consumes');
 
         const wrapper = shallow(<MicroserviceCountLabel {...props}/>);
-        chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1external ✪ | 1 service missing req. props');
+        chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪ | 1 service missing req. props');
     });
 
 });
