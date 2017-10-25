@@ -2,7 +2,7 @@ import rest from 'rest';
 import mime from 'rest/interceptor/mime';
 import errorCode from 'rest/interceptor/errorCode';
 
-export function onType(value) {
+export function onType(event, value) {
     return {
         type: 'FILTERBOX_TYPE',
         filterString: value
