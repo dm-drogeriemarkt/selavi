@@ -55,7 +55,8 @@ is needed for the MySQL database
 It is possible to read microservices and their relations to each other from an Eureka serivce registry.
 
 Therefore the link to the Eureka application interface has to be configured:
-selavi.registry.url.environment=https://registry-host/eureka/apps
+    
+    selavi.registry.url.environment=https://registry-host/eureka/apps
 
 ## Watch mode (automatically re-build frontend sources when a file changes)
 
