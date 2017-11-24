@@ -3,6 +3,7 @@ package de.filiadata.datahub.common;
 import de.dm.auth.activedirectory.cache.CachingAuthenticationProvider;
 import de.filiadata.datahub.activedirectory.business.ActiveDirectoryProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private ActiveDirectoryProperties properties;
 
+    @Value("${selavi.security.userRole}")
+    private String userRole;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -40,9 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/person/**").permitAll()
                 .antMatchers("/_system/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/services/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/services/**").hasRole("AD-ROLE-SELAVI-TEST-USER")
-                .antMatchers(HttpMethod.PUT, "/services/**").hasRole("AD-ROLE-SELAVI-TEST-USER")
-                .antMatchers(HttpMethod.DELETE, "/services/**").hasRole("AD-ROLE-SELAVI-TEST-USER")
+                .antMatchers(HttpMethod.POST, "/services/**").hasRole(userRole)
+                .antMatchers(HttpMethod.PUT, "/services/**").hasRole(userRole)
+                .antMatchers(HttpMethod.DELETE, "/services/**").hasRole(userRole)
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
