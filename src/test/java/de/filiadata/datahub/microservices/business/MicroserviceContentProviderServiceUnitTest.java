@@ -9,9 +9,6 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
-/**
- * Created by username on 12.05.17.
- */
 public class MicroserviceContentProviderServiceUnitTest {
 
     private final ServiceRegistryContentProvider serviceRegistryContentProvider = mock(ServiceRegistryContentProvider.class);
