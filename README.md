@@ -19,7 +19,7 @@ That will create the WAR file within the 'target' directory.
 From the root folder of the application, execute:
 
 	$ mvn spring-boot:run
-	$ mvn spring-boot:run -Drun.jvmArguments=-Dspring.profiles.active=development
+	$ mvn spring-boot:run -Drun.jvmArguments=-Dspring.profiles.active=development-h2
 	
 ### Running the Application with IntelliJ IDEA
 
