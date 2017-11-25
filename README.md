@@ -1,13 +1,15 @@
 # SeLaVi
 SeLaVi (ServiceLandscapeVisualizer) displays all mircoservices which are registered in a service registry and their relations to each other in a graphical mindmap.
 
+The graph is drawn using [vis.js](https://github.com/almende/vis "vis.js").
+
 ## Building the Application
 
 It is possible to build the application with Maven.
 
 ### Maven
 
-Make sure you have [Maven](http://maven.apache.org/ "Maven") installed.
+Make sure you have [Maven](http://maven.apache.org/ "Maven") installed (Version 3.1.0 or later).
 
 ### Running the Application with Maven
 
