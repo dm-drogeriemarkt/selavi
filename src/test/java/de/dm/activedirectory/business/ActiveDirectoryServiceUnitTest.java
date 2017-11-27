@@ -23,7 +23,7 @@ public class ActiveDirectoryServiceUnitTest {
     @Test
     public void getAllPersonNames() throws Exception {
         ActiveDirectoryService activeDirectoryService = new ActiveDirectoryService(ldapTemplate);
-        activeDirectoryService.getAllPersonNames("Alt, foo");
+        activeDirectoryService.findPersonsByName("Alt, foo");
 
         ArgumentCaptor<LdapQuery> queryArgumentCaptor = ArgumentCaptor.forClass(LdapQuery.class);
         ArgumentCaptor<AttributesMapper> mapperArgumentCaptor = ArgumentCaptor.forClass(AttributesMapper.class);
