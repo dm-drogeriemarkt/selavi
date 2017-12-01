@@ -26,8 +26,8 @@ Run the spring boot runner form IDEA with the VM options:
 
 ### Testing the application
 
-    $ mvn clean verify -Dspring.profiles.active=development-h2
-
+    $ mvn clean verify
+    
 ### Building the application
 
 Navigate to the root directory of the sources and execute:

@@ -56,7 +56,7 @@ public class SelaviApplication extends SpringBootServletInitializer {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("de.filiadata.datahub"))
+                .apis(RequestHandlerSelectors.basePackage("de.dm"))
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/");
