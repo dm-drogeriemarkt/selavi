@@ -34,8 +34,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
-            .authorizeRequests()
+                .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
+                .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/lib/**").permitAll()
                 .antMatchers("/style.css").permitAll()
@@ -49,19 +49,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/services/**").hasRole(userRole)
                 .anyRequest().authenticated()
                 .and()
-            .formLogin()
+                .formLogin()
                 .loginPage("/login")
                 .permitAll()
                 .successHandler(new HttpOkAuthenticationSuccessHandler())
                 .failureHandler(new SimpleUrlAuthenticationFailureHandler())
                 .and()
-            .logout()
+                .logout()
                 .permitAll()
-                .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
                 .and()
-            .csrf()
+                .csrf()
                 .disable()
-            .sessionManagement()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 

@@ -1,5 +1,5 @@
 # SeLaVi
-SeLaVi (ServiceLandscapeVisualizer) displays all mircoservices which are registered in a service registry and their relations to each other in a graphical mindmap.
+SeLaVi (ServiceLandscapeVisualizer) displays all microservices which are registered in a service registry and their relations to each other in a graphical mindmap.
 
 The graph is drawn using [vis.js](https://github.com/almende/vis "vis.js").
 
@@ -29,11 +29,11 @@ Run the spring boot runner form IDEA with the VM options:
     $ mvn clean verify
     
 ### Building the application
-    
+
 Navigate to the root directory of the sources and execute:
-    
+
     $ mvn clean package
-    
+
 That will create the WAR file within the 'target' directory.
 
 ### Deploying the application
@@ -57,7 +57,7 @@ is needed for the MySQL database
 It is possible to read microservices and their relations to each other from an Eureka serivce registry.
 
 Therefore the link to the Eureka application interface has to be configured:
-    
+
     selavi.registry.url.environment=https://registry-host/eureka/apps
 
 ## Watch mode (automatically re-build frontend sources when a file changes)

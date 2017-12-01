@@ -1,7 +1,7 @@
 package de.dm.common;
 
-import de.dm.activedirectory.domain.Person;
 import de.dm.activedirectory.business.ActiveDirectoryService;
+import de.dm.activedirectory.domain.Person;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +20,7 @@ public class UserController {
     @RequestMapping("/user")
     public Person getUserDetails(Principal principal) {
 
-        List<Person> personList = activeDirectoryService.getAllPersonNames(principal.getName());
+        List<Person> personList = activeDirectoryService.findPersonsByName(principal.getName());
         if (personList.size() == 1) {
             return personList.get(0);
         }

@@ -149,11 +149,6 @@
             <artifactId>liquibase-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-
         <!--Use lombock to avoid boilerplate code e.a. getters/setters -->
         <dependency>
             <groupId>org.projectlombok</groupId>
