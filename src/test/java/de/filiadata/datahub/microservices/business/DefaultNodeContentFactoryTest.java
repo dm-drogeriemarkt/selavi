@@ -1,4 +1,4 @@
-package de.filiadata.datahub.microservices.business;
+package de.dm.microservices.business;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
