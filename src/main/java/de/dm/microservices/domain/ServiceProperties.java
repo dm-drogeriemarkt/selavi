@@ -8,7 +8,6 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity(name = "service_properties")
@@ -17,16 +16,16 @@ import java.io.Serializable;
 @Setter
 public class ServiceProperties implements Serializable {
 
-    public ServiceProperties(String id, String stage, String content) {
-        pk = new ServicePropertiesPk(id, stage);
-        this.content = content;
-    }
-
     @EmbeddedId
     private ServicePropertiesPk pk;
 
     @Column(nullable = false, length = Integer.MAX_VALUE)
     private String content;
+
+    public ServiceProperties(String id, String stage, String content) {
+        pk = new ServicePropertiesPk(id, stage);
+        this.content = content;
+    }
 
     @AllArgsConstructor
     @NoArgsConstructor

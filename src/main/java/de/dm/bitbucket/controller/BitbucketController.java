@@ -1,4 +1,4 @@
-package de.dm.bitbucket.client.rest;
+package de.dm.bitbucket.controller;
 
 import de.dm.bitbucket.business.BitbucketService;
 import de.dm.bitbucket.domain.TopCommitterDto;
@@ -19,7 +19,7 @@ public class BitbucketController {
 
     @GetMapping("/bitbucket/{stage}/{microserviceId}")
     public List<TopCommitterDto> getBitbucketInformation(@PathVariable final String stage, @PathVariable final String microserviceId) {
-        return bitbucketService.getNamedTopCommitter(stage, microserviceId);
+        return bitbucketService.findNamedTopCommitters(stage, microserviceId);
     }
 
 }

@@ -1,6 +1,7 @@
 package de.dm.microservices.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -56,17 +57,21 @@ public class ServiceRegistryRepository {
     private final MicroserviceDtoFactory microserviceDtoFactory;
     private final Boolean offlineMode;
     private final Map<String, String> registryUrls;
+    private final ObjectMapper mapper;
 
     @Autowired
     public ServiceRegistryRepository(RestTemplate restTemplate,
                                      DefaultNodeContentFactory defaultNodeContentFactory,
                                      @Value("${development.offline-mode:false}") String offlineMode,
-                                     MicroserviceDtoFactory microserviceDtoFactory, ServiceRegistryProperties serviceRegistryProperties) {
+                                     MicroserviceDtoFactory microserviceDtoFactory,
+                                     ServiceRegistryProperties serviceRegistryProperties,
+                                     ObjectMapper mapper) {
         this.restTemplate = restTemplate;
         this.defaultNodeContentFactory = defaultNodeContentFactory;
         this.offlineMode = Boolean.parseBoolean(offlineMode);
         this.microserviceDtoFactory = microserviceDtoFactory;
         this.registryUrls = serviceRegistryProperties.getUrl();
+        this.mapper = mapper;
     }
 
 
@@ -126,7 +131,7 @@ public class ServiceRegistryRepository {
         final ArrayNode instances = (ArrayNode) applicationNode.get(INSTANCE);
         instances.forEach(instanceNode -> {
 
-            final ObjectNode hostResultNode = defaultNodeContentFactory.getMapper().createObjectNode();
+            final ObjectNode hostResultNode = mapper.createObjectNode();
             addSingleProperty(hostResultNode, instanceNode, HOST_NAME);
             addSingleProperty(hostResultNode, instanceNode, IP_ADDR);
             addSingleProperty(hostResultNode, instanceNode, HOME_PAGE_URL);
@@ -198,7 +203,6 @@ public class ServiceRegistryRepository {
     }
 
 
-
     private void addArrayProperty(ArrayNode portsNode, JsonNode instanceNode, String propertyName) {
         if (instanceNode.hasNonNull(propertyName)) {
             final JsonNode port = instanceNode.get(propertyName);
@@ -219,7 +223,7 @@ public class ServiceRegistryRepository {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON_UTF8));
 
         if (!registryUrls.containsKey(stage)) {
-            throw new InvalidStageNameException("Invalid stage name \"" + stage  + "\"");
+            throw new InvalidStageNameException("Invalid stage name \"" + stage + "\"");
         }
 
         String registryUrl = registryUrls.get(stage);

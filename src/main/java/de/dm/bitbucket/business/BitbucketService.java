@@ -1,9 +1,9 @@
 package de.dm.bitbucket.business;
 
-import de.dm.bitbucket.domain.BitbucketCommitsDto;
-import de.dm.bitbucket.domain.TopCommitterDto;
 import de.dm.bitbucket.domain.BitbucketAuthorDto;
+import de.dm.bitbucket.domain.BitbucketCommitsDto;
 import de.dm.bitbucket.domain.BitbucketCommitterDto;
+import de.dm.bitbucket.domain.TopCommitterDto;
 import de.dm.microservices.business.MicroserviceContentProviderService;
 import de.dm.microservices.domain.MicroserviceDto;
 import org.apache.commons.lang.StringUtils;
@@ -12,7 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -26,9 +30,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class BitbucketService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BitbucketService.class);
-
-    private static final String BITBUCKET_URL = "bitbucketUrl";
-    private static final String IGNORED_COMMITTERS = "ignoredCommitters";
 
     private final RestTemplate restTemplate;
     private final String bitbucketCredentials;
@@ -44,7 +45,7 @@ public class BitbucketService {
         this.microserviceContentProviderService = microserviceContentProviderService;
     }
 
-    public List<TopCommitterDto> getNamedTopCommitter(String stage, String microserviceId) {
+    public List<TopCommitterDto> findNamedTopCommitters(String stage, String microserviceId) {
         final List<TopCommitterDto> result = new ArrayList<>();
         final Map<BitbucketAuthorDto, Long> topCommitters = getTopCommitters(stage, microserviceId);
 
@@ -58,48 +59,66 @@ public class BitbucketService {
         return result;
     }
 
-    public Map<BitbucketAuthorDto, Long> getTopCommitters(String stage, String microserviceId) {
-        final MicroserviceDto microserviceDto = microserviceContentProviderService.getAllMicroservices(stage).get(microserviceId);
+    private Map<BitbucketAuthorDto, Long> getTopCommitters(String stage, String microserviceId) {
 
+        final MicroserviceDto microserviceDto = microserviceContentProviderService.getAllMicroservices(stage).get(microserviceId);
         final String bitbucketUrl = microserviceDto.getBitbucketUrl();
-        final String ignoredCommitters = microserviceDto.getIgnoredCommitters();
+
         if (bitbucketUrl != null) {
             final ResponseEntity<BitbucketCommitsDto> responseEntity = performRequest(bitbucketUrl + "/commits?limit=500");
-            return handleResponse(responseEntity, ignoredCommitters);
-        }
+            BitbucketCommitsDto bitbucketCommitsDto = extractPayload(responseEntity);
 
-        return Collections.emptyMap();
-
-
-    }
-
-    private Map<BitbucketAuthorDto, Long> handleResponse(ResponseEntity<BitbucketCommitsDto> responseEntity, String ignoredCommiters2) {
-        final List<String> ignoredCommiters = StringUtils.isEmpty(ignoredCommiters2) ? Collections.<String>emptyList() : Arrays.<String>asList(ignoredCommiters2.split(","));
-
-        final Map<BitbucketAuthorDto, Long> result = new LinkedHashMap<>();
-
-        if (responseEntity.getStatusCode().equals(HttpStatus.OK) && responseEntity.hasBody()) {
-
-            final BitbucketCommitsDto bitbucketCommitsDto = responseEntity.getBody();
-            final Map<BitbucketAuthorDto, Long> allCommittersSorted = new LinkedHashMap<>();
-
-            getAllCommiters(bitbucketCommitsDto).entrySet().stream()
-                    .sorted(Map.Entry.<BitbucketAuthorDto, Long>comparingByValue().reversed())
-                    .forEachOrdered(x -> allCommittersSorted.put(x.getKey(), x.getValue()));
-
-            int i = 0;
-            for (final Map.Entry<BitbucketAuthorDto, Long> entry : allCommittersSorted.entrySet()) {
-                if (i < numberOfTopCommiters && !ignoredCommiters.contains(entry.getKey().getEmailAddress())) {
-                    i++;
-                    result.put(entry.getKey(), entry.getValue());
-                }
-                if (i == numberOfTopCommiters) {
-                    break;
-                }
+            if (bitbucketCommitsDto != null) {
+                Map<BitbucketAuthorDto, Long> allCommittersWithCount = extractCommittersWithCount(bitbucketCommitsDto);
+                final Map<BitbucketAuthorDto, Long> allCommittersSorted = sortByCommitCount(allCommittersWithCount);
+                List<String> ignoredCommitters = extractIgnoredCommitters(microserviceDto);
+                return extractTopCommitters(ignoredCommitters, allCommittersSorted);
             }
         }
 
+        return Collections.emptyMap();
+    }
+
+    private List<String> extractIgnoredCommitters(MicroserviceDto microserviceDto) {
+        String ignoredCommittersProperty = microserviceDto.getIgnoredCommitters();
+        return StringUtils.isEmpty(ignoredCommittersProperty) ? Collections.<String>emptyList() : Arrays.<String>asList(ignoredCommittersProperty.split(","));
+    }
+
+    private BitbucketCommitsDto extractPayload(ResponseEntity<BitbucketCommitsDto> responseEntity) {
+        if (responseEntity.getStatusCode().equals(HttpStatus.OK) && responseEntity.hasBody()) {
+            return responseEntity.getBody();
+        }
+
+        return null;
+    }
+
+    private Map<BitbucketAuthorDto, Long> extractTopCommitters(List<String> ignoredCommiters, Map<BitbucketAuthorDto, Long> allCommittersSorted) {
+
+        final Map<BitbucketAuthorDto, Long> result = new LinkedHashMap<>();
+        int i = 0;
+        for (final Map.Entry<BitbucketAuthorDto, Long> entry : allCommittersSorted.entrySet()) {
+            if (i < numberOfTopCommiters && !ignoredCommiters.contains(entry.getKey().getEmailAddress())) {
+                i++;
+                result.put(entry.getKey(), entry.getValue());
+            }
+            if (i == numberOfTopCommiters) {
+                break;
+            }
+        }
         return result;
+    }
+
+    private Map<BitbucketAuthorDto, Long> sortByCommitCount(Map<BitbucketAuthorDto, Long> allCommittersWithCount) {
+        final Map<BitbucketAuthorDto, Long> allCommittersSorted = new LinkedHashMap<>();
+        allCommittersWithCount.entrySet().stream()
+                .sorted(Map.Entry.<BitbucketAuthorDto, Long>comparingByValue().reversed())
+                .forEachOrdered(x -> allCommittersSorted.put(x.getKey(), x.getValue()));
+        return allCommittersSorted;
+    }
+
+    private Map<BitbucketAuthorDto, Long> extractCommittersWithCount(BitbucketCommitsDto bitbucketCommitsDto) {
+        return bitbucketCommitsDto.getValues().stream()
+                .collect(Collectors.groupingBy(BitbucketCommitterDto::getAuthor, Collectors.counting()));
     }
 
     private ResponseEntity<BitbucketCommitsDto> performRequest(String url) {
@@ -118,11 +137,6 @@ public class BitbucketService {
         }
     }
 
-    private Map<BitbucketAuthorDto, Long> getAllCommiters(BitbucketCommitsDto bitbucketCommitsDto) {
-        return bitbucketCommitsDto.getValues().stream()
-                .collect(Collectors.groupingBy(BitbucketCommitterDto::getAuthor, Collectors.counting()));
-    }
-
     private HttpHeaders createHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         String credentials = encodeCredentials();
@@ -132,8 +146,7 @@ public class BitbucketService {
 
     private String encodeCredentials() {
         String prefix = "Basic ";
-        String plainCredentials = bitbucketCredentials;
-        byte[] plainCredentialsBytes = plainCredentials.getBytes(UTF_8);
+        byte[] plainCredentialsBytes = bitbucketCredentials.getBytes(UTF_8);
         byte[] base64CredentialsBytes = Base64.encodeBase64(plainCredentialsBytes);
         String base64Credentials = new String(base64CredentialsBytes, UTF_8);
 
