@@ -303,29 +303,6 @@
                 </excludes>
             </resource>
         </resources>
-
     </build>
-
-    <repositories>
-        <repository>
-            <id>artifactory</id>
-            <url>https://artifactory.dm-drogeriemarkt.com/artifactory/repo</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>artifactory</id>
-            <name>artifactory.dm-drogeriemarkt.com-releases</name>
-            <url>https://artifactory.dm-drogeriemarkt.com/artifactory/releases-kunde</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>artifactory.dm-drogeriemarkt.com-snapshots</name>
-            <url>https://artifactory.dm-drogeriemarkt.com/artifactory/snapshots-kunde</url>
-        </snapshotRepository>
-
-    </distributionManagement>
-
 
 </project>

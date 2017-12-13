@@ -1,23 +1,20 @@
 import chai from 'chai';
-import {
-    getRequiredPropertyNames,
-    hasAllRequiredProperties
-} from '../../../main/javascript/shared/requiredPropertyUtil';
+import {getRequiredPropertyNames, hasAllRequiredProperties} from '../../../main/javascript/shared/requiredPropertyUtil';
 
 describe('requiredPropertyUtil', function () {
     describe('getRequiredPropertyNames', function () {
         it('returns array of required property names', function () {
 
             const serviceBusinessInputFields = {
-                "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
-                "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true },
+                "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
+                "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
                 "fdOwner": {
                     label: "Contact Person *",
                     hint: "eg. \"Altmann, Erik\"",
                     required: true,
                     searchEndpoint: "/selavi/person/search"
                 },
-                "tags": { label: "Tags", hint: "eg. \"dm-pos-belege, produktdaten\"", required: false },
+                "tags": {label: "Tags", hint: "eg. \"dm-pos-belege, produktdaten\"", required: false},
                 "description": {
                     label: "Description",
                     hint: "eg. \"ZKDB Online Echtzeitf\u00e4hig\"",
@@ -27,34 +24,34 @@ describe('requiredPropertyUtil', function () {
             };
 
             const serviceTechInputFields = {
-                "microserviceUrl": { label: "URL", hint: "eg. \"https://zoe.dm.de\"", required: false },
-                "ipAddress": { label: "IP address(es)", hint: "eg. \"172.23.68.213\"", required: false },
-                "networkZone": { label: "Network zone", hint: "eg. \"LAN\"", required: false },
-                "external": { type: "toggle", label: "External service (eg., not a microservice)" }
+                "microserviceUrl": {label: "URL", hint: "eg. \"https://zoe.organization.de\"", required: false},
+                "ipAddress": {label: "IP address(es)", hint: "eg. \"172.23.68.213\"", required: false},
+                "networkZone": {label: "Network zone", hint: "eg. \"LAN\"", required: false},
+                "external": {type: "toggle", label: "External service (eg., not a microservice)"}
             };
 
             const serviceDocumentationInputFields = {
                 "documentationLink": {
                     label: "Link to documentation",
-                    hint: "eg. \"https://wiki.dm.de/ZOE\"",
+                    hint: "eg. \"https://wiki.organization.de/ZOE\"",
                     required: false,
                     isLink: true
                 },
                 "buildMonitorLink": {
                     label: "Link to Build Monitor",
-                    hint: "eg. \"https://zoe-jenkins.dm.de\"",
+                    hint: "eg. \"https://zoe-jenkins.organization.de\"",
                     required: false,
                     isLink: true
                 },
                 "monitoringLink": {
                     label: "Link to Monitoring",
-                    hint: "eg. \"https://elk-kibana.dm.de\"",
+                    hint: "eg. \"https://elk-kibana.organization.de\"",
                     required: false,
                     isLink: true
                 },
                 "bitbucketUrl": {
                     label: "Bitbucket URL",
-                    hint: "eg. \"https://stash.dm.de/projects/ZOE/repos/zoe\"",
+                    hint: "eg. \"https://stash.organization.de/projects/ZOE/repos/zoe\"",
                     required: false,
                     isLink: true
                 }
@@ -62,9 +59,9 @@ describe('requiredPropertyUtil', function () {
 
 
             const serviceInputTabs = [
-                { label: "Business", inputFields: serviceBusinessInputFields },
-                { label: "Technical", inputFields: serviceTechInputFields },
-                { label: "Documentation", inputFields: serviceDocumentationInputFields }
+                {label: "Business", inputFields: serviceBusinessInputFields},
+                {label: "Technical", inputFields: serviceTechInputFields},
+                {label: "Documentation", inputFields: serviceDocumentationInputFields}
             ];
 
             const result = getRequiredPropertyNames(serviceInputTabs);
@@ -80,7 +77,7 @@ describe('requiredPropertyUtil', function () {
                 "id": "selavi",
                 "label": "selavi",
                 "tag": "zoe",
-                "consumes": [{ "target": "GLUECKSKIND-APP", "type": "REST" }],
+                "consumes": [{"target": "GLUECKSKIND-APP", "type": "REST"}],
                 "fdOwner": "Erika Esteban Cardoso"
             };
 
@@ -97,7 +94,7 @@ describe('requiredPropertyUtil', function () {
                 "id": "selavi",
                 "label": "selavi",
                 "tag": "zoe",
-                "consumes": [{ "target": "GLUECKSKIND-APP", "type": "REST" }],
+                "consumes": [{"target": "GLUECKSKIND-APP", "type": "REST"}],
                 "fdOwner": "Erika Esteban Cardoso"
             };
 

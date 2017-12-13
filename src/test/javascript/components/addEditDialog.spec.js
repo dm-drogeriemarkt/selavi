@@ -333,7 +333,7 @@ describe('<AddEditDialog/>', function () {
                 inputFields: {
                     "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
                     "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true },
-                    "fdOwner": { label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search" }
+                    "fdOwner": { label: "Owner *", required: true, searchEndpoint: "/selavi/person/search" }
                 }
             });
 
@@ -350,7 +350,7 @@ describe('<AddEditDialog/>', function () {
                 inputFields: {
                     "id": { label: "Service ID *", hint: "eg. \"ZOE\"", required: true },
                     "label": { label: "Label *", hint: "eg. \"ZOE\"", required: true },
-                    "fdOwner": { label: "Filiadata-Owner *", required: true, searchEndpoint: "/selavi/person/search" }
+                    "fdOwner": { label: "Owner *", required: true, searchEndpoint: "/selavi/person/search" }
                 }
             });
 
