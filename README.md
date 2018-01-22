@@ -1,6 +1,8 @@
 # SeLaVi
 SeLaVi (ServiceLandscapeVisualizer) displays all microservices which are registered in a service registry and their relations to each other in a graphical mindmap.
 
+![SeLaVi Screenshot](screenshot.png)
+
 The graph is drawn using [vis.js](https://github.com/almende/vis "vis.js").
 
 ## Building the Application
