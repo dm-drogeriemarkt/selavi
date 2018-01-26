@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @Configuration
 @EnableWebSecurity
 @Profile({"local", "development-h2", "development-mysql"})
-@Order(2)
+@Order(1)
 public class BasicWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private GrantedAuthoritiesMapper authoritiesMapper;
@@ -35,8 +35,8 @@ public class BasicWebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
-				.authorizeRequests()
+			.exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
+			.authorizeRequests()
 				.antMatchers("/").permitAll()
 				.antMatchers("/lib/**").permitAll()
 				.antMatchers("/style.css").permitAll()
@@ -50,19 +50,19 @@ public class BasicWebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.DELETE, "/services/**").hasRole(userRole)
 				.anyRequest().authenticated()
 				.and()
-				.formLogin()
+			.formLogin()
 				.loginPage("/login")
 				.permitAll()
 				.successHandler(new HttpOkAuthenticationSuccessHandler())
 				.failureHandler(new SimpleUrlAuthenticationFailureHandler())
 				.and()
-				.logout()
+			.logout()
 				.permitAll()
 				.logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
 				.and()
-				.csrf()
+			.csrf()
 				.disable()
-				.sessionManagement()
+			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 	}
 

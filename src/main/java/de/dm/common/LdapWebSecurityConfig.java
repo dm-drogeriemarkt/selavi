@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
+@Order(2)
 public class LdapWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
