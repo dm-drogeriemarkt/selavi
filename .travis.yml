@@ -5,5 +5,7 @@ language: java
 services:
   - docker
 
+script: mvn install -P jar
+
 after_success:
   - docker build -t dm/selavi .
