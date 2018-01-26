@@ -43,7 +43,7 @@ const propTypes = {
   onCancel: PropTypes.func.isRequired
 };
 
-export class MicroserviceFilterbox extends React.Component {
+export class MicroserviceFilterboxComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -144,6 +144,6 @@ export class MicroserviceFilterbox extends React.Component {
   }
 }
 
-MicroserviceFilterbox.propTypes = propTypes;
+MicroserviceFilterboxComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceFilterbox);
+export const MicroserviceFilterbox = connect(mapStateToProps, mapDispatchToProps)(MicroserviceFilterboxComponent);

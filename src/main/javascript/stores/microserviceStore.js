@@ -16,8 +16,8 @@ const initialState = {
   contextMenuServiceId: -1,
   contextMenuFromId: -1,
   contextMenuToId: -1,
-  addPropertyServiceId: 'NONE',
-  deleteServiceId: 'NONE',
+  addPropertyServiceId: -1,
+  deleteServiceId: -1,
   deleteServiceErrorMessage: '',
   contextMenuVisible: false,
   menuMode: '',
@@ -26,8 +26,8 @@ const initialState = {
   addEditDialogFormAction: null,
   globalErrorMessage: '',
   loginErrorMessage: '',
-  deleteLinkToId: 'NONE',
-  deleteLinkFromId: 'NONE',
+  deleteLinkToId: -1,
+  deleteLinkFromId: -1,
   loggedInUser: {},
   debugMode: urlSearchParams.has('debug')
 };
@@ -186,7 +186,7 @@ export function updateStore(state = initialState, action) {
     case 'CANCEL_MENU_ACTION': {
       return Object.assign({}, state, {
         menuMode: '',
-        addPropertyServiceId: 'NONE',
+        addPropertyServiceId: -1,
         deleteServiceErrorMessage: '',
         globalErrorMessage: '',
         entity: '',

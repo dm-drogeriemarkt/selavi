@@ -20,7 +20,7 @@ const propTypes = {
   stage: PropTypes.string.isRequired
 };
 
-export class StageSelector extends React.Component {
+export class StageSelectorComponent extends React.Component {
 
   onChangeHandler(value) {
     this.props.onStageSelected(this.props.availableStages[value]);
@@ -47,7 +47,7 @@ export class StageSelector extends React.Component {
   }
 }
 
-StageSelector.propTypes = propTypes;
+StageSelectorComponent.propTypes = propTypes;
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(StageSelector);
+export const StageSelector = connect(mapStateToProps, mapDispatchToProps)(StageSelectorComponent);

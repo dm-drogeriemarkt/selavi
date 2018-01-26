@@ -77,7 +77,7 @@ const addColorData = (microservice, props) => {
   return microservice;
 };
 
-export class MicroserviceMindmap extends React.Component {
+export class MicroserviceMindmapComponent extends React.Component {
 
   componentDidMount() {
     this.updateMindmap();
@@ -302,7 +302,7 @@ export class MicroserviceMindmap extends React.Component {
   }
 }
 
-MicroserviceMindmap.propTypes = propTypes;
-MicroserviceMindmap.network = undefined;
+MicroserviceMindmapComponent.propTypes = propTypes;
+MicroserviceMindmapComponent.network = undefined;
 
-export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmap);
+export const MicroserviceMindmap = connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapComponent);

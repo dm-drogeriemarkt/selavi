@@ -13,7 +13,7 @@ const propTypes = {
   serviceRequiredProperties: PropTypes.array.isRequired
 };
 
-export const MicroserviceCountLabel = props => {
+export const MicroserviceCountLabelComponent = props => {
 
   const externalCount = props.microservices.filter((microservice) => microservice.external).length;
   const internalCount = props.microservices.length - externalCount;
@@ -34,6 +34,6 @@ export const MicroserviceCountLabel = props => {
   );
 };
 
-MicroserviceCountLabel.propTypes = propTypes;
+MicroserviceCountLabelComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps)(MicroserviceCountLabel);
+export const MicroserviceCountLabel = connect(mapStateToProps)(MicroserviceCountLabelComponent);

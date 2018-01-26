@@ -26,7 +26,7 @@ const mapDispatchToProps = {
 
 const propTypes = {
   loggedInUser: PropTypes.object.isRequired,
-  contextMenuServiceId: PropTypes.string.isRequired,
+  contextMenuServiceId: PropTypes.number.isRequired,
   onAddProperty: PropTypes.func.isRequired,
   contextMenuToId: PropTypes.number.isRequired,
   onDeleteService: PropTypes.func.isRequired,
@@ -38,13 +38,13 @@ const propTypes = {
   onEditLink: PropTypes.func.isRequired
 };
 
-export const MicroserviceMindmapContextMenu = props => {
+export const MicroserviceMindmapContextMenuComponent = props => {
 
   const { top, left } = props;
   const style = { position: 'fixed', top, left, zIndex: 999 };
 
   if (!(Object.keys(props.loggedInUser).length === 0 && props.loggedInUser.constructor === Object)) {
-    if (props.contextMenuServiceId !== 'NONE') {
+    if (props.contextMenuServiceId !== -1) {
       return (
         <nav style={style} className="contextMenu">
           <button onClick={props.onAddProperty}>Edit Service</button>
@@ -59,7 +59,7 @@ export const MicroserviceMindmapContextMenu = props => {
         </nav>
       );
     }
-  } else if (props.contextMenuServiceId !== 'NONE') {
+  } else if (props.contextMenuServiceId !== -1) {
     return (
       <nav style={style} className="contextMenu">
         <button onClick={props.onShowService}>Show Service</button>
@@ -70,6 +70,6 @@ export const MicroserviceMindmapContextMenu = props => {
   return <nav hidden className="contextMenu"/>;
 };
 
-MicroserviceMindmapContextMenu.propTypes = propTypes;
+MicroserviceMindmapContextMenuComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapContextMenu);
+export const MicroserviceMindmapContextMenu = connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapContextMenuComponent);

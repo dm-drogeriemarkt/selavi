@@ -6,7 +6,7 @@ import { MicroserviceMindmapContextMenu } from '../../../main/javascript/compone
 
 function createProps() {
   return {
-    contextMenuServiceId: 'NONE',
+    contextMenuServiceId: -1,
     contextMenuFromId: -1,
     contextMenuToId: -1,
     onAddProperty: sinon.spy(),

@@ -23,7 +23,7 @@ const propTypes = {
   onRequestClose: PropTypes.func.isRequired
 };
 
-const MicroserviceSnackbar = props => {
+export const MicroserviceSnackbarComponent = props => {
 
   let open = false;
   let message = '';
@@ -46,6 +46,6 @@ const MicroserviceSnackbar = props => {
   );
 };
 
-MicroserviceSnackbar.propTypes = propTypes;
+MicroserviceSnackbarComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceSnackbar);
+export const MicroserviceSnackbar = connect(mapStateToProps, mapDispatchToProps)(MicroserviceSnackbarComponent);

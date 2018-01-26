@@ -26,7 +26,7 @@ const propTypes = {
   loginErrorMessage: PropTypes.string.isRequired
 };
 
-export class LoginDialog extends React.Component {
+export class LoginDialogComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -50,10 +50,9 @@ export class LoginDialog extends React.Component {
       // => this is probably because material-ui Dialog is using an internal RenderToLayer component to lazily render its contents
       // second, setTimeout(fn, 0) is not working either: someone steals focus after a couple of milliseconds
       // => likely the same reason (input element being rendered somewhere else in reacts virtual dom before being brought into view)
-      const userInput = this.usernameInput;
-      window.setTimeout(() => {
-        userInput.focus();
-      }, 200);
+      window.setTimeout((that) => {
+        that.usernameInput.focus();
+      }, 200, this);
     }
   }
 
@@ -154,6 +153,6 @@ export class LoginDialog extends React.Component {
   }
 }
 
-LoginDialog.propTypes = propTypes;
+LoginDialogComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginDialog);
+export const LoginDialog = connect(mapStateToProps, mapDispatchToProps)(LoginDialogComponent);

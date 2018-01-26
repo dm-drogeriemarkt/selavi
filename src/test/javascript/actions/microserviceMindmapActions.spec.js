@@ -77,7 +77,7 @@ describe('microserviceMindmapActions', () => {
       const result = onContextMenuOpen({ edgeFromId: 42, edgeToId: 43, top: 100, left: 200 });
 
       chai.expect(result.type).to.equal('CONTEXT_MENU_OPEN');
-      chai.expect(result.contextMenuServiceId).to.equal('NONE');
+      chai.expect(result.contextMenuServiceId).to.equal(-1);
       chai.expect(result.contextMenuFromId).to.equal(42);
       chai.expect(result.contextMenuToId).equal(43);
       chai.expect(result.top).to.equal(100);
@@ -88,7 +88,7 @@ describe('microserviceMindmapActions', () => {
       const result = onContextMenuOpen({ top: 100, left: 200 });
 
       chai.expect(result.type).to.equal('CONTEXT_MENU_OPEN');
-      chai.expect(result.contextMenuServiceId).to.equal('NONE');
+      chai.expect(result.contextMenuServiceId).to.equal(-1);
       chai.expect(result.contextMenuFromId).to.equal(-1);
       chai.expect(result.contextMenuToId).to.equal(-1);
       chai.expect(result.top).to.equal(-1);

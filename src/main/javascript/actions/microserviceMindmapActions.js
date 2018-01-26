@@ -25,15 +25,15 @@ export function onContextMenuOpen(params) {
       top: params.top,
       left: params.left,
       contextMenuServiceId: params.nodeId,
-      contextMenuFromId: 'NONE',
-      contextMenuToId: 'NONE'
+      contextMenuFromId: -1,
+      contextMenuToId: -1
     };
   } else if (params.edgeFromId && params.edgeToId) {
     return {
       type: 'CONTEXT_MENU_OPEN',
       top: params.top,
       left: params.left,
-      contextMenuServiceId: 'NONE',
+      contextMenuServiceId: -1,
       contextMenuFromId: params.edgeFromId,
       contextMenuToId: params.edgeToId
     };
@@ -42,9 +42,9 @@ export function onContextMenuOpen(params) {
     type: 'CONTEXT_MENU_OPEN',
     top: -1,
     left: -1,
-    contextMenuServiceId: 'NONE',
-    contextMenuFromId: 'NONE',
-    contextMenuToId: 'NONE'
+    contextMenuServiceId: -1,
+    contextMenuFromId: -1,
+    contextMenuToId: -1
   };
 }
 

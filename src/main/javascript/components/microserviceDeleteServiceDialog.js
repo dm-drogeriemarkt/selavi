@@ -28,10 +28,10 @@ const propTypes = {
   stage: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  deleteServiceErrorMessage: PropTypes.number.isRequired
+  deleteServiceErrorMessage: PropTypes.string.isRequired
 };
 
-export class MicroserviceDeleteServiceDialog extends React.Component {
+export class MicroserviceDeleteServiceDialogComponent extends React.Component {
 
   onSubmit() {
     const params = {
@@ -92,6 +92,6 @@ export class MicroserviceDeleteServiceDialog extends React.Component {
   }
 }
 
-MicroserviceDeleteServiceDialog.propTypes = propTypes;
+MicroserviceDeleteServiceDialogComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceDeleteServiceDialog);
+export const MicroserviceDeleteServiceDialog = connect(mapStateToProps, mapDispatchToProps)(MicroserviceDeleteServiceDialogComponent);

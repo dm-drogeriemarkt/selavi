@@ -6,8 +6,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import MicroserviceFilterBox from './components/microserviceFilterbox';
-import MicroserviceSnackbar from './components/microserviceSnackbar';
+import { MicroserviceFilterbox } from './components/microserviceFilterbox';
+import { MicroserviceSnackbar } from './components/microserviceSnackbar';
 import store from './stores/microserviceStore';
 import { getRequiredPropertyNames } from './shared/requiredPropertyUtil';
 import { MicroserviceMindmap } from './components/microserviceMindmap';
@@ -121,7 +121,7 @@ class App extends React.Component {
     return (
       <div className="appcontainer">
         <div className="appheader">
-          <MicroserviceFilterBox serviceRequiredProperties={serviceRequiredProperties}/>
+          <MicroserviceFilterbox serviceRequiredProperties={serviceRequiredProperties}/>
         </div>
         <div className="appcontent">
           <MicroserviceMindmap serviceRequiredProperties={serviceRequiredProperties}/>

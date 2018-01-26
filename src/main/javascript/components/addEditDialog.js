@@ -38,15 +38,22 @@ const propTypes = {
   onCancel: PropTypes.func.isRequired,
   editMenuMode: PropTypes.string.isRequired,
   addMenuMode: PropTypes.string.isRequired,
-  addEditDialogFormAction: PropTypes.string.isRequired,
-  inputTabs: PropTypes.number.isRequired,
-  topComitters: PropTypes.object.isRequired,
-  showMenuMode: PropTypes.bool.isRequired,
+  addEditDialogFormAction: PropTypes.string,
+  inputTabs: PropTypes.array.isRequired,
+  topComitters: PropTypes.array,
+  showMenuMode: PropTypes.string.isRequired,
   entityDisplayName: PropTypes.string.isRequired,
-  entity: PropTypes.object.isRequired
+  entity: PropTypes.string
 };
 
-export class AddEditDialog extends React.Component {
+const defaultProps = {
+  topComitters: [],
+  showMenuMode: '_DISABLED_',
+  addEditDialogFormAction: null,
+  entity: undefined
+};
+
+export class AddEditDialogComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -128,11 +135,6 @@ export class AddEditDialog extends React.Component {
     const validate = (key, i) => {
       if (this.props.inputTabs[i].inputFields[key].required) {
         if (typeof this.allRefs[`input_${key}`].getValue === 'function') {
-          if (!this.allRefs[`input_${key}`].getValue()) {
-            validationMessages[key] = 'Field is required!';
-            isValid = false;
-          }
-        } else if (typeof this.allRefs[`input_${key}`].getValue === 'function') {
           if (!this.allRefs[`input_${key}`].getValue()) {
             validationMessages[key] = 'Field is required!';
             isValid = false;
@@ -412,9 +414,7 @@ export class AddEditDialog extends React.Component {
   }
 }
 
-AddEditDialog.defaultProps = {
-  showMenuMode: '_DISABLED_'
-};
-AddEditDialog.propTypes = propTypes;
+AddEditDialogComponent.defaultProps = defaultProps;
+AddEditDialogComponent.propTypes = propTypes;
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEditDialog);
+export const AddEditDialog = connect(mapStateToProps, mapDispatchToProps)(AddEditDialogComponent);
