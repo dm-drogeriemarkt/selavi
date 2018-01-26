@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
 import { shallow } from 'enzyme';
-import { MicroserviceMindmap } from '../../../main/javascript/components/microserviceMindmap';
+import { MicroserviceMindmapComponent } from '../../../main/javascript/components/microserviceMindmap';
 
 function createProps() {
   const microservices = [
@@ -33,7 +33,7 @@ function createProps() {
   };
 }
 
-describe('<MicroserviceMindmap/>', () => {
+describe('<MicroserviceMindmapComponent/>', () => {
 
   let clickEventHandler;
   let oncontextEventHandler;
@@ -112,7 +112,7 @@ describe('<MicroserviceMindmap/>', () => {
 
   it('can be instantiated', () => {
     const props = createProps();
-    const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props}/>);
 
     chai.expect(wrapper.type()).to.equal('div');
   });
@@ -124,7 +124,7 @@ describe('<MicroserviceMindmap/>', () => {
     // enzyme's shallow rendering does not call all lifecycle methods of the component, unless
     // lifecycleExperimental is set to 'true'. in our case, componentDidUpdate() was not called.
     // this might be resolved in the future, see https://github.com/airbnb/enzyme/pull/318
-    shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+    shallow(<MicroserviceMindmapComponent {...props} />, { lifecycleExperimental: true });
 
     const expectedAllNodes = [
       {
@@ -181,7 +181,7 @@ describe('<MicroserviceMindmap/>', () => {
     const props = createProps();
     props.serviceRequiredProperties = ['consumes'];
 
-    shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+    shallow(<MicroserviceMindmapComponent {...props} />, { lifecycleExperimental: true });
 
     const expectedAllNodes = [
       {
@@ -211,7 +211,7 @@ describe('<MicroserviceMindmap/>', () => {
     const props = createProps();
     props.filterString = 'foo';
 
-    shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+    shallow(<MicroserviceMindmapComponent {...props} />, { lifecycleExperimental: true });
 
     const expectedAllNodes = [
       {
@@ -237,7 +237,7 @@ describe('<MicroserviceMindmap/>', () => {
 
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props} />, { lifecycleExperimental: true });
 
     props.filterString = 'foo';
     wrapper.setProps(props);
@@ -267,7 +267,7 @@ describe('<MicroserviceMindmap/>', () => {
 
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props} />, { lifecycleExperimental: true });
 
     sinon.assert.calledOnce(global.vis.DataSet);
     sinon.assert.calledOnce(global.vis.Network);
@@ -288,7 +288,7 @@ describe('<MicroserviceMindmap/>', () => {
 
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceMindmap {...props} />);
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props} />);
 
     /* we force a call to componentDidUpdate() here, because shallow-rendering does not call componentDidMount()
 
@@ -324,7 +324,7 @@ describe('<MicroserviceMindmap/>', () => {
     const props = createProps();
     props.stage = 'dev';
 
-    const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props}/>);
     wrapper.instance().forceUpdate();
 
     chai.expect(wrapper.type()).to.equal('div');
@@ -371,7 +371,7 @@ describe('<MicroserviceMindmap/>', () => {
 
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props}/>);
     wrapper.instance().forceUpdate();
 
     chai.expect(wrapper.type()).to.equal('div');
@@ -413,7 +413,7 @@ describe('<MicroserviceMindmap/>', () => {
 
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceMindmap {...props}/>);
+    const wrapper = shallow(<MicroserviceMindmapComponent {...props}/>);
     wrapper.instance().forceUpdate();
 
     chai.expect(wrapper.type()).to.equal('div');

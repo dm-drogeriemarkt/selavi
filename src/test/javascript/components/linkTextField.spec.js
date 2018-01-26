@@ -76,7 +76,7 @@ describe('<LinkTextField/>', () => {
     sinon.assert.notCalled(window.open);
 
     // setting the text fields value 'enables' submit button
-    wrapper.ref('textField').find('input').getDOMNode().value = 'http://foo.bar.baz';
+    wrapper.instance().textfieldRef.input.value = 'http://foo.bar.baz';
 
     wrapper.instance().onTouchTap();
 

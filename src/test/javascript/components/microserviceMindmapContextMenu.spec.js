@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
 import { shallow } from 'enzyme';
-import { MicroserviceMindmapContextMenu } from '../../../main/javascript/components/microserviceMindmapContextMenu';
+import { MicroserviceMindmapContextMenuComponent } from '../../../main/javascript/components/microserviceMindmapContextMenu';
 
 function createProps() {
   return {
@@ -20,12 +20,12 @@ function createProps() {
   };
 }
 
-describe('<MicroserviceMindmapContextMenu/>', () => {
+describe('<MicroserviceMindmapContextMenuComponent/>', () => {
 
   it('is hidden when contextMenuServiceId, contextMenuFromId and contextMenuToId are -1', () => {
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+    const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
     chai.expect(wrapper.find('nav').props().hidden).to.equal(true);
   });
@@ -37,7 +37,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.loggedInUser = 'my_user_id';
         props.contextMenuServiceId = 'foo';
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         chai.expect(wrapper.find('nav').props().hidden).to.be.undefined;
         chai.expect(wrapper.find('button').at(0).text()).to.equal('Edit Service');
@@ -49,7 +49,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.loggedInUser = 'my_user_id';
         props.contextMenuServiceId = 'foo';
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         wrapper.find('button').at(0).simulate('click');
 
@@ -61,7 +61,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.loggedInUser = 'my_user_id';
         props.contextMenuServiceId = 'foo';
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         wrapper.find('button').at(1).simulate('click');
 
@@ -76,7 +76,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.contextMenuFromId = 42;
         props.contextMenuToId = 43;
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         chai.expect(wrapper.find('nav').props().hidden).to.be.undefined;
         chai.expect(wrapper.find('button').at(0).text()).to.equal('Delete Link');
@@ -89,7 +89,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.contextMenuFromId = 42;
         props.contextMenuToId = 43;
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         wrapper.find('button').at(0).simulate('click');
 
@@ -102,7 +102,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.contextMenuFromId = 42;
         props.contextMenuToId = 43;
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         wrapper.find('button').at(1).simulate('click');
 
@@ -117,7 +117,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         const props = createProps();
         props.contextMenuServiceId = 'foo';
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         chai.expect(wrapper.find('nav').props().hidden).to.be.undefined;
         chai.expect(wrapper.find('button').at(0).text()).to.equal('Show Service');
@@ -127,7 +127,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         const props = createProps();
         props.contextMenuServiceId = 'foo';
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         wrapper.find('button').at(0).simulate('click');
 
@@ -141,7 +141,7 @@ describe('<MicroserviceMindmapContextMenu/>', () => {
         props.contextMenuFromId = 42;
         props.contextMenuToId = 43;
 
-        const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+        const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         chai.expect(wrapper.find('nav').props().hidden).to.be.true;
         chai.expect(wrapper.find('button').length).to.equal(0);

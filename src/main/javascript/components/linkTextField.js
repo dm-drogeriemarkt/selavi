@@ -14,6 +14,7 @@ class LinkTextField extends React.Component {
   constructor(props) {
     super(props);
     this.state = { linkActive: !!props.defaultValue };
+    this.textfieldRef = undefined;
   }
 
   onChange(event) {

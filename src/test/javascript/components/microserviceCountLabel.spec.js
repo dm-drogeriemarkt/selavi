@@ -1,7 +1,7 @@
 import React from 'react';
 import chai from 'chai';
 import { shallow } from 'enzyme';
-import { MicroserviceCountLabel } from '../../../main/javascript/components/microserviceCountLabel';
+import { MicroserviceCountLabelComponent } from '../../../main/javascript/components/microserviceCountLabel';
 
 function createProps() {
   return {
@@ -23,12 +23,12 @@ function createProps() {
   };
 }
 
-describe('<MicroserviceCountLabel/>', () => {
+describe('<MicroserviceCountLabelComponent/>', () => {
 
   it('displays count of (external) services', () => {
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceCountLabel {...props}/>);
+    const wrapper = shallow(<MicroserviceCountLabelComponent {...props}/>);
     chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪');
   });
 
@@ -36,7 +36,7 @@ describe('<MicroserviceCountLabel/>', () => {
     const props = createProps();
     props.serviceRequiredProperties.push('consumes');
 
-    const wrapper = shallow(<MicroserviceCountLabel {...props}/>);
+    const wrapper = shallow(<MicroserviceCountLabelComponent {...props}/>);
     chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪ | 1 service missing req. props');
   });
 

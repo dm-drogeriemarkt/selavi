@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
 import { shallow } from 'enzyme';
-import { MicroserviceDeleteServiceDialog } from '../../../main/javascript/components/microserviceDeleteServiceDialog';
+import { MicroserviceDeleteServiceDialogComponent } from '../../../main/javascript/components/microserviceDeleteServiceDialog';
 
 function createProps() {
   return {
@@ -18,12 +18,12 @@ function createProps() {
   };
 }
 
-describe('<MicroserviceDeleteServiceDialog/>', () => {
+describe('<MicroserviceDeleteServiceDialogComponent/>', () => {
 
   it('is hidden when menuMode is not DELETE_SERVICE or DELETE_LINK', () => {
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
+    const wrapper = shallow(<MicroserviceDeleteServiceDialogComponent {...props}/>);
 
     chai.expect(wrapper.type()).to.equal('div');
 
@@ -36,7 +36,7 @@ describe('<MicroserviceDeleteServiceDialog/>', () => {
 
     props.deleteServiceErrorMessage = 'thats an error';
 
-    const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
+    const wrapper = shallow(<MicroserviceDeleteServiceDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('Dialog').props().open).to.equal(false);
     chai.expect(wrapper.find('Snackbar').props().open).to.equal(false);
@@ -50,7 +50,7 @@ describe('<MicroserviceDeleteServiceDialog/>', () => {
       props.menuMode = 'DELETE_SERVICE';
       props.deleteServiceId = 'foobar';
 
-      const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
+      const wrapper = shallow(<MicroserviceDeleteServiceDialogComponent {...props}/>);
 
       chai.expect(wrapper.find('Dialog').props().open).to.equal(true);
       chai.expect(wrapper.find('Dialog').props().title).to.equal('Confirm deletion of service with id foobar');
@@ -64,7 +64,7 @@ describe('<MicroserviceDeleteServiceDialog/>', () => {
 
       props.deleteServiceErrorMessage = 'thats an error';
 
-      const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
+      const wrapper = shallow(<MicroserviceDeleteServiceDialogComponent {...props}/>);
 
       chai.expect(wrapper.find('Dialog').props().open).to.equal(true);
       chai.expect(wrapper.find('Snackbar').props().open).to.equal(true);
@@ -81,7 +81,7 @@ describe('<MicroserviceDeleteServiceDialog/>', () => {
       props.deleteLinkFromId = 'foobar';
       props.deleteLinkToId = 'baz';
 
-      const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
+      const wrapper = shallow(<MicroserviceDeleteServiceDialogComponent {...props}/>);
 
       chai.expect(wrapper.find('Dialog').props().open).to.equal(true);
       chai.expect(wrapper.find('Dialog').props().title).to
@@ -96,7 +96,7 @@ describe('<MicroserviceDeleteServiceDialog/>', () => {
 
       props.deleteServiceErrorMessage = 'thats a link-error';
 
-      const wrapper = shallow(<MicroserviceDeleteServiceDialog {...props}/>);
+      const wrapper = shallow(<MicroserviceDeleteServiceDialogComponent {...props}/>);
 
       chai.expect(wrapper.find('Dialog').props().open).to.equal(true);
       chai.expect(wrapper.find('Snackbar').props().open).to.equal(true);

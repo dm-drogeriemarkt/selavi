@@ -31,6 +31,8 @@ export class LoginDialogComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = { inProgress: false };
+    this.usernameInput = undefined;
+    this.passwordInput = undefined;
   }
 
   componentWillMount() {
@@ -61,8 +63,8 @@ export class LoginDialogComponent extends React.Component {
 
     const params = {
       entity: {
-        username: this.usernameInput.getValue(),
-        password: this.passwordInput.getValue()
+        username: this.usernameInput ? this.usernameInput.getValue() : undefined,
+        password: this.passwordInput ? this.passwordInput.getValue() : undefined
       }
     };
     this.props.onSubmit(params);

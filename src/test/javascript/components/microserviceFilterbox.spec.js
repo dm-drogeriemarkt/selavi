@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
 import { shallow } from 'enzyme';
-import { MicroserviceFilterbox } from '../../../main/javascript/components/microserviceFilterbox';
+import { MicroserviceFilterboxComponent } from '../../../main/javascript/components/microserviceFilterbox';
 
 function createProps() {
   return {
@@ -19,12 +19,12 @@ function createProps() {
   };
 }
 
-describe('<MicroserviceFilterbox/>', () => {
+describe('<MicroserviceFilterboxComponent/>', () => {
 
   it('displays application name', () => {
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+    const wrapper = shallow(<MicroserviceFilterboxComponent {...props}/>);
     chai.expect(wrapper.find('ToolbarTitle').props().text).to.equal('SeLaVi - Service Landscape Visualizer');
   });
 
@@ -35,7 +35,7 @@ describe('<MicroserviceFilterbox/>', () => {
       thumbnailPhoto: 'i_am_a_byte_array'
     };
 
-    const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+    const wrapper = shallow(<MicroserviceFilterboxComponent {...props}/>);
     chai.expect(wrapper.find('Avatar').props().src).to.equal('data:image/png;base64,i_am_a_byte_array');
     chai.expect(wrapper.find('ToolbarGroup').at(0).childAt(1).text()).to.equal('my_user_id');
   });
@@ -47,7 +47,7 @@ describe('<MicroserviceFilterbox/>', () => {
       thumbnailPhoto: undefined
     };
 
-    const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+    const wrapper = shallow(<MicroserviceFilterboxComponent {...props}/>);
     chai.expect(wrapper.find('Avatar').props().icon.type.displayName).to.equal('SocialSentimentVerySatisfied');
     chai.expect(wrapper.find('ToolbarGroup').at(0).childAt(1).text()).to.equal('my_user_id');
   });
@@ -56,7 +56,7 @@ describe('<MicroserviceFilterbox/>', () => {
   it('displays login & share link button in menu when no user is logged in', () => {
     const props = createProps();
 
-    const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+    const wrapper = shallow(<MicroserviceFilterboxComponent {...props}/>);
 
     chai.expect(wrapper.find('MenuItem').length).to.equal(2);
     chai.expect(wrapper.find('MenuItem').at(0).props().primaryText).to.equal('Login');
@@ -65,9 +65,9 @@ describe('<MicroserviceFilterbox/>', () => {
 
   it('displays logout, add service, add link & share link buttons in menu when a user is logged in', () => {
     const props = createProps();
-    props.loggedInUser = {};
+    props.loggedInUser = { username: 'testuser' };
 
-    const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+    const wrapper = shallow(<MicroserviceFilterboxComponent {...props}/>);
 
     chai.expect(wrapper.find('MenuItem').length).to.equal(4);
     chai.expect(wrapper.find('MenuItem').at(0).props().primaryText).to.equal('Logout');
@@ -81,7 +81,7 @@ describe('<MicroserviceFilterbox/>', () => {
     props.filterString = 'foobar';
     props.stage = 'baz';
 
-    const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+    const wrapper = shallow(<MicroserviceFilterboxComponent {...props}/>);
 
     chai.expect(wrapper.find('Dialog').at(0).props().open).to.equal(false);
 

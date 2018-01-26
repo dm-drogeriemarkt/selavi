@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
 import { mount, shallow } from 'enzyme';
-import { AddEditDialog } from '../../../main/javascript/components/addEditDialog';
+import { AddEditDialogComponent } from '../../../main/javascript/components/addEditDialog';
 
 function createProps() {
   return {
@@ -17,7 +17,7 @@ function createProps() {
   };
 }
 
-describe('<AddEditDialog/>', () => {
+describe('<AddEditDialogComponent/>', () => {
 
   it('renders tabs with text fields for all elements in inputTabs prop', () => {
 
@@ -30,7 +30,7 @@ describe('<AddEditDialog/>', () => {
       }
     });
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
 
     chai.expect(wrapper.find('Tab').length)
@@ -81,7 +81,7 @@ describe('<AddEditDialog/>', () => {
     props.menuMode = 'MY_MENU_MODE';
     props.editMenuMode = 'MY_MENU_MODE';
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('TextField').length)
       .to
@@ -129,7 +129,7 @@ describe('<AddEditDialog/>', () => {
     props.menuMode = 'MY_MENU_MODE';
     props.editMenuMode = 'MY_MENU_MODE';
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('TextField').length)
       .to
@@ -167,7 +167,7 @@ describe('<AddEditDialog/>', () => {
       }
     });
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('TextField').length)
       .to
@@ -207,7 +207,7 @@ describe('<AddEditDialog/>', () => {
     props.menuMode = 'SHOW_SERVICE';
     props.showMenuMode = 'SHOW_SERVICE';
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('TextField').length)
       .to
@@ -243,7 +243,7 @@ describe('<AddEditDialog/>', () => {
       label: 'hello_world'
     };
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('Dialog')
       .props().title)
@@ -263,7 +263,7 @@ describe('<AddEditDialog/>', () => {
       }
     });
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('TextField').length)
       .to
@@ -296,7 +296,7 @@ describe('<AddEditDialog/>', () => {
       }
     });
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('LinkTextField').length)
       .to
@@ -319,7 +319,7 @@ describe('<AddEditDialog/>', () => {
       }
     });
 
-    const wrapper = mount(<AddEditDialog {...props}/>, {
+    const wrapper = mount(<AddEditDialogComponent {...props}/>, {
       context: {
         muiTheme: getMuiTheme()
       },
@@ -338,10 +338,10 @@ describe('<AddEditDialog/>', () => {
       .to
       .equal('Field is required!');
 
-    chai.expect(wrapper.instance().refs.input_id.props.errorText)
+    chai.expect(wrapper.instance().allRefs.input_id.props.errorText)
       .to
       .equal('Field is required!');
-    chai.expect(wrapper.instance().refs.input_label.props.errorText)
+    chai.expect(wrapper.instance().allRefs.input_label.props.errorText)
       .to
       .equal('Field is required!');
   });
@@ -362,7 +362,7 @@ describe('<AddEditDialog/>', () => {
       }
     });
 
-    const wrapper = mount(<AddEditDialog {...props}/>, {
+    const wrapper = mount(<AddEditDialogComponent {...props}/>, {
       context: {
         muiTheme: getMuiTheme()
       },
@@ -406,7 +406,7 @@ describe('<AddEditDialog/>', () => {
     };
     props.addEditDialogFormAction = '/myBackendUrl';
 
-    const wrapper = mount(<AddEditDialog {...props}/>, {
+    const wrapper = mount(<AddEditDialogComponent {...props}/>, {
       context: {
         muiTheme: getMuiTheme()
       },
@@ -436,7 +436,7 @@ describe('<AddEditDialog/>', () => {
       }
     ];
 
-    const wrapper = shallow(<AddEditDialog {...props}/>);
+    const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('Tab').length)
       .to
@@ -522,7 +522,7 @@ describe('<AddEditDialog/>', () => {
         }
       });
 
-      const wrapper = shallow(<AddEditDialog {...props}/>);
+      const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
       chai.expect(wrapper.find('AutoComplete').length)
         .to
@@ -541,7 +541,7 @@ describe('<AddEditDialog/>', () => {
         }
       });
 
-      const wrapper = shallow(<AddEditDialog {...props}/>);
+      const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
       wrapper.find('AutoComplete')
         .simulate('updateInput', 'Mül');

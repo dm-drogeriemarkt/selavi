@@ -58,6 +58,7 @@ export class AddEditDialogComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = { validationMessages: {}, autocompleteDataSource: [] };
+    this.allRefs = [];
   }
 
   handleOnSubmit() {

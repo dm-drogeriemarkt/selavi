@@ -3,7 +3,7 @@ import React from 'react';
 import chai from 'chai';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { mount, shallow } from 'enzyme';
-import { LoginDialog } from '../../../main/javascript/components/loginDialog';
+import { LoginDialogComponent } from '../../../main/javascript/components/loginDialog';
 
 function createProps() {
   return {
@@ -17,12 +17,12 @@ function createProps() {
   };
 }
 
-describe('<LoginDialog/>', () => {
+describe('<LoginDialogComponent/>', () => {
 
   it('is hidden when menuMode is not LOGIN', () => {
     const props = createProps();
 
-    const wrapper = shallow(<LoginDialog {...props}/>);
+    const wrapper = shallow(<LoginDialogComponent {...props}/>);
 
     chai.expect(wrapper.type()).to.equal('div');
 
@@ -35,7 +35,7 @@ describe('<LoginDialog/>', () => {
 
     props.loginErrorMessage = 'thats an error';
 
-    const wrapper = shallow(<LoginDialog {...props}/>);
+    const wrapper = shallow(<LoginDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('Dialog').props().open).to.equal(false);
     chai.expect(wrapper.find('Snackbar').props().open).to.equal(false);
@@ -46,7 +46,7 @@ describe('<LoginDialog/>', () => {
 
     props.menuMode = 'LOGIN';
 
-    const wrapper = shallow(<LoginDialog {...props}/>);
+    const wrapper = shallow(<LoginDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('Dialog').props().open).to.equal(true);
     chai.expect(wrapper.find('Dialog').props().title).to.equal('Login to SeLaVi');
@@ -58,7 +58,7 @@ describe('<LoginDialog/>', () => {
 
     props.menuMode = 'LOGIN';
 
-    const wrapper = mount(<LoginDialog {...props}/>, {
+    const wrapper = mount(<LoginDialogComponent {...props}/>, {
       context: {
         muiTheme: getMuiTheme()
       },
@@ -67,8 +67,8 @@ describe('<LoginDialog/>', () => {
       }
     });
 
-    wrapper.ref('input_username').find('input').getDOMNode().value = 'foobar';
-    wrapper.ref('input_password').find('input').getDOMNode().value = 'baz';
+    wrapper.instance().usernameInput.input.value = 'foobar';
+    wrapper.instance().passwordInput.input.value = 'baz';
 
     wrapper.instance().onSubmit();
 
@@ -82,7 +82,7 @@ describe('<LoginDialog/>', () => {
     props.menuMode = 'LOGIN';
     props.loginErrorMessage = 'heute leider nur fuer stammgaeste';
 
-    const wrapper = shallow(<LoginDialog {...props}/>);
+    const wrapper = shallow(<LoginDialogComponent {...props}/>);
 
     chai.expect(wrapper.find('Snackbar').props().open).to.equal(true);
     chai.expect(wrapper.find('Snackbar').props().message).to.equal('heute leider nur fuer stammgaeste');
@@ -93,7 +93,7 @@ describe('<LoginDialog/>', () => {
 
     props.menuMode = 'LOGIN';
 
-    const wrapper = shallow(<LoginDialog {...props}/>);
+    const wrapper = shallow(<LoginDialogComponent {...props}/>);
 
     // fake refs
     wrapper.instance().refs = {
@@ -133,15 +133,13 @@ describe('<LoginDialog/>', () => {
       }
     });
 
-    const wrapper = shallow(<LoginDialog {...props}/>);
+    const wrapper = shallow(<LoginDialogComponent {...props}/>);
 
     chai.expect(keyboardHandlerFn).to.be.defined;
 
     // fake refs
-    wrapper.instance().refs = {
-      input_username: { getValue: () => 'login' },
-      input_password: { getValue: () => 'using_keyboard' }
-    };
+    wrapper.instance().usernameInput = { getValue: () => 'login' };
+    wrapper.instance().passwordInput = { getValue: () => 'using_keyboard' };
 
     keyboardHandlerFn({
       key: 'Enter'
@@ -161,7 +159,7 @@ describe('<LoginDialog/>', () => {
   it('brings username text field into focus', () => {
     const props = createProps();
 
-    const wrapper = mount(<LoginDialog {...props}/>, {
+    const wrapper = mount(<LoginDialogComponent {...props}/>, {
       context: {
         muiTheme: getMuiTheme()
       },
@@ -182,11 +180,12 @@ describe('<LoginDialog/>', () => {
 
     chai.expect(callbackFn).to.be.defined;
 
-    chai.expect(wrapper.instance().refs.input_username.state.isFocused).to.be.false;
+    chai.expect(wrapper.instance().usernameInput.state.isFocused).to.be.false;
 
     callbackFn(wrapper.instance());
 
-    chai.expect(wrapper.instance().refs.input_username.state.isFocused).to.be.true;
+    chai.expect(wrapper.instance().usernameInput.state.isFocused).to.be.true;
+    chai.expect(wrapper.instance().passwordInput.state.isFocused).to.be.false;
 
     window.setTimeout.restore();
   });
