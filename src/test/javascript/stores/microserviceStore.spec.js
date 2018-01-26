@@ -1,63 +1,47 @@
 import sinon from 'sinon';
 import chai from 'chai';
+import { updateStore } from '../../../main/javascript/stores/microserviceStore';
 
-describe('microserviceStore', function () {
+describe('microserviceStore', () => {
 
-    beforeEach(function () {
-        sinon.stub(URLSearchParams.prototype, 'get');
+  beforeEach(() => {
+    sinon.stub(URLSearchParams.prototype, 'get');
+  });
+
+  afterEach(() => {
+    URLSearchParams.prototype.get.restore();
+  });
+
+  describe('FETCH_AVAILABLE_STAGES_SUCCESS', () => {
+
+    it('pre-selects stage from url search param if set', () => {
+
+      URLSearchParams.prototype.get.withArgs('stage').returns('foobar');
+
+      const newState = updateStore({}, {
+        type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+        response: { entity: ['dev', 'stage', 'foobar'] }
+      });
+
+      chai.expect(newState.stage).to.equal('foobar');
     });
+    it('pre-selects dev stage if present', () => {
 
-    afterEach(function () {
-        URLSearchParams.prototype.get.restore();
+      const newState = updateStore({}, {
+        type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+        response: { entity: ['stage', 'foobar', 'dev'] }
+      });
+
+      chai.expect(newState.stage).to.equal('dev');
     });
+    it('pre-selects first stage in list otherwise', () => {
 
-    it('parses filter string from url search param for initial state', function () {
+      const newState = updateStore({}, {
+        type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+        response: { entity: ['stage', 'foobar', 'prod'] }
+      });
 
-        URLSearchParams.prototype.get.withArgs('filter').returns('foobar');
-
-        const store = require("../../../main/javascript/stores/microserviceStore");
-
-        const initialState = store.updateStore(undefined, { type: "no_op" });
-
-        chai.expect(initialState.filterString).to.equal("foobar");
+      chai.expect(newState.stage).to.equal('stage');
     });
-
-    describe('FETCH_AVAILABLE_STAGES_SUCCESS', function () {
-
-        let store;
-
-        beforeEach(function () {
-            store = require("../../../main/javascript/stores/microserviceStore");
-        });
-
-        it('pre-selects stage from url search param if set', function () {
-
-            URLSearchParams.prototype.get.withArgs('stage').returns('foobar');
-
-            const newState = store.updateStore({}, {
-                type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
-                response: { entity: ['dev', 'stage', 'foobar'] }
-            });
-
-            chai.expect(newState.stage).to.equal("foobar");
-        });
-        it('pre-selects dev stage if present', function () {
-
-            const newState = store.updateStore({}, {
-                type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
-                response: { entity: ['stage', 'foobar', 'dev'] }
-            });
-
-            chai.expect(newState.stage).to.equal("dev");
-        });
-        it('pre-selects first stage in list otherwise', function () {
-
-            const newState = store.updateStore({}, {
-                type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
-                response: { entity: ['stage', 'foobar', 'prod'] }
-            });
-
-            chai.expect(newState.stage).to.equal("stage");
-        });
-    });
+  });
 });

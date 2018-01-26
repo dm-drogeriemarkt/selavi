@@ -12,15 +12,21 @@
     "redux-thunk": "^2.1.0",
     "rest": "^1.3.1",
     "webpack": "^1.12.2",
-    "babel-register": "latest"
+    "babel-register": "latest",
+    "jsdom": "^9.12.0",
+    "url-search-params-polyfill": "^2.0.0",
+    "prop-types": "latest"
   },
   "scripts": {
     "watch": "webpack --watch -d",
     "test": "mocha -w src/test/javascript/setup.js src/test/javascript/**/*.spec.js",
-    "testCI": "nyc mocha src/test/javascript/setup.js src/test/javascript/**/*.spec.js"
+    "testCI": "nyc mocha src/test/javascript/setup.js src/test/javascript/**/*.spec.js",
+    "lint": "eslint --ext .js --ext .jsx src",
+    "lint-fix": "eslint --ext .js --ext .jsx src --fix"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
+    "babel-eslint": "7.2.3",
     "babel-loader": "^6.2.7",
     "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-polyfill": "^6.16.0",
@@ -28,12 +34,16 @@
     "babel-preset-react": "^6.16.0",
     "chai": "^3.5.0",
     "enzyme": "^2.7.1",
-    "jsdom": "^9.12.0",
-    "mocha": "^3.2.0",
+    "eslint": "4.6.1",
+    "eslint-config-airbnb": "15.1.0",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-jsx-a11y": "5.1.1",
+    "eslint-plugin-react": "7.3.0",
+    "mocha": "^3.5.3",
+    "mocha-webpack": "^1.0.1",
     "nyc": "^10.1.2",
     "react-addons-test-utils": "^15.4.2",
-    "sinon": "^1.17.6",
-    "url-search-params-polyfill": "^2.0.0"
+    "sinon": "^1.17.6"
   },
   "nyc": {
     "exclude": [

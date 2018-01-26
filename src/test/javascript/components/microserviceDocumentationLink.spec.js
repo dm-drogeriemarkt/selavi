@@ -4,12 +4,12 @@ import { shallow } from 'enzyme';
 import MicroserviceDocumentationLink from '../../../main/javascript/components/microserviceDocumentationLink';
 
 
-describe('<MicroserviceDocumentationLink/>', function () {
+describe('<MicroserviceDocumentationLink/>', () => {
 
-    it('check documentation link', function () {
-        const wrapper = shallow(<MicroserviceDocumentationLink />);
-        chai.expect(wrapper.text()).to.contains('Doku');
-    });
+  it('check documentation link', () => {
+    const wrapper = shallow(<MicroserviceDocumentationLink />);
+    chai.expect(wrapper.text()).to.contains('Doku');
+  });
 
 
 });

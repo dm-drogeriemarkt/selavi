@@ -4,37 +4,38 @@ import chai from 'chai';
 import { shallow } from 'enzyme';
 import { StageSelector } from '../../../main/javascript/components/stageSelector';
 
-describe('<StageSelector/>', function () {
+function createProps() {
+  return {
+    onStageSelected: sinon.spy(),
+    stage: 'dev',
+    availableStages: []
+  };
+}
 
-    it('shows drop-down box with all available stages, pre-selects "stage" prop', function () {
-        const props = createProps();
-        props.availableStages = ['foo', 'bar', 'baz'];
-        props.stage = 'bar';
+describe('<StageSelector/>', () => {
 
-        const wrapper = shallow(<StageSelector {...props}/>);
+  it('shows drop-down box with all available stages, pre-selects "stage" prop', () => {
+    const props = createProps();
+    props.availableStages = ['foo', 'bar', 'baz'];
+    props.stage = 'bar';
 
-        chai.expect(wrapper.find('MenuItem').length).to.equal(3);
-        chai.expect(wrapper.props().value).to.equal(1);
-    });
+    const wrapper = shallow(<StageSelector {...props}/>);
 
-    it('calls onStageSelected with the name of the selected stage', function () {
-        const props = createProps();
-        props.availableStages = ['foo', 'bar', 'baz'];
-        props.stage = 'foo';
+    chai.expect(wrapper.find('MenuItem').length).to.equal(3);
+    chai.expect(wrapper.props().value).to.equal(1);
+  });
 
-        const wrapper = shallow(<StageSelector {...props}/>);
+  it('calls onStageSelected with the name of the selected stage', () => {
+    const props = createProps();
+    props.availableStages = ['foo', 'bar', 'baz'];
+    props.stage = 'foo';
 
-        wrapper.simulate('change', undefined, undefined, 2);
+    const wrapper = shallow(<StageSelector {...props}/>);
 
-        sinon.assert.calledOnce(props.onStageSelected);
-        sinon.assert.calledWith(props.onStageSelected, 'baz');
-    });
+    wrapper.simulate('change', undefined, undefined, 2);
+
+    sinon.assert.calledOnce(props.onStageSelected);
+    sinon.assert.calledWith(props.onStageSelected, 'baz');
+  });
 });
 
-function createProps() {
-    return {
-        onStageSelected: sinon.spy(),
-        stage: undefined,
-        availableStages: undefined
-    };
-}

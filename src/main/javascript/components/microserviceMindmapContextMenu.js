@@ -1,65 +1,75 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
-    onAddProperty,
-    onDeleteLink,
-    onDeleteService,
-    onEditLink,
-    onShowService
+  onAddProperty, onDeleteLink, onDeleteService, onEditLink,
+  onShowService
 } from './../actions/microserviceMindmapContextMenuActions';
 
-const mapStateToProps = (state) => {
-    return {
-        top: state.contextMenuTop,
-        left: state.contextMenuLeft,
-        contextMenuServiceId: state.contextMenuServiceId,
-        contextMenuFromId: state.contextMenuFromId,
-        contextMenuToId: state.contextMenuToId,
-        loggedInUser: state.loggedInUser
-    };
-};
+const mapStateToProps = (state) => ({
+  top: state.contextMenuTop,
+  left: state.contextMenuLeft,
+  contextMenuServiceId: state.contextMenuServiceId,
+  contextMenuFromId: state.contextMenuFromId,
+  contextMenuToId: state.contextMenuToId,
+  loggedInUser: state.loggedInUser
+});
 
 
 const mapDispatchToProps = {
-    onAddProperty,
-    onDeleteService,
-    onDeleteLink,
-    onEditLink,
-    onShowService
+  onAddProperty,
+  onDeleteService,
+  onDeleteLink,
+  onEditLink,
+  onShowService
 };
 
-export class MicroserviceMindmapContextMenu extends React.Component {
+const propTypes = {
+  loggedInUser: PropTypes.object.isRequired,
+  contextMenuServiceId: PropTypes.string.isRequired,
+  onAddProperty: PropTypes.func.isRequired,
+  contextMenuToId: PropTypes.number.isRequired,
+  onDeleteService: PropTypes.func.isRequired,
+  top: PropTypes.number.isRequired,
+  left: PropTypes.number.isRequired,
+  contextMenuFromId: PropTypes.number.isRequired,
+  onDeleteLink: PropTypes.func.isRequired,
+  onShowService: PropTypes.func.isRequired,
+  onEditLink: PropTypes.func.isRequired
+};
 
-    render() {
-        const { top, left } = this.props;
-        const style = { position: 'fixed', top, left, zIndex: 999 };
+export const MicroserviceMindmapContextMenu = props => {
 
-        if (this.props.loggedInUser) {
-            if (this.props.contextMenuServiceId) {
-                return (
-                  <nav style={style} className="contextMenu">
-                      <button onClick={this.props.onAddProperty}>Edit Service</button>
-                      <button onClick={this.props.onDeleteService}>Delete Service</button>
-                  </nav>
-                );
-            } else if (this.props.contextMenuFromId && this.props.contextMenuToId) {
-                return (
-                  <nav style={style} className="contextMenu">
-                      <button onClick={this.props.onDeleteLink}>Delete Link</button>
-                      <button onClick={this.props.onEditLink}>Edit Link</button>
-                  </nav>
-                );
-            }
-        } else if (this.props.contextMenuServiceId) {
-            return (
-              <nav style={style} className="contextMenu">
-                  <button onClick={this.props.onShowService}>Show Service</button>
-              </nav>
-            );
-        }
+  const { top, left } = props;
+  const style = { position: 'fixed', top, left, zIndex: 999 };
 
-        return <nav hidden className="contextMenu"/>;
+  if (!(Object.keys(props.loggedInUser).length === 0 && props.loggedInUser.constructor === Object)) {
+    if (props.contextMenuServiceId !== 'NONE') {
+      return (
+        <nav style={style} className="contextMenu">
+          <button onClick={props.onAddProperty}>Edit Service</button>
+          <button onClick={props.onDeleteService}>Delete Service</button>
+        </nav>
+      );
+    } else if (props.contextMenuFromId > -1 && props.contextMenuToId > -1) {
+      return (
+        <nav style={style} className="contextMenu">
+          <button onClick={props.onDeleteLink}>Delete Link</button>
+          <button onClick={props.onEditLink}>Edit Link</button>
+        </nav>
+      );
     }
-}
+  } else if (props.contextMenuServiceId !== 'NONE') {
+    return (
+      <nav style={style} className="contextMenu">
+        <button onClick={props.onShowService}>Show Service</button>
+      </nav>
+    );
+  }
+
+  return <nav hidden className="contextMenu"/>;
+};
+
+MicroserviceMindmapContextMenu.propTypes = propTypes;
 
 export default connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapContextMenu);
