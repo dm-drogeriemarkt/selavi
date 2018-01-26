@@ -5,5 +5,5 @@ language: java
 services:
   - docker
 
-before_install:
+after_success:
   - docker build -t dm/selavi .
