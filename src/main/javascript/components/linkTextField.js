@@ -21,20 +21,18 @@ class LinkTextField extends React.Component {
   }
 
   onTouchTap() {
-    const value = this.refs.textField.getValue();
+    const value = this.textfieldRef.getValue();
     if (value) {
       window.open(value);
     }
   }
 
-  getValue() {
-    return this.refs.textField.getValue();
-  }
-
   render() {
 
     const textFieldProps = Object.assign({}, this.props, {
-      ref: 'textField'
+      ref: (ref) => {
+        this.textfieldRef = ref;
+      }
     });
     textFieldProps.style.width = '31em';
 

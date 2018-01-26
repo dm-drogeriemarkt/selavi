@@ -3,12 +3,11 @@ export function getRequiredPropertyNames(inputTabsArray) {
 
   const result = [];
 
-  for (let key in flatObj) {
+  Object.keys(flatObj).forEach((key) => {
     if (flatObj[key].required) {
       result.push(key);
     }
-  }
-
+  });
   return result;
 }
 

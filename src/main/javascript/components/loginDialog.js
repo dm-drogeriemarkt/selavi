@@ -50,9 +50,10 @@ export class LoginDialog extends React.Component {
       // => this is probably because material-ui Dialog is using an internal RenderToLayer component to lazily render its contents
       // second, setTimeout(fn, 0) is not working either: someone steals focus after a couple of milliseconds
       // => likely the same reason (input element being rendered somewhere else in reacts virtual dom before being brought into view)
-      window.setTimeout((that) => {
-        that.refs.input_username.focus();
-      }, 200, this);
+      const userInput = this.usernameInput;
+      window.setTimeout(() => {
+        userInput.focus();
+      }, 200);
     }
   }
 
@@ -61,8 +62,8 @@ export class LoginDialog extends React.Component {
 
     const params = {
       entity: {
-        username: this.refs.input_username.getValue(),
-        password: this.refs.input_password.getValue()
+        username: this.usernameInput.getValue(),
+        password: this.passwordInput.getValue()
       }
     };
     this.props.onSubmit(params);
@@ -123,14 +124,18 @@ export class LoginDialog extends React.Component {
           open={isOpen}
         >
           <TextField
-            ref="input_username"
+            ref={(ref) => {
+              this.usernameInput = ref;
+            }}
             floatingLabelText="Username"
             hintText="Username"
             style={textFieldStyle}
             disabled={this.state.inProgress}
           />
           <TextField
-            ref="input_password"
+            ref={(ref) => {
+              this.passwordInput = ref;
+            }}
             floatingLabelText="Password"
             hintText="Password"
             type="password"

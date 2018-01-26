@@ -12,7 +12,7 @@ function match(fieldValue, filterString) {
   }
 
   return (fieldValue.toLowerCase()
-                    .indexOf(filterString.toLowerCase()) !== -1);
+    .indexOf(filterString.toLowerCase()) !== -1);
 }
 
 export function shouldFilterOut(microservice, filterString) {

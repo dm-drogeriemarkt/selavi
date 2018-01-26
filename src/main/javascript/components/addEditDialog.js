@@ -1,16 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
-import { List, ListItem } from 'material-ui/List';
 import { Tab, Tabs } from 'material-ui/Tabs';
 import AutoComplete from 'material-ui/AutoComplete';
 import Avatar from 'material-ui/Avatar';
 import rest from 'rest';
 import mime from 'rest/interceptor/mime';
+import { connect } from 'react-redux';
+import { List, ListItem } from 'material-ui';
 import MenuItem from 'material-ui/MenuItem';
 
 import LinkTextField from './linkTextField';
@@ -35,7 +35,15 @@ const propTypes = {
   menuMode: PropTypes.string.isRequired,
   stage: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  editMenuMode: PropTypes.string.isRequired,
+  addMenuMode: PropTypes.string.isRequired,
+  addEditDialogFormAction: PropTypes.string.isRequired,
+  inputTabs: PropTypes.number.isRequired,
+  topComitters: PropTypes.object.isRequired,
+  showMenuMode: PropTypes.bool.isRequired,
+  entityDisplayName: PropTypes.string.isRequired,
+  entity: PropTypes.object.isRequired
 };
 
 export class AddEditDialog extends React.Component {
@@ -49,19 +57,20 @@ export class AddEditDialog extends React.Component {
     if (this.validate()) {
       const entity = {};
 
-      for (const key in this.refs) {
-        if (key.substr(0, 6) === 'input_') {
-          if (this.refs[key] instanceof TextField || this.refs[key] instanceof LinkTextField) {
-            entity[key.substr(6)] = this.refs[key].getValue();
-          } else if (this.refs[key] instanceof Toggle) {
-            entity[key.substr(6)] = this.refs[key].isToggled();
-          } else if (this.refs[key] instanceof AutoComplete) {
-            entity[key.substr(6)] = this.refs[key].refs.searchTextField.getValue();
-          } else {
-            console.log(`unkown input type ${this.refs[key]}`);
+      Object.keys(this.allRefs)
+        .forEach((key) => {
+          if (key.substr(0, 6) === 'input_') {
+            if (this.allRefs[key] instanceof TextField || this.allRefs[key] instanceof LinkTextField) {
+              entity[key.substr(6)] = this.allRefs[key].getValue();
+            } else if (this.allRefs[key] instanceof Toggle) {
+              entity[key.substr(6)] = this.allRefs[key].isToggled();
+            } else if (this.allRefs[key] instanceof AutoComplete) {
+              entity[key.substr(6)] = this.allRefs[key].getValue();
+            } else {
+              console.log(`unkown input type ${this.allRefs[key]}`);
+            }
           }
-        }
-      }
+        });
 
       let method;
 
@@ -75,12 +84,12 @@ export class AddEditDialog extends React.Component {
     }
   }
 
-  _handleOnCancel() {
+  handleOnCancel() {
     this.setState({ validationMessages: {} });
     this.props.onCancel();
   }
 
-  _handleAutocompleteInput(searchText, searchEndpoint) {
+  handleAutocompleteInput(searchText, searchEndpoint) {
     if (searchText && searchText.length > 2) {
       const client = rest.wrap(mime);
       const encodedSearchUri = encodeURI(`${searchEndpoint}?searchQuery=${searchText}`);
@@ -115,29 +124,33 @@ export class AddEditDialog extends React.Component {
     const validationMessages = {};
     let isValid = true;
 
-    for (let i = 0; i < this.props.inputTabs.length; i++) {
-      for (const key in this.props.inputTabs[i].inputFields) {
-        if (this.props.inputTabs[i].inputFields[key].required) {
-          if (typeof this.refs[`input_${key}`].getValue === 'function') {
-            if (!this.refs[`input_${key}`].getValue()) {
-              validationMessages[key] = 'Field is required!';
-              isValid = false;
-            }
-          } else if (typeof this.refs[`input_${key}`].refs.searchTextField.getValue === 'function') {
-            if (!this.refs[`input_${key}`].refs.searchTextField.getValue()) {
-              validationMessages[key] = 'Field is required!';
-              isValid = false;
-            }
+
+    const validate = (key, i) => {
+      if (this.props.inputTabs[i].inputFields[key].required) {
+        if (typeof this.allRefs[`input_${key}`].getValue === 'function') {
+          if (!this.allRefs[`input_${key}`].getValue()) {
+            validationMessages[key] = 'Field is required!';
+            isValid = false;
+          }
+        } else if (typeof this.allRefs[`input_${key}`].getValue === 'function') {
+          if (!this.allRefs[`input_${key}`].getValue()) {
+            validationMessages[key] = 'Field is required!';
+            isValid = false;
           }
         }
       }
+    };
+
+    for (let i = 0; i < this.props.inputTabs.length; i += 1) {
+      Object.keys(this.props.inputTabs[i].inputFields)
+        .forEach((key) => validate(key, i));
     }
 
     this.setState({ validationMessages });
     return isValid;
   }
 
-  _createTextField(options) {
+  createTextField(options) {
     const style = { marginLeft: '1em' };
 
     if (options.multiLine) {
@@ -148,7 +161,9 @@ export class AddEditDialog extends React.Component {
       return (<AutoComplete
         key={`add_edit_dialog_${options.key}`}
         style={style}
-        ref={`input_${options.key}`}
+        ref={(ref) => {
+          this.allRefs[`input_${options.key}`] = ref;
+        }}
         floatingLabelText={options.label}
         hintText={options.hint}
         errorText={this.state.validationMessages[options.key]}
@@ -157,7 +172,7 @@ export class AddEditDialog extends React.Component {
         multiLine={options.multiLine}
         dataSource={this.state.autocompleteDataSource}
         onUpdateInput={(searchText) => {
-          this._handleAutocompleteInput(searchText, options.searchEndpoint);
+          this.handleAutocompleteInput(searchText, options.searchEndpoint);
         }}
         filter={AutoComplete.caseInsensitiveFilter}
       />);
@@ -165,7 +180,9 @@ export class AddEditDialog extends React.Component {
       return (<LinkTextField
         key={`add_edit_dialog_${options.key}`}
         style={style}
-        ref={`input_${options.key}`}
+        ref={(ref) => {
+          this.allRefs[`input_${options.key}`] = ref;
+        }}
         floatingLabelText={options.label}
         hintText={options.hint}
         errorText={this.state.validationMessages[options.key]}
@@ -176,7 +193,9 @@ export class AddEditDialog extends React.Component {
     return (<TextField
       key={`add_edit_dialog_${options.key}`}
       style={style}
-      ref={`input_${options.key}`}
+      ref={(ref) => {
+        this.allRefs[`input_${options.key}`] = ref;
+      }}
       floatingLabelText={options.label}
       hintText={options.hint}
       errorText={this.state.validationMessages[options.key]}
@@ -193,17 +212,17 @@ export class AddEditDialog extends React.Component {
       <FlatButton
         label="Cancel"
         primary
-        onTouchTap={this._handleOnCancel.bind(this)}
+        onTouchTap={this.handleOnCancel}
       />,
       <FlatButton
         label="Submit"
         primary
-        onTouchTap={this.handleOnSubmit.bind(this)}
+        onTouchTap={this.handleOnSubmit}
       />
     ];
 
     let isOpen = false;
-    const _entity = this.props.entity || {};
+    const entity = this.props.entity || {};
     let title = '';
 
     let readOnly = false;
@@ -213,16 +232,16 @@ export class AddEditDialog extends React.Component {
       title = `Add ${this.props.entityDisplayName}`;
     } else if (this.props.menuMode === this.props.editMenuMode) {
       isOpen = true;
-      title = `Edit ${_entity.label}`;
+      title = `Edit ${entity.label}`;
     } else if (this.props.menuMode === this.props.showMenuMode) {
       isOpen = true;
-      title = `Show ${_entity.label}`;
+      title = `Show ${entity.label}`;
 
       actions = [
         <FlatButton
           label="Close"
           primary
-          onTouchTap={this._handleOnCancel.bind(this)}
+          onTouchTap={() => this.handleOnCancel()}
         />
       ];
 
@@ -232,65 +251,68 @@ export class AddEditDialog extends React.Component {
       return null;
     }
 
-    const customProperties = Object.keys(_entity);
+    const customProperties = Object.keys(entity);
 
     // pre-defined input field tabs
     const defaultPropertyInputTabs = [];
 
-    for (let i = 0; i < this.props.inputTabs.length; i++) {
+    for (let i = 0; i < this.props.inputTabs.length; i += 1) {
 
       const inputs = [];
       let hasInvalidInput = false;
 
-      for (const key in this.props.inputTabs[i].inputFields) {
+      Object.keys(this.props.inputTabs[i].inputFields)
+        .forEach((key) => {
 
-        if (this.props.inputTabs[i].inputFields[key].type === 'toggle') {
-          const toggle = this.props.inputTabs[i].inputFields[key];
+          if (this.props.inputTabs[i].inputFields[key].type === 'toggle') {
+            const toggle = this.props.inputTabs[i].inputFields[key];
 
-          let value = false;
-          if (typeof (_entity[key]) === 'boolean') {
-            value = _entity[key];
+            let value = false;
+            if (typeof (entity[key]) === 'boolean') {
+              value = entity[key];
 
-            customProperties.splice(customProperties.indexOf(key), 1);
+              customProperties.splice(customProperties.indexOf(key), 1);
+            }
+
+            inputs.push(<Toggle
+              key={`add_edit_dialog_${key}`}
+              ref={(ref) => {
+                this.allRefs[`input_${key}`] = ref;
+              }}
+              label={toggle.label}
+              defaultToggled={value}
+              disabled={readOnly}
+              style={{ marginTop: '2em', maxWidth: '23em' }}
+            />);
+
+          } else {
+            // default to "text"
+
+            const textField = this.props.inputTabs[i].inputFields[key];
+
+            let value = '';
+            if (typeof (entity[key]) === 'string') {
+              value = entity[key];
+
+              customProperties.splice(customProperties.indexOf(key), 1);
+            }
+
+            inputs.push(this.createTextField({
+              key,
+              label: textField.label,
+              hint: textField.hint,
+              multiLine: textField.multiLine,
+              value,
+              disabled: textField.disabled || readOnly,
+              searchEndpoint: textField.searchEndpoint,
+              isLink: textField.isLink
+            }));
+
+            if (this.state.validationMessages[key]) {
+              hasInvalidInput = true;
+            }
           }
-
-          inputs.push(<Toggle
-            key={`add_edit_dialog_${key}`}
-            ref={`input_${key}`}
-            label={toggle.label}
-            defaultToggled={value}
-            disabled={readOnly}
-            style={{ marginTop: '2em', maxWidth: '23em' }}
-          />);
-
-        } else {
-          // default to "text"
-
-          const textField = this.props.inputTabs[i].inputFields[key];
-
-          let value = '';
-          if (typeof (_entity[key]) === 'string') {
-            value = _entity[key];
-
-            customProperties.splice(customProperties.indexOf(key), 1);
-          }
-
-          inputs.push(this._createTextField({
-            key,
-            label: textField.label,
-            hint: textField.hint,
-            multiLine: textField.multiLine,
-            value,
-            disabled: textField.disabled || readOnly,
-            searchEndpoint: textField.searchEndpoint,
-            isLink: textField.isLink
-          }));
-
-          if (this.state.validationMessages[key]) {
-            hasInvalidInput = true;
-          }
-        }
-      }
+        });
 
       let tabstyle;
 
@@ -313,36 +335,40 @@ export class AddEditDialog extends React.Component {
     if (customProperties.length > 0) {
       const customPropertyInputs = [];
 
-      for (const idx in customProperties) {
-        const key = customProperties[idx];
+      Object.keys(customProperties)
+        .forEach((idx) => {
+          const key = customProperties[idx];
 
-        if (typeof (_entity[key]) === 'string') {
-          customPropertyInputs.push(this._createTextField({
-            key,
-            label: key,
-            hint: key,
-            value: _entity[key],
-            disabled: readOnly
-          }));
-        } else if (typeof (_entity[key]) === 'boolean') {
-          customPropertyInputs.push(<Toggle
-            ref={`input_${key}`}
-            label={key}
-            defaultToggled={_entity[key]}
-            disabled={readOnly}
-            style={{ marginTop: '2em', maxWidth: '23em' }}
-          />);
-        } else {
-          console.log(`unkown property type for key "${key}" with value "${JSON.stringify(_entity[key])}"`);
-        }
-      }
+          if (typeof (entity[key]) === 'string') {
+            customPropertyInputs.push(this.createTextField({
+              key,
+              label: key,
+              hint: key,
+              value: entity[key],
+              disabled: readOnly
+            }));
+          } else if (typeof (entity[key]) === 'boolean') {
+            customPropertyInputs.push(<Toggle
+              ref={(ref) => {
+                this.allRefs[`input_${key}`] = ref;
+              }}
+              label={key}
+              defaultToggled={entity[key]}
+              disabled={readOnly}
+              style={{ marginTop: '2em', maxWidth: '23em' }}
+            />);
+          } else {
+            console.log(`unkown property type for key "${key}" with value "${JSON.stringify(entity[key])}"`);
+          }
+        });
 
-      customPropertiesTab = <Tab
-        key="add_edit_dialog_tab_custom_props"
-        label="Misc"
-      >
-        {customPropertyInputs}
-      </Tab>;
+      customPropertiesTab =
+        <Tab
+          key="add_edit_dialog_tab_custom_props"
+          label="Misc"
+        >
+          {customPropertyInputs}
+        </Tab>;
     }
 
     // bitbucket top comitters tab
@@ -352,7 +378,7 @@ export class AddEditDialog extends React.Component {
       const topComittersList = [];
       this.props.topComitters.forEach((propValue, index) => {
         topComittersList.push(<ListItem
-          key={`${_entity.id}_bitbucket_${index}`}
+          key={`${entity.id}_bitbucket_${index}`}
           primaryText={propValue.emailAddress}
           secondaryText={propValue.numberOfCommits}
         />);

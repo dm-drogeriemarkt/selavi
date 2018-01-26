@@ -5,9 +5,9 @@ import MicroserviceDocumentationLink from './microserviceDocumentationLink';
 import { onAddLink, onContextMenuOpen, onSelectMicroserviceNode } from './../actions/microserviceMindmapActions';
 import { shouldFilterOut } from './../shared/filterUtils';
 import { hasAllRequiredProperties } from './../shared/requiredPropertyUtil';
-import StageSelector from './stageSelector';
-import MicroserviceCountLabel from './microserviceCountLabel';
-import MicroserviceMindmapContextMenu from './microserviceMindmapContextMenu';
+import { MicroserviceMindmapContextMenu } from './microserviceMindmapContextMenu';
+import { StageSelector } from './stageSelector';
+import { MicroserviceCountLabel } from './microserviceCountLabel';
 
 const mapStateToProps = (state) => ({
   microservices: state.microservices,
@@ -52,6 +52,31 @@ const propTypes = {
   serviceRequiredProperties: PropTypes.array.isRequired
 };
 
+const addColorData = (microservice, props) => {
+  if (shouldFilterOut(microservice, props.filterString)) {
+    microservice.group = 'filteredOut';
+    if (!hasAllRequiredProperties(microservice, props.serviceRequiredProperties)) {
+      microservice.shadow = {
+        color: '#c4c3c6'
+      };
+    }
+  } else {
+    if (microservice.external) {
+      microservice.group = 'external';
+    } else {
+      microservice.group = 'microservice';
+    }
+
+    if (!hasAllRequiredProperties(microservice, props.serviceRequiredProperties)) {
+      microservice.shadow = {
+        color: '#e50f03'
+      };
+    }
+  }
+
+  return microservice;
+};
+
 export class MicroserviceMindmap extends React.Component {
 
   componentDidMount() {
@@ -67,7 +92,7 @@ export class MicroserviceMindmap extends React.Component {
       return false;
     } else if (nextProps.filterString !== this.props.filterString) {
       // we are filtering, no need to re-draw the graph itself
-      const microservices = this.props.microservices.map(microservice => this.addColorData(microservice, nextProps));
+      const microservices = this.props.microservices.map(microservice => addColorData(microservice, nextProps));
       this.network.body.data.nodes.update(microservices);
 
       return false;
@@ -145,39 +170,14 @@ export class MicroserviceMindmap extends React.Component {
   }
 
   resize() {
-    if (this.network && this.refs.microserviceMindmap) {
-      this.network.setSize('100%', `${this.refs.microserviceMindmap.offsetHeight - 4}px`);
+    if (this.network && this.microserviceMindmap) {
+      this.network.setSize('100%', `${this.microserviceMindmap.offsetHeight - 4}px`);
       this.network.redraw();
     }
   }
 
-  addColorData(microservice, props) {
-    if (shouldFilterOut(microservice, props.filterString)) {
-      microservice.group = 'filteredOut';
-      if (!hasAllRequiredProperties(microservice, props.serviceRequiredProperties)) {
-        microservice.shadow = {
-          color: '#c4c3c6'
-        };
-      }
-    } else {
-      if (microservice.external) {
-        microservice.group = 'external';
-      } else {
-        microservice.group = 'microservice';
-      }
-
-      if (!hasAllRequiredProperties(microservice, props.serviceRequiredProperties)) {
-        microservice.shadow = {
-          color: '#e50f03'
-        };
-      }
-    }
-
-    return microservice;
-  }
-
   updateMindmap() {
-    const microservices = this.props.microservices.map(microservice => this.addColorData(microservice, this.props));
+    const microservices = this.props.microservices.map(microservice => addColorData(microservice, this.props));
 
     // create an array with nodes
     const nodes = new vis.DataSet(microservices);
@@ -234,11 +234,11 @@ export class MicroserviceMindmap extends React.Component {
       if (this.props.debugMode) {
         options.configure = {
           enabled: true,
-          container: this.refs.debugcontainer
+          container: this.debuggingContainer
         };
       }
 
-      this.network = new vis.Network(this.refs.vizcontainer, data, options);
+      this.network = new vis.Network(this.visualizationContainer, data, options);
 
       const boundOnSelectMicroserviceNode = this.onSelectMicroserviceNodeHandler.bind(this);
       const boundOnContextMenuOpen = this.onContextMenuHandler.bind(this);
@@ -256,16 +256,16 @@ export class MicroserviceMindmap extends React.Component {
 
     // add edges to existing network (a lot faster than adding them with the node data)
     microservices.filter((el) => el.consumes)
-                 .forEach((el) => {
-                   el.consumes.forEach((consumer) => {
-                     this.network.body.data.edges.add({
-                       from: el.id,
-                       to: consumer.target,
-                       label: consumer.type !== null ? consumer.type : '',
-                       font: { align: 'middle' }
-                     });
-                   }, this);
-                 }, this);
+      .forEach((el) => {
+        el.consumes.forEach((consumer) => {
+          this.network.body.data.edges.add({
+            from: el.id,
+            to: consumer.target,
+            label: consumer.type !== null ? consumer.type : '',
+            font: { align: 'middle' }
+          });
+        }, this);
+      }, this);
 
     // because we add the edges to an existing network, things are kind of tangled up, so we start a simulation manually (to un-tangle everything)
     this.network.startSimulation();
@@ -273,10 +273,27 @@ export class MicroserviceMindmap extends React.Component {
 
   render() {
     return (
-      <div className="microserviceMindmap" ref="microserviceMindmap">
+      <div
+        className="microserviceMindmap"
+        ref={(ref) => {
+          this.microserviceMindmap = ref;
+        }}
+      >
         <MicroserviceMindmapContextMenu/>
-        {this.props.debugMode && <div ref="debugcontainer" className="debugContainer"/>}
-        <div ref="vizcontainer" className="vizContainer"/>
+        {this.props.debugMode &&
+        <div
+          ref={(ref) => {
+            this.debuggingContainer = ref;
+          }}
+          className="debugContainer"
+        />
+        }
+        <div
+          ref={(ref) => {
+            this.visualizationContainer = ref;
+          }}
+          className="vizContainer"
+        />
         <StageSelector/>
         <MicroserviceCountLabel serviceRequiredProperties={this.props.serviceRequiredProperties}/>
         <MicroserviceDocumentationLink/>

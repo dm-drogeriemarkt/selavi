@@ -140,7 +140,7 @@ export function updateStore(state = initialState, action) {
       });
     }
     case 'EDIT_LINK': {
-      const relation = state.microservices.filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes.filter((relation) => relation.target === state.contextMenuToId)[0];
+      const relation = state.microservices.filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes.filter(() => relation.target === state.contextMenuToId)[0];
       relation.label = `Relation ${state.contextMenuFromId} -> ${state.contextMenuToId}`;
 
       return Object.assign({}, state, {
