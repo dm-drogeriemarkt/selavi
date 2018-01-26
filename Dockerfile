@@ -1,6 +1,6 @@
 FROM openjdk:8
 
-COPY app.jar /srv/app.jar
+COPY target/app.jar /srv/app.jar
 
 WORKDIR /srv/
 
