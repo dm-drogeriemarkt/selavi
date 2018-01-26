@@ -4,31 +4,35 @@ import de.dm.activedirectory.business.ActiveDirectoryProperties;
 import de.dm.auth.activedirectory.cache.CachingAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.ldap.authentication.ad.Hotfix3960ActiveDirectoryLdapAuthenticationProvider;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import java.util.Properties;
+
 @Configuration
 @EnableWebSecurity
-@Order(2)
-public class LdapWebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private GrantedAuthoritiesMapper authoritiesMapper;
-
-    @Autowired
-    private ActiveDirectoryProperties properties;
+   @Autowired
+   private AuthenticationProvider authenticationProvider;
 
     @Value("${selavi.security.userRole}")
     private String userRole;
@@ -69,10 +73,6 @@ public class LdapWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        Hotfix3960ActiveDirectoryLdapAuthenticationProvider provider;
-        provider = new Hotfix3960ActiveDirectoryLdapAuthenticationProvider(properties.getDomain(), properties.getUrl(), properties.getBase());
-        provider.setSearchFilter("(&(objectClass=user)(samAccountName={1}))");
-        provider.setAuthoritiesMapper(authoritiesMapper);
-        auth.authenticationProvider(new CachingAuthenticationProvider(provider));
+        auth.authenticationProvider(authenticationProvider);
     }
 }
