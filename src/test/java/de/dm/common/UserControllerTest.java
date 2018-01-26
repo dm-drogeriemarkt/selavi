@@ -1,7 +1,7 @@
 package de.dm.common;
 
-import de.dm.activedirectory.business.ActiveDirectoryService;
-import de.dm.activedirectory.domain.Person;
+import de.dm.selavi.personrepositorycore.Person;
+import de.dm.selavi.personrepositorycore.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,11 +19,11 @@ public class UserControllerTest {
 
     private UserController userController;
 
-    private ActiveDirectoryService activeDirectoryService;
+    private PersonRepository activeDirectoryService;
 
     @Before
     public void setup() {
-        activeDirectoryService = mock(ActiveDirectoryService.class);
+        activeDirectoryService = mock(PersonRepository.class);
 
         userController = new UserController(activeDirectoryService);
     }
@@ -34,7 +34,7 @@ public class UserControllerTest {
         Principal principal = () -> "foobar";
 
         Person user = Person.builder().build();
-        when(activeDirectoryService.getAllPersonNames("foobar")).thenReturn(Arrays.asList(user));
+        when(activeDirectoryService.findByName("foobar")).thenReturn(Arrays.asList(user));
 
         Person result = userController.getUserDetails(principal);
 
@@ -46,7 +46,7 @@ public class UserControllerTest {
 
         Principal principal = () -> "foobar";
 
-        when(activeDirectoryService.getAllPersonNames("foobar")).thenReturn(Collections.emptyList());
+        when(activeDirectoryService.findByName("foobar")).thenReturn(Collections.emptyList());
 
         Person result = userController.getUserDetails(principal);
 
