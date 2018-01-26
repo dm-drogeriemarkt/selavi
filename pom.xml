@@ -6,7 +6,7 @@
     <groupId>de.dm</groupId>
     <artifactId>selavi</artifactId>
     <version>0.2.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>${packaging.type}</packaging>
 
     <name>selavi</name>
     <description>Service Landscape Visualizer</description>
@@ -149,11 +149,6 @@
             <artifactId>liquibase-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-
         <!--Use lombock to avoid boilerplate code e.a. getters/setters -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -223,6 +218,7 @@
     </dependencies>
 
     <build>
+        <finalName>app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -308,29 +304,24 @@
                 </excludes>
             </resource>
         </resources>
-
     </build>
 
-    <repositories>
-        <repository>
-            <id>artifactory</id>
-            <url>https://artifactory.dm-drogeriemarkt.com/artifactory/repo</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>artifactory</id>
-            <name>artifactory.dm-drogeriemarkt.com-releases</name>
-            <url>https://artifactory.dm-drogeriemarkt.com/artifactory/releases-kunde</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>artifactory.dm-drogeriemarkt.com-snapshots</name>
-            <url>https://artifactory.dm-drogeriemarkt.com/artifactory/snapshots-kunde</url>
-        </snapshotRepository>
-
-    </distributionManagement>
-
+    <profiles>
+        <profile>
+            <id>war</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <packaging.type>war</packaging.type>
+            </properties>
+        </profile>
+        <profile>
+            <id>jar</id>
+            <properties>
+                <packaging.type>jar</packaging.type>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

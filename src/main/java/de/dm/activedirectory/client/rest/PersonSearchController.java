@@ -1,7 +1,7 @@
 package de.dm.activedirectory.client.rest;
 
-import de.dm.activedirectory.domain.Person;
 import de.dm.activedirectory.business.ActiveDirectoryService;
+import de.dm.activedirectory.domain.Person;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,6 +21,6 @@ public class PersonSearchController {
 
     @GetMapping("/person/search")
     public ResponseEntity<List<Person>> serachForPersons(@RequestParam String searchQuery) {
-        return new ResponseEntity<>(this.activeDirectoryService.getAllPersonNames(searchQuery), HttpStatus.OK);
+        return new ResponseEntity<>(this.activeDirectoryService.findPersonsByName(searchQuery), HttpStatus.OK);
     }
 }

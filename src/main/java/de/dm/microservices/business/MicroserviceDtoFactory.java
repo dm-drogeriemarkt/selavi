@@ -39,7 +39,7 @@ public class MicroserviceDtoFactory {
         return null;
     }
 
-    public String getJsonFromMicroserviceDto(final MicroserviceDto dto) {
+    String getJsonFromMicroserviceDto(final MicroserviceDto dto) {
         try {
             return mapper.writeValueAsString(dto);
         } catch (JsonProcessingException e) {

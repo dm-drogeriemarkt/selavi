@@ -1,5 +1,6 @@
 package de.dm.microservices.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dm.microservices.business.DefaultNodeContentFactory;
 import de.dm.microservices.business.MicroserviceDtoFactory;
 import de.dm.microservices.business.ServiceRegistryProperties;
@@ -11,8 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
 public class ServiceRegistryRepositoryTest {
@@ -24,6 +25,7 @@ public class ServiceRegistryRepositoryTest {
     private String offlineMode;
     private MicroserviceDtoFactory microserviceDtoFactory;
     private ServiceRegistryProperties serviceRegistryProperties;
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void setup() {
@@ -35,7 +37,7 @@ public class ServiceRegistryRepositoryTest {
         microserviceDtoFactory = mock(MicroserviceDtoFactory.class);
         serviceRegistryProperties = new ServiceRegistryProperties();
 
-        serviceRegistryRepository = new ServiceRegistryRepository(restTemplate, defaultNodeContentFactory, offlineMode, microserviceDtoFactory, serviceRegistryProperties);
+        serviceRegistryRepository = new ServiceRegistryRepository(restTemplate, defaultNodeContentFactory, offlineMode, microserviceDtoFactory, serviceRegistryProperties, mapper);
     }
 
     @Test
