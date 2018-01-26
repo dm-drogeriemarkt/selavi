@@ -1,4 +1,4 @@
-FROM dockerfile/java:oracle-java8
+FROM openjdk:8
 
 COPY app.jar /srv/app.jar
 
