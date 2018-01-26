@@ -6,4 +6,4 @@ WORKDIR /srv/
 
 EXPOSE 8080
 
-CMD [ "java", "-jar", "app.jar", "--spring.config.location=/srv/conf/" ]
+CMD [ "java", "-jar", "app.jar", "--spring.profiles.active=development-h2" ]
