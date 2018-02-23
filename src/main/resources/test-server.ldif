@@ -1,0 +1,40 @@
+dn: dc=springframework,dc=org
+objectClass: top
+objectClass: domain
+objectClass: extensibleObject
+dc: springframework
+
+dn: ou=people,dc=springframework,dc=org
+objectClass: top
+objectClass: organizationalUnit
+ou: people
+
+dn: uid=ben,ou=people,dc=springframework,dc=org
+objectClass: top
+objectClass: user
+objectClass: organizationalPerson
+cn: Ben Alex
+sn: Alex
+uid: ben
+mail: foo@bar.com
+name: Alex, Ben
+sAMAccountName: d0e4242
+displayname: Ben Alex
+userPrincipalName: ben
+userPassword: {SHA}nFCebWjxfaLbHHG1Qk5UU4trbvQ=
+
+dn: uid=bob,ou=people,dc=springframework,dc=org
+objectClass: top
+objectClass: user
+objectClass: organizationalPerson
+cn: Bob Hamilton
+sn: Hamilton
+uid: bob
+mail: bar@bar.com
+name: Hamilton, Bob
+sAMAccountName: d0e01337
+displayname: Bob Hamnilton
+userPrincipalName: bob@localhost
+userPassword: bobspassword
+
+
