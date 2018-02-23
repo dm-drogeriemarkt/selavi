@@ -10,7 +10,6 @@ function createProps() {
   return {
     menuMode: undefined,
     inputTabs: [],
-    entity: undefined,
     editMenuMode: undefined,
     onCancel: sinon.spy(),
     onSubmit: sinon.spy()
@@ -33,38 +32,16 @@ describe('<AddEditDialogComponent/>', () => {
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
 
-    chai.expect(wrapper.find('Tab').length)
-      .to
-      .equal(1);
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .props().label)
-      .to
-      .equal('my_input_tab');
+    chai.expect(wrapper.find('Tab').length).to.equal(2);
+    chai.expect(wrapper.find('Tab').at(0).props().label).to.equal('my_input_tab');
 
-    chai.expect(wrapper.find('TextField').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().floatingLabelText)
-      .to
-      .equal('Service ID *');
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().defaultValue)
-      .to
-      .equal('');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().floatingLabelText)
-      .to
-      .equal('Label *');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().defaultValue)
-      .to
-      .equal('');
+    chai.expect(wrapper.find('TextField').length).to.equal(2);
+
+    chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal('Service ID *');
+    chai.expect(wrapper.find('TextField').at(0).props().defaultValue).to.equal('');
+
+    chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal('Label *');
+    chai.expect(wrapper.find('TextField').at(1).props().defaultValue).to.equal('');
   });
 
   it('renders text fields for fields in selected service, and sets their default values', () => {
@@ -83,29 +60,12 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('TextField').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().floatingLabelText)
-      .to
-      .equal('id');
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().defaultValue)
-      .to
-      .equal('bar-consumer');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().floatingLabelText)
-      .to
-      .equal('label');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().defaultValue)
-      .to
-      .equal('bar-consumer');
+    chai.expect(wrapper.find('TextField').length).to.equal(2);
+    chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal('id');
+    chai.expect(wrapper.find('TextField').at(0).props().defaultValue).to.equal('bar-consumer');
+
+    chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal('label');
+    chai.expect(wrapper.find('TextField').at(1).props().defaultValue).to.equal('bar-consumer');
   });
 
   it('mixes pre-defined and dynamic fields / properties', () => {
@@ -131,29 +91,13 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('TextField').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().floatingLabelText)
-      .to
-      .equal('Service ID *');
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().defaultValue)
-      .to
-      .equal('bar-consumer');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().floatingLabelText)
-      .to
-      .equal('Label *');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().defaultValue)
-      .to
-      .equal('bar-consumer');
+    chai.expect(wrapper.find('TextField').length).to.equal(2);
+
+    chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal('Service ID *');
+    chai.expect(wrapper.find('TextField').at(0).props().defaultValue).to.equal('bar-consumer');
+
+    chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal('Label *');
+    chai.expect(wrapper.find('TextField').at(1).props().defaultValue).to.equal('bar-consumer');
   });
 
   it('renders disabled text fields', () => {
@@ -169,29 +113,13 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('TextField').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().floatingLabelText)
-      .to
-      .equal('Service ID *');
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().disabled)
-      .to
-      .equal(true);
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().floatingLabelText)
-      .to
-      .equal('Label *');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().disabled)
-      .to
-      .equal(false);
+    chai.expect(wrapper.find('TextField').length).to.equal(2);
+
+    chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal('Service ID *');
+    chai.expect(wrapper.find('TextField').at(0).props().disabled).to.equal(true);
+
+    chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal('Label *');
+    chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(false);
   });
 
   it('disables all input fields when menuMode is SHOW_SERVICE', () => {
@@ -209,29 +137,13 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('TextField').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().floatingLabelText)
-      .to
-      .equal('Service ID *');
-    chai.expect(wrapper.find('TextField')
-      .at(0)
-      .props().disabled)
-      .to
-      .equal(true);
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().floatingLabelText)
-      .to
-      .equal('Label *');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().disabled)
-      .to
-      .equal(true);
+    chai.expect(wrapper.find('TextField').length).to.equal(2);
+
+    chai.expect(wrapper.find('TextField').at(0).props().floatingLabelText).to.equal('Service ID *');
+    chai.expect(wrapper.find('TextField').at(0).props().disabled).to.equal(true);
+
+    chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal('Label *');
+    chai.expect(wrapper.find('TextField').at(1).props().disabled).to.equal(true);
   });
 
   it('displays "show..." as title when menuMode is SHOW_SERVICE', () => {
@@ -245,10 +157,7 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('Dialog')
-      .props().title)
-      .to
-      .equal('Show hello_world');
+    chai.expect(wrapper.find('Dialog').props().title).to.equal('Show hello_world');
   });
 
 
@@ -265,24 +174,11 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('TextField').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().floatingLabelText)
-      .to
-      .equal('Label *');
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().multiLine)
-      .to
-      .equal(true);
-    chai.expect(wrapper.find('TextField')
-      .at(1)
-      .props().style.width)
-      .to
-      .equal('33em');
+    chai.expect(wrapper.find('TextField').length).to.equal(2);
+
+    chai.expect(wrapper.find('TextField').at(1).props().floatingLabelText).to.equal('Label *');
+    chai.expect(wrapper.find('TextField').at(1).props().multiLine).to.equal(true);
+    chai.expect(wrapper.find('TextField').at(1).props().style.width).to.equal('33em');
   });
 
   it('renders link text fields', () => {
@@ -298,14 +194,8 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('LinkTextField').length)
-      .to
-      .equal(1);
-    chai.expect(wrapper.find('LinkTextField')
-      .at(0)
-      .props().floatingLabelText)
-      .to
-      .equal('Label *');
+    chai.expect(wrapper.find('LinkTextField').length).to.equal(1);
+    chai.expect(wrapper.find('LinkTextField').at(0).props().floatingLabelText).to.equal('Label *');
   });
 
   it('validates text fields with required=true on submit', () => {
@@ -331,19 +221,11 @@ describe('<AddEditDialogComponent/>', () => {
     wrapper.instance()
       .handleOnSubmit();
 
-    chai.expect(wrapper.state().validationMessages.id)
-      .to
-      .equal('Field is required!');
-    chai.expect(wrapper.state().validationMessages.label)
-      .to
-      .equal('Field is required!');
+    chai.expect(wrapper.state().validationMessages.id).to.equal('Field is required!');
+    chai.expect(wrapper.state().validationMessages.label).to.equal('Field is required!');
 
-    chai.expect(wrapper.instance().allRefs.input_id.props.errorText)
-      .to
-      .equal('Field is required!');
-    chai.expect(wrapper.instance().allRefs.input_label.props.errorText)
-      .to
-      .equal('Field is required!');
+    chai.expect(wrapper.instance().allRefs.input_id.props.errorText).to.equal('Field is required!');
+    chai.expect(wrapper.instance().allRefs.input_label.props.errorText).to.equal('Field is required!');
   });
 
   xit('marks tabs containing invalid fields', () => {
@@ -378,16 +260,9 @@ describe('<AddEditDialogComponent/>', () => {
     // currently, its not possible to test anything on the children of material ui's Dialog component (eg, the Tab)
     // when using enzyme's mount(): https://github.com/callemall/material-ui/issues/6290
 
-    chai.expect(wrapper.find('Tab').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .props().style).to.be.undefined;
-    chai.expect(wrapper.find('Tab')
-      .at(1).style)
-      .to
-      .equal({ color: 'rgb(244, 67, 54)' });
+    chai.expect(wrapper.find('Tab').length).to.equal(2);
+    chai.expect(wrapper.find('Tab').at(0).props().style).to.be.undefined;
+    chai.expect(wrapper.find('Tab').at(1).style).to.equal({ color: 'rgb(244, 67, 54)' });
   });
 
   it('creates entity object and calls props.onSubmit() when validation succeeds', () => {
@@ -438,47 +313,14 @@ describe('<AddEditDialogComponent/>', () => {
 
     const wrapper = shallow(<AddEditDialogComponent {...props}/>);
 
-    chai.expect(wrapper.find('Tab').length)
-      .to
-      .equal(1);
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .props().label)
-      .to
-      .equal('Top Committers');
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .find('ListItem').length)
-      .to
-      .equal(2);
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .find('ListItem')
-      .at(0)
-      .props().primaryText)
-      .to
-      .equal('foo@bar.baz');
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .find('ListItem')
-      .at(0)
-      .props().secondaryText)
-      .to
-      .equal(42);
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .find('ListItem')
-      .at(1)
-      .props().primaryText)
-      .to
-      .equal('moo@cow.biz');
-    chai.expect(wrapper.find('Tab')
-      .at(0)
-      .find('ListItem')
-      .at(1)
-      .props().secondaryText)
-      .to
-      .equal(1337);
+    chai.expect(wrapper.find('Tab').length).to.equal(1);
+    chai.expect(wrapper.find('Tab').at(0).props().label).to.equal('Top Committers');
+    chai.expect(wrapper.find('Tab').at(0).find('ListItem').length).to.equal(2);
+
+    chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(0).props().primaryText).to.equal('foo@bar.baz');
+    chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(0).props().secondaryText).to.equal(42);
+    chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(1).props().primaryText).to.equal('moo@cow.biz');
+    chai.expect(wrapper.find('Tab').at(0).find('ListItem').at(1).props().secondaryText).to.equal(1337);
   });
 
   describe('autocomplete feature', () => {
@@ -557,29 +399,11 @@ describe('<AddEditDialogComponent/>', () => {
       });
 
 
-      chai.expect(wrapper.find('AutoComplete')
-        .at(0)
-        .props().dataSource.length)
-        .to
-        .equal(2);
-      chai.expect(wrapper.find('AutoComplete')
-        .at(0)
-        .props().dataSource[0].value.props.primaryText)
-        .to
-        .equal('Müller, Sven');
-      chai.expect(wrapper.find('AutoComplete')
-        .at(0)
-        .props().dataSource[0].value.props.rightAvatar).to.be.undefined;
-      chai.expect(wrapper.find('AutoComplete')
-        .at(0)
-        .props().dataSource[1].value.props.primaryText)
-        .to
-        .equal('Müller, Thomas');
-      chai.expect(wrapper.find('AutoComplete')
-        .at(0)
-        .props().dataSource[1].value.props.rightAvatar.props.src)
-        .to
-        .equal('data:image/png;base64,i_am_a_base64_encoded_png');
+      chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource.length).to.equal(2);
+      chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.primaryText).to.equal('Müller, Sven');
+      chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[0].value.props.rightAvatar).to.be.undefined;
+      chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.primaryText).to.equal('Müller, Thomas');
+      chai.expect(wrapper.find('AutoComplete').at(0).props().dataSource[1].value.props.rightAvatar.props.src).to.equal('data:image/png;base64,i_am_a_base64_encoded_png');
     });
 
   });
