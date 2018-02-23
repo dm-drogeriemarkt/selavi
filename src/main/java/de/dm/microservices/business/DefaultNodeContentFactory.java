@@ -24,8 +24,4 @@ public class DefaultNodeContentFactory {
 
         return node;
     }
-
-    public ObjectMapper getMapper() {
-        return mapper;
-    }
 }

@@ -21,6 +21,7 @@ public class UserController {
     public Person getUserDetails(Principal principal) {
 
         List<Person> personList = personRepository.findByName(principal.getName());
+
         if (personList.size() == 1) {
             return personList.get(0);
         }

@@ -32,8 +32,8 @@ public class UserControllerTest {
     public void getUserDetails() throws InvalidNameException {
 
         Principal principal = () -> "foobar";
-
         Person user = Person.builder().build();
+
         when(activeDirectoryService.findByName("foobar")).thenReturn(Arrays.asList(user));
 
         Person result = userController.getUserDetails(principal);
