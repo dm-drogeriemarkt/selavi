@@ -2,7 +2,7 @@
 SeLaVi (ServiceLandscapeVisualizer) displays all microservices which are registered in a service registry and their relations to each other in a graphical mindmap.
 This grants an overview over a complex system landscape for developers, operators and product owners alike.
 
-[![Build Status](https://travis-ci.org/dm-drogeriemarkt/selavi.png)](https://travis-ci.org/dm-drogeriemarkt/selavi)
+[![Build Status](https://travis-ci.org/dm-drogeriemarkt/selavi.svg?branch=master)](https://travis-ci.org/dm-drogeriemarkt/selavi)
 
 ### Demo System
 
