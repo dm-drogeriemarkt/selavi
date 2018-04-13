@@ -1,9 +1,9 @@
-FROM dockerfile/java:oracle-java8
+FROM openjdk:8
 
-COPY app.jar /srv/app.jar
+COPY target/app.jar /srv/app.jar
 
 WORKDIR /srv/
 
 EXPOSE 8080
 
-CMD [ "java", "-jar", "app.jar", "--spring.config.location=/srv/conf/" ]
+CMD [ "java", "-Xmx350m", "-jar", "app.jar", "--spring.profiles.active=development-h2", "--server.port=${PORT:8080}" ]
