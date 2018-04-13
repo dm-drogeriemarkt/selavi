@@ -57,6 +57,11 @@ The WAR file created during the build process can be deployed in a Servlet Conta
 The application can be run with a local H2 database or a MySQL database. A database user with alter table permission
 is needed for the MySQL database
 
+To run MySQL in docker container for local development, simply run
+
+	$ docker pull mysql
+	$ docker run --name docker-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=selavi -e MYSQL_USER=selavi -e MYSQL_PASSWORD=supersicher -d -p 3306:3306 mysql
+
 ### Spring Profiles
 | Name | Description |
 | ----------- | ----------- |
