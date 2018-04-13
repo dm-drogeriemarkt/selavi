@@ -1,11 +1,27 @@
 # SeLaVi
 SeLaVi (ServiceLandscapeVisualizer) displays all microservices which are registered in a service registry and their relations to each other in a graphical mindmap.
+This grants an overview over a complex system landscape for developers, operators and product owners alike.
 
 [![Build Status](https://travis-ci.org/dm-drogeriemarkt/selavi.png)](https://travis-ci.org/dm-drogeriemarkt/selavi)
+
+### Demo System
+
+You can have a look at SeLaVi on our CI system:
+
+https://selavi.herokuapp.com/selavi
+
+Note: The system might take a couple of seconds to respond because heroku puts it into hibernation after a certain amount of inactivity.
 
 ![SeLaVi Screenshot](screenshot.png)
 
 The graph is drawn using [vis.js](https://github.com/almende/vis "vis.js").
+
+## When should you use SeLaVi?
+
+* When you have a complex system landscape that is difficult to overview
+* When you have the need to visualize dependencies between your services
+* If you already have a Eureka service registry in operation, SeLaVi can easily be used on top of it
+
 
 ## Building the Application
 
@@ -31,14 +47,6 @@ Run the spring boot runner form IDEA with the VM options:
 ### Testing the application
 
     $ mvn clean verify
-    
-### Building the application
-
-Navigate to the root directory of the sources and execute:
-
-    $ mvn clean package
-
-That will create the WAR file within the 'target' directory.
 
 ### Deploying the application
 
