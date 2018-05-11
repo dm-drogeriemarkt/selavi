@@ -118,24 +118,24 @@
             <artifactId>unboundid-ldapsdk</artifactId>
         </dependency>
 
-        <!--
-                <dependency>
-                    <groupId>de.dm.auth</groupId>
-                    <artifactId>activedirectory-spring-boot-starter</artifactId>
-                    <version>${activedirectory-spring-boot-starter.version}</version>
-                </dependency>
-        -->
+
+        <dependency>
+            <groupId>de.dm.auth</groupId>
+            <artifactId>activedirectory-spring-boot-starter</artifactId>
+            <version>${activedirectory-spring-boot-starter.version}</version>
+        </dependency>
+        
 
         <dependency>
             <groupId>de.dm.selavi</groupId>
             <artifactId>person-repository-core</artifactId>
             <version>${person-repository-core.version}</version>
         </dependency>
-        <!--        <dependency>
-                    <groupId>de.dm.selavi</groupId>
-                    <artifactId>person-repository-activedirectory</artifactId>
-                    <version>${person-repository-activedirectory.version}</version>
-                </dependency>-->
+        <dependency>
+            <groupId>de.dm.selavi</groupId>
+            <artifactId>person-repository-activedirectory</artifactId>
+            <version>${person-repository-activedirectory.version}</version>
+        </dependency>
         <!--Develop-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
