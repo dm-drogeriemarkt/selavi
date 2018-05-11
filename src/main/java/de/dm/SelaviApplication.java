@@ -1,7 +1,7 @@
 package de.dm;
 
 import com.google.common.cache.CacheBuilder;
-import de.dm.activedirectory.business.ActiveDirectoryProperties;
+import de.dm.activedirectory.business.BasicDirectoryProperties;
 import de.dm.microservices.business.ServiceRegistryProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 @EnableSwagger2
 @EnableDiscoveryClient
-@EnableConfigurationProperties({ActiveDirectoryProperties.class, ServiceRegistryProperties.class})
+@EnableConfigurationProperties({BasicDirectoryProperties.class, ServiceRegistryProperties.class})
 public class SelaviApplication extends SpringBootServletInitializer {
 
     @Value("${cache.expireAfterWriteInMinutes}")

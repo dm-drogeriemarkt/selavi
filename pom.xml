@@ -101,6 +101,10 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -114,11 +118,13 @@
             <artifactId>unboundid-ldapsdk</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>de.dm.auth</groupId>
-            <artifactId>activedirectory-spring-boot-starter</artifactId>
-            <version>${activedirectory-spring-boot-starter.version}</version>
-        </dependency>
+        <!--
+                <dependency>
+                    <groupId>de.dm.auth</groupId>
+                    <artifactId>activedirectory-spring-boot-starter</artifactId>
+                    <version>${activedirectory-spring-boot-starter.version}</version>
+                </dependency>
+        -->
 
         <dependency>
             <groupId>de.dm.selavi</groupId>
