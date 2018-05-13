@@ -3,7 +3,6 @@ package de.dm.common.basicldap;
 import de.dm.personsearch.PersonRepository;
 import de.dm.personsearch.basicldap.PersonBasicLdapService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +28,6 @@ public class BasicLdapAuthenticationProviderConfig {
     private GrantedAuthoritiesMapper authorietiesMapper;
 
     @Bean
-    @ConditionalOnMissingBean
     public AuthenticationProvider authenticationProvider() {
 
         LdapAuthenticationProvider ldapAuthenticationProvider = new LdapAuthenticationProvider(ldapAuthenticator());

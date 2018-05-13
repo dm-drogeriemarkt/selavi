@@ -5,7 +5,6 @@ import de.dm.auth.activedirectory.cache.CachingAuthenticationProvider;
 import de.dm.personsearch.PersonRepository;
 import de.dm.personsearch.activedirectory.PersonActiveDirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -30,7 +29,6 @@ public class ActiveDirectoryAuthenticationProviderConfig {
     private LdapContextSource contextSource;
 
     @Bean
-    @ConditionalOnMissingBean
     public AuthenticationProvider authenticationProvider() {
         Hotfix3960ActiveDirectoryLdapAuthenticationProvider provider =
                 new Hotfix3960ActiveDirectoryLdapAuthenticationProvider(properties.getDomain(), properties.getUrl(), properties.getBase());
