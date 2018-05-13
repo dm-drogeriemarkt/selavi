@@ -16,7 +16,7 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.ldap.authentication.ad.Hotfix3960ActiveDirectoryLdapAuthenticationProvider;
 
 @Configuration
-@Profile({"activedirectory"})
+@Profile({"active-directory"})
 public class ActiveDirectoryAuthenticationProviderConfig {
 
 

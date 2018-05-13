@@ -19,7 +19,7 @@ import org.springframework.security.ldap.authentication.PasswordComparisonAuthen
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 
 @Configuration
-@Profile({"basicldap"})
+@Profile({"basic-ldap"})
 public class BasicLdapAuthenticationProviderConfig {
 
     @Autowired
