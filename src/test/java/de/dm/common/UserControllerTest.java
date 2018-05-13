@@ -1,7 +1,7 @@
 package de.dm.common;
 
-import de.dm.selavi.personrepositorycore.Person;
-import de.dm.selavi.personrepositorycore.PersonRepository;
+import de.dm.personsearch.Person;
+import de.dm.personsearch.PersonRepository;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,9 +1,8 @@
-package de.dm.personsearch;
+package de.dm.personsearch.basicldap;
 
-import de.dm.selavi.personrepositorycore.Person;
-import de.dm.selavi.personrepositorycore.PersonRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.dm.personsearch.Person;
+import de.dm.personsearch.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.ContainerCriteria;
@@ -11,12 +10,12 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 
 import java.util.List;
 
-public class BasicPersonSearchService implements PersonRepository {
+@Slf4j
+public class PersonBasicLdapService implements PersonRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(BasicPersonSearchService.class);
     private final LdapTemplate ldapTemplate;
 
-    public BasicPersonSearchService(LdapTemplate ldapTemplate) {
+    public PersonBasicLdapService(LdapTemplate ldapTemplate) {
         this.ldapTemplate = ldapTemplate;
     }
 
@@ -35,4 +34,5 @@ public class BasicPersonSearchService implements PersonRepository {
         log.info("Search person for name {}", name);
         return this.ldapTemplate.search(containerCriteria, attributesMapper);
     }
+
 }

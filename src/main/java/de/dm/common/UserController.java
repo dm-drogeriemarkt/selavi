@@ -1,7 +1,7 @@
 package de.dm.common;
 
-import de.dm.selavi.personrepositorycore.Person;
-import de.dm.selavi.personrepositorycore.PersonRepository;
+import de.dm.personsearch.Person;
+import de.dm.personsearch.PersonRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

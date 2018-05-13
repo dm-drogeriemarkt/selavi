@@ -1,7 +1,9 @@
-package de.dm.common;
+package de.dm.common.activedirectory;
 
 import de.dm.activedirectory.business.ActiveDirectoryProperties;
 import de.dm.auth.activedirectory.cache.CachingAuthenticationProvider;
+import de.dm.personsearch.PersonRepository;
+import de.dm.personsearch.activedirectory.PersonActiveDirectoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,9 @@ public class ActiveDirectoryAuthenticationProviderConfig {
     @Autowired
     private ActiveDirectoryProperties properties;
 
+    @Autowired
+    private LdapContextSource contextSource;
+
     @Bean
     @ConditionalOnMissingBean
     public AuthenticationProvider authenticationProvider() {
@@ -35,7 +40,7 @@ public class ActiveDirectoryAuthenticationProviderConfig {
     }
 
     @Bean
-    public LdapContextSource ldapContextSource(ActiveDirectoryProperties properties) {
+    public LdapContextSource ldapContextSource() {
         LdapContextSource ldapContextSource = new LdapContextSource();
         ldapContextSource.setUrl(properties.getUrl());
         ldapContextSource.setUserDn(properties.getUserDn());
@@ -45,10 +50,15 @@ public class ActiveDirectoryAuthenticationProviderConfig {
     }
 
     @Bean
-    public LdapTemplate ldapTemplate(LdapContextSource contextSource) {
+    public LdapTemplate ldapTemplate() {
         LdapTemplate ldapTemplate = new LdapTemplate(contextSource);
         ldapTemplate.setIgnorePartialResultException(true);
         return ldapTemplate;
+    }
+
+    @Bean
+    public PersonRepository personRepository() {
+        return new PersonActiveDirectoryService(ldapTemplate());
     }
 
 }

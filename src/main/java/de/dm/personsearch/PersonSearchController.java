@@ -1,7 +1,5 @@
 package de.dm.personsearch;
 
-import de.dm.selavi.personrepositorycore.Person;
-import de.dm.selavi.personrepositorycore.PersonRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

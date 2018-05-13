@@ -1,8 +1,8 @@
 package de.dm.activedirectory.business;
 
 import de.dm.personsearch.InMemoryPersonSearchService;
-import de.dm.selavi.personrepositorycore.Person;
-import de.dm.selavi.personrepositorycore.PersonRepository;
+import de.dm.personsearch.Person;
+import de.dm.personsearch.PersonRepository;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
