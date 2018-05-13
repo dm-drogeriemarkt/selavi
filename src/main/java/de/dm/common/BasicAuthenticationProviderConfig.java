@@ -3,7 +3,6 @@ package de.dm.common;
 import de.dm.personsearch.BasicPersonSearchService;
 import de.dm.selavi.personrepositorycore.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +28,6 @@ public class BasicAuthenticationProviderConfig {
     @Autowired
     private EmbeddedLdapProperties properties;
 
-    @Value("${selavi.security.userRole}")
-    private String userRole;
     @Autowired
     private GrantedAuthoritiesMapper authorietiesMapper;
 
