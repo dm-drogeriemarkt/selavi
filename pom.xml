@@ -123,12 +123,6 @@
             <version>${activedirectory-spring-boot-starter.version}</version>
         </dependency>
 
-        <!--Develop-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
-
         <!--Persistence -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
