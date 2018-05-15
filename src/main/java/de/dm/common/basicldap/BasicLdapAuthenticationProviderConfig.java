@@ -3,6 +3,7 @@ package de.dm.common.basicldap;
 import de.dm.personsearch.PersonRepository;
 import de.dm.personsearch.basicldap.PersonBasicLdapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,8 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.authentication.PasswordComparisonAuthenticator;
+import org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator;
+import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 
 @Configuration
@@ -27,14 +30,24 @@ public class BasicLdapAuthenticationProviderConfig {
     @Autowired
     private GrantedAuthoritiesMapper authorietiesMapper;
 
+    @Value("${selavi.security.userRole}")
+    private String userRole;
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
-
-        LdapAuthenticationProvider ldapAuthenticationProvider = new LdapAuthenticationProvider(ldapAuthenticator());
+        LdapAuthenticationProvider ldapAuthenticationProvider = new LdapAuthenticationProvider(ldapAuthenticator(), ldapAuthoritizer());
         ldapAuthenticationProvider.setUseAuthenticationRequestCredentials(true);
         ldapAuthenticationProvider.setAuthoritiesMapper(authorietiesMapper);
         ldapAuthenticationProvider.setUserDetailsContextMapper(new LdapUserDetailsMapper());
         return ldapAuthenticationProvider;
+    }
+
+    @Bean
+    public LdapAuthoritiesPopulator ldapAuthoritizer() {
+
+        DefaultLdapAuthoritiesPopulator defaultLdapAuthoritiesPopulator1 = new DefaultLdapAuthoritiesPopulator(ldapContextSource(), "ou=groups");
+        defaultLdapAuthoritiesPopulator1.setDefaultRole(userRole);
+        return defaultLdapAuthoritiesPopulator1;
     }
 
     @Bean
