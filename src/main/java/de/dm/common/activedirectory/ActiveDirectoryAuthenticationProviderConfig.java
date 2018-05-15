@@ -1,6 +1,5 @@
 package de.dm.common.activedirectory;
 
-import de.dm.activedirectory.business.ActiveDirectoryProperties;
 import de.dm.auth.activedirectory.cache.CachingAuthenticationProvider;
 import de.dm.personsearch.PersonRepository;
 import de.dm.personsearch.activedirectory.PersonActiveDirectoryService;

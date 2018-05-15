@@ -1,4 +1,4 @@
-package de.dm.activedirectory.business;
+package de.dm.common.activedirectory;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

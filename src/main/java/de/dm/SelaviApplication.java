@@ -1,7 +1,7 @@
 package de.dm;
 
 import com.google.common.cache.CacheBuilder;
-import de.dm.activedirectory.business.ActiveDirectoryProperties;
+import de.dm.common.activedirectory.ActiveDirectoryProperties;
 import de.dm.microservices.business.ServiceRegistryProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
