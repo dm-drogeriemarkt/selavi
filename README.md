@@ -68,6 +68,7 @@ To run MySQL in docker container for local development, simply run
 | local | all to localhost  |
 | development-h2 | use H2 database|
 | development-mysql | use local installed MySQL databse |
+| active-directory | enable Active Directory as authentication provider |
 
 ## Connection to Service Registry
 
