@@ -43,6 +43,18 @@ export function onAddLink() {
     };
 }
 
+export function onShowVersions() {
+    return {
+        type: 'SHOW_VERSIONS',
+    };
+}
+
+export function onHideVersions() {
+    return {
+        type: 'HIDE_VERSIONS',
+    };
+}
+
 export function onAddService() {
     return {
         type: 'ADD_SERVICE',

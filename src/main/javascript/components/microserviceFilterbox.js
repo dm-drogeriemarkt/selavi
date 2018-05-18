@@ -11,13 +11,14 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import { onAddLink, onAddService, onCancel, onLogin, onLogout, onType } from '../actions/microserviceFilderboxActions';
+import { onAddLink, onAddService, onCancel, onLogin, onLogout, onType, onShowVersions, onHideVersions } from '../actions/microserviceFilderboxActions';
 
 const mapStateToProps = (state) => {
     return {
         menuMode: state.menuMode,
         loggedInUser: state.loggedInUser,
         filterString: state.filterString,
+        showVersions: state.showVersions,
         stage: state.stage
     };
 };
@@ -27,6 +28,8 @@ const mapDispatchToProps = {
     onLogin,
     onLogout,
     onAddLink,
+    onShowVersions,
+    onHideVersions,
     onAddService,
     onCancel
 };
@@ -51,7 +54,6 @@ export class MicroserviceFilterbox extends React.Component {
     handleLinkAlertClose() {
         this.setState({ linkUrl: undefined });
     }
-
     render() {
 
         let avatarToolGroup;
@@ -60,6 +62,12 @@ export class MicroserviceFilterbox extends React.Component {
         let loginLogoutMenuItem;
         let addServiceMenuItem;
         let linkMenuItem;
+        let showVersionsMenuItem;
+        if (this.props.showVersions) {
+            showVersionsMenuItem = (<MenuItem primaryText="Hide versions" onTouchTap={this.props.onHideVersions}/>);
+        }else {
+            showVersionsMenuItem = (<MenuItem primaryText="Show versions" onTouchTap={this.props.onShowVersions}/>);
+        }
 
         if (this.props.loggedInUser) {
             let avatar;
@@ -108,6 +116,7 @@ export class MicroserviceFilterbox extends React.Component {
                       {loginLogoutMenuItem}
                       {addServiceMenuItem}
                       {linkMenuItem}
+                      {showVersionsMenuItem}
                       <MenuItem primaryText="Share link" onTouchTap={this.handleLinkAlertOpen.bind(this)}/>
                   </IconMenu>
               </ToolbarGroup>

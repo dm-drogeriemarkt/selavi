@@ -15,6 +15,7 @@ const mapStateToProps = (state) => {
         filterString: state.filterString,
         microserviceListResizeCount: state.microserviceListResizeCount,
         debugMode: state.debugMode,
+        showVersions: state.showVersions,
         stage: state.stage
     };
 };
@@ -164,8 +165,19 @@ export class MicroserviceMindmap extends React.Component {
         return microservice;
     }
 
+    _addVersionData(microservice) {
+        if (this.props.showVersions && microservice.version && !microservice.label.includes('@')) {
+            microservice.label = microservice.label + '@' + microservice.version;
+        }else if (!this.props.showVersions){
+            microservice.label=microservice.id
+        }
+
+        return microservice;
+    }
+
     updateMindmap() {
-        let microservices = this.props.microservices.map(microservice => this._addColorData(microservice, this.props));
+        let microservices = this.props.microservices.map(microservice => this._addColorData(microservice, this.props))
+            .map(microservice => this._addVersionData(microservice));
 
         // create an array with nodes
         let nodes = new vis.DataSet(microservices);
