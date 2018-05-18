@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
+import {connect} from 'react-redux';
+import {Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar';
 import TextField from 'material-ui/TextField';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
@@ -11,7 +11,15 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import { onAddLink, onAddService, onCancel, onLogin, onLogout, onType } from '../actions/microserviceFilderboxActions';
+import {
+    onAddLink,
+    onAddService,
+    onCancel,
+    onLogin,
+    onLogout,
+    onType,
+    onUnhideServices
+} from '../actions/microserviceFilderboxActions';
 
 const mapStateToProps = (state) => {
     return {
@@ -28,14 +36,15 @@ const mapDispatchToProps = {
     onLogout,
     onAddLink,
     onAddService,
-    onCancel
+    onCancel,
+    onUnhideServices
 };
 
 export class MicroserviceFilterbox extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { linkUrl: undefined }
+        this.state = {linkUrl: undefined}
     }
 
     handleLinkAlertOpen() {
@@ -45,28 +54,30 @@ export class MicroserviceFilterbox extends React.Component {
             url += ("&filter=" + this.props.filterString);
         }
 
-        this.setState({ linkUrl: url });
+        this.setState({linkUrl: url});
     }
 
     handleLinkAlertClose() {
-        this.setState({ linkUrl: undefined });
+        this.setState({linkUrl: undefined});
     }
 
     render() {
 
         let avatarToolGroup;
-        const avatarStyle = { margin: 5 };
+        const avatarStyle = {margin: 5};
 
         let loginLogoutMenuItem;
         let addServiceMenuItem;
         let linkMenuItem;
+        let unhideServicesMenuItem;
 
         if (this.props.loggedInUser) {
             let avatar;
 
             if (this.props.loggedInUser.thumbnailPhoto) {
                 avatar =
-                  <Avatar src={"data:image/png;base64," + this.props.loggedInUser.thumbnailPhoto} style={avatarStyle}/>;
+                    <Avatar src={"data:image/png;base64," + this.props.loggedInUser.thumbnailPhoto}
+                            style={avatarStyle}/>;
             } else {
                 avatar = <Avatar icon={<SentimentVerySatisfiedIcon/>} style={avatarStyle}/>;
             }
@@ -84,7 +95,7 @@ export class MicroserviceFilterbox extends React.Component {
             }
 
             addServiceMenuItem = (
-              <MenuItem primaryText="Add Service" onTouchTap={this.props.onAddService}/>);
+                <MenuItem primaryText="Add Service" onTouchTap={this.props.onAddService}/>);
         } else {
             avatarToolGroup = (<ToolbarGroup>
                 <Avatar icon={<SentimentNeutralIcon/>} style={avatarStyle}/>Not logged in
@@ -92,39 +103,41 @@ export class MicroserviceFilterbox extends React.Component {
 
             loginLogoutMenuItem = (<MenuItem primaryText="Login" onTouchTap={this.props.onLogin}/>);
         }
+        unhideServicesMenuItem = (<MenuItem primaryText="Show Hidden" onTouchTap={this.props.onUnhideServices}/>);
 
         return (
-          <Toolbar>
-              {avatarToolGroup}
-              <ToolbarGroup>
-                  <ToolbarTitle text="SeLaVi - Service Landscape Visualizer"/>
-              </ToolbarGroup>
-              <ToolbarGroup>
-                  <TextField hintText="Filter services... (label, tags)" value={this.props.filterString}
-                             onChange={this.props.onType.bind(this)}/>
-              </ToolbarGroup>
-              <ToolbarGroup>
-                  <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon /></IconButton>}>
-                      {loginLogoutMenuItem}
-                      {addServiceMenuItem}
-                      {linkMenuItem}
-                      <MenuItem primaryText="Share link" onTouchTap={this.handleLinkAlertOpen.bind(this)}/>
-                  </IconMenu>
-              </ToolbarGroup>
-              <Dialog
-                title="Link to current SeLaVi view"
-                actions={<FlatButton
-                  label="Ok"
-                  primary={true}
-                  onTouchTap={this.handleLinkAlertClose.bind(this)}
-                />}
-                modal={false}
-                open={!!this.state.linkUrl}
-                onRequestClose={this.handleLinkAlertClose.bind(this)}
-              >
-                  <span>{this.state.linkUrl}</span>
-              </Dialog>
-          </Toolbar>
+            <Toolbar>
+                {avatarToolGroup}
+                <ToolbarGroup>
+                    <ToolbarTitle text="SeLaVi - Service Landscape Visualizer"/>
+                </ToolbarGroup>
+                <ToolbarGroup>
+                    <TextField hintText="Filter services... (label, tags)" value={this.props.filterString}
+                               onChange={this.props.onType.bind(this)}/>
+                </ToolbarGroup>
+                <ToolbarGroup>
+                    <IconMenu iconButtonElement={<IconButton touch={true}><NavigationExpandMoreIcon/></IconButton>}>
+                        {loginLogoutMenuItem}
+                        {addServiceMenuItem}
+                        {linkMenuItem}
+                        {unhideServicesMenuItem}
+                        <MenuItem primaryText="Share link" onTouchTap={this.handleLinkAlertOpen.bind(this)}/>
+                    </IconMenu>
+                </ToolbarGroup>
+                <Dialog
+                    title="Link to current SeLaVi view"
+                    actions={<FlatButton
+                        label="Ok"
+                        primary={true}
+                        onTouchTap={this.handleLinkAlertClose.bind(this)}
+                    />}
+                    modal={false}
+                    open={!!this.state.linkUrl}
+                    onRequestClose={this.handleLinkAlertClose.bind(this)}
+                >
+                    <span>{this.state.linkUrl}</span>
+                </Dialog>
+            </Toolbar>
         );
     }
 }

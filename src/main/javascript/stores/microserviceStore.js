@@ -9,6 +9,7 @@ const initialState = {
     stage: undefined,
     availableStages: [],
     microservices: [],
+    hiddenMicroServices: [],
     bitbucketDetails: {},
     topComitters: undefined,
     selectedService: undefined,
@@ -128,7 +129,15 @@ export function updateStore(state = initialState, action) {
         }
         case 'HIDE_SERVICE': {
             return Object.assign({}, state, {
+                hiddenMicroServices: state.hiddenMicroServices.concat(state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0]),
                 microservices: state.microservices.filter((microservice) => microservice.id !== state.contextMenuServiceId),
+                contextMenuServiceId: undefined
+            });
+        }
+        case 'UNHIDE_SERVICES': {
+            return Object.assign({}, state, {
+                hiddenMicroServices: [],
+                microservices: state.microservices.concat(state.hiddenMicroServices),
                 contextMenuServiceId: undefined
             });
         }

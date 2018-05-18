@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
-import { shallow } from 'enzyme';
-import { MicroserviceFilterbox } from '../../../main/javascript/components/microserviceFilterbox';
+import {shallow} from 'enzyme';
+import {MicroserviceFilterbox} from '../../../main/javascript/components/microserviceFilterbox';
 
 describe('<MicroserviceFilterbox/>', function () {
 
@@ -43,9 +43,10 @@ describe('<MicroserviceFilterbox/>', function () {
 
         const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
 
-        chai.expect(wrapper.find('MenuItem').length).to.equal(2);
+        chai.expect(wrapper.find('MenuItem').length).to.equal(3);
         chai.expect(wrapper.find('MenuItem').at(0).props().primaryText).to.equal('Login');
-        chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Share link');
+        chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Show Hidden');
+        chai.expect(wrapper.find('MenuItem').at(2).props().primaryText).to.equal('Share link');
     });
 
     it('displays logout, add service, add link & share link buttons in menu when a user is logged in', function () {
@@ -54,11 +55,12 @@ describe('<MicroserviceFilterbox/>', function () {
 
         const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
 
-        chai.expect(wrapper.find('MenuItem').length).to.equal(4);
+        chai.expect(wrapper.find('MenuItem').length).to.equal(5);
         chai.expect(wrapper.find('MenuItem').at(0).props().primaryText).to.equal('Logout');
         chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Add Service');
         chai.expect(wrapper.find('MenuItem').at(2).props().primaryText).to.equal('Add link');
-        chai.expect(wrapper.find('MenuItem').at(3).props().primaryText).to.equal('Share link');
+        chai.expect(wrapper.find('MenuItem').at(3).props().primaryText).to.equal('Show Hidden');
+        chai.expect(wrapper.find('MenuItem').at(4).props().primaryText).to.equal('Share link');
     });
 
     it('shows selavi share link in alert dialog', function () {
@@ -70,7 +72,7 @@ describe('<MicroserviceFilterbox/>', function () {
 
         chai.expect(wrapper.find('Dialog').at(0).props().open).to.equal(false);
 
-        wrapper.find('MenuItem').at(1).simulate('touchTap');
+        wrapper.find('MenuItem').at(2).simulate('touchTap');
 
         chai.expect(wrapper.find('Dialog').at(0).props().open).to.equal(true);
         chai.expect(wrapper.find('Dialog').find('span').text()).to.equal("http://localhost/?stage=baz&filter=foobar")
