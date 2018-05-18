@@ -33,5 +33,6 @@ public class MicroserviceDto {
     private String buildMonitorLink;
     private String monitoringLink;
     private boolean external;
+    private String version;
 
 }

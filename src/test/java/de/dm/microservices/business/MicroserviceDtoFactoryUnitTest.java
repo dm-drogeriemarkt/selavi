@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 public class MicroserviceDtoFactoryUnitTest {
     @Test
     public void getMicroserviceDtoFromJSON() throws Exception {
-        final String json = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81]}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true}";
+        final String json = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81]}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true,\"version\":\"1.0.1\"}";
 
         final MicroserviceDtoFactory factory = new MicroserviceDtoFactory();
         final MicroserviceDto dto2 = factory.getMicroserviceDtoFromJSON(json);
@@ -31,6 +31,7 @@ public class MicroserviceDtoFactoryUnitTest {
         assertThat(dto2.getMonitoringLink(), is("monitoringLink"));
         assertThat(dto2.getNetworkZone(), is("networkZone"));
         assertThat(dto2.getTags(), is("tags"));
+        assertThat(dto2.getVersion(), is("1.0.1"));
 
         assertThat(dto2.getConsumes().get(0).getLabel(), is("labelConsume"));
         assertThat(dto2.getConsumes().get(0).getTarget(), is("target"));
@@ -45,7 +46,7 @@ public class MicroserviceDtoFactoryUnitTest {
 
     @Test
     public void getJsonFromMicroserviceDto() throws Exception {
-        final String expectedJson = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81]}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true}";
+        final String expectedJson = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81]}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true,\"version\":\"1.0.1\"}";
         final MicroserviceDtoFactory factory = new MicroserviceDtoFactory();
         final MicroserviceDto dto = new MicroserviceDto();
         dto.setId("id");
@@ -62,6 +63,7 @@ public class MicroserviceDtoFactoryUnitTest {
         dto.setMonitoringLink("monitoringLink");
         dto.setNetworkZone("networkZone");
         dto.setTags("tags");
+        dto.setVersion("1.0.1");
 
         final ConsumeDto consumeDto = new ConsumeDto();
         consumeDto.setLabel("labelConsume");
