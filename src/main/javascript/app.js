@@ -47,6 +47,7 @@ class App extends React.Component {
         const serviceBusinessInputFields = {
             "id": {label: "Service ID *", hint: "eg. \"ZOE\"", required: true},
             "label": {label: "Label *", hint: "eg. \"ZOE\"", required: true},
+            "version": {label: "Version *", hint: "eg. \"1.0.1\"", required: false},
             "fdOwner": {
                 label: "Contact Person *",
                 hint: "eg. \"Altmann, Erik\"",
