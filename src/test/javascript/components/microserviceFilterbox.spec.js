@@ -38,27 +38,29 @@ describe('<MicroserviceFilterbox/>', function () {
     });
 
 
-    it('displays login & share link button in menu when no user is logged in', function () {
+    it('displays login, show versions & share link button in menu when no user is logged in', function () {
         const props = createProps();
 
         const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
 
-        chai.expect(wrapper.find('MenuItem').length).to.equal(2);
+        chai.expect(wrapper.find('MenuItem').length).to.equal(3);
         chai.expect(wrapper.find('MenuItem').at(0).props().primaryText).to.equal('Login');
-        chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Share link');
+        chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Show versions');
+        chai.expect(wrapper.find('MenuItem').at(2).props().primaryText).to.equal('Share link');
     });
 
-    it('displays logout, add service, add link & share link buttons in menu when a user is logged in', function () {
+    it('displays logout, add service, add link, show versions & share link buttons in menu when a user is logged in', function () {
         const props = createProps();
         props.loggedInUser = "my_user_id";
 
         const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
 
-        chai.expect(wrapper.find('MenuItem').length).to.equal(4);
+        chai.expect(wrapper.find('MenuItem').length).to.equal(5);
         chai.expect(wrapper.find('MenuItem').at(0).props().primaryText).to.equal('Logout');
         chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Add Service');
         chai.expect(wrapper.find('MenuItem').at(2).props().primaryText).to.equal('Add link');
-        chai.expect(wrapper.find('MenuItem').at(3).props().primaryText).to.equal('Share link');
+        chai.expect(wrapper.find('MenuItem').at(3).props().primaryText).to.equal('Show versions');
+        chai.expect(wrapper.find('MenuItem').at(4).props().primaryText).to.equal('Share link');
     });
 
     it('displays show hidden services button when there are hidden services', function () {
@@ -79,7 +81,7 @@ describe('<MicroserviceFilterbox/>', function () {
 
         chai.expect(wrapper.find('Dialog').at(0).props().open).to.equal(false);
 
-        wrapper.find('MenuItem').at(1).simulate('touchTap');
+        wrapper.find('MenuItem').at(2).simulate('touchTap');
 
         chai.expect(wrapper.find('Dialog').at(0).props().open).to.equal(true);
         chai.expect(wrapper.find('Dialog').find('span').text()).to.equal("http://localhost/?stage=baz&filter=foobar")
@@ -95,13 +97,37 @@ describe('<MicroserviceFilterbox/>', function () {
 
         sinon.assert.calledOnce(props.onUnhideServices);
     });
+
+    it('dispatches SHOW_VERSIONS action', function () {
+        const props = createProps();
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+
+        wrapper.find('MenuItem').at(1).simulate('touchTap');
+
+        sinon.assert.calledOnce(props.onShowVersions);
+    });
+
+    it('dispatches HIDE_VERSIONS action', function () {
+        const props = createProps();
+        props.showVersions = true;
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+
+        wrapper.find('MenuItem').at(1).simulate('touchTap');
+
+        sinon.assert.calledOnce(props.onHideVersions);
+    });
 });
 
 function createProps() {
     return {
         loggedInUser: undefined,
+        showVersions: false,
         onLogin: sinon.spy(),
         onLogout: sinon.spy(),
+        onShowVersions: sinon.spy(),
+        onHideVersions: sinon.spy(),
         onAddLink: sinon.spy(),
         onAddService: sinon.spy(),
         onType: sinon.spy(),

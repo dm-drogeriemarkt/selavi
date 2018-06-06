@@ -163,6 +163,7 @@ public class ServiceRegistryRepository {
         addChildNodeToBaseNode(applicationNode, metadata, "documentationLink");
         addChildNodeToBaseNode(applicationNode, metadata, "buildMonitorLink");
         addChildNodeToBaseNode(applicationNode, metadata, "monitoringLink");
+        addChildNodeToBaseNode(applicationNode, metadata, "version");
     }
 
 

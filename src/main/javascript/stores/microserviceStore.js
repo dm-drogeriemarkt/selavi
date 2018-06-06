@@ -23,6 +23,7 @@ const initialState = {
     deleteServiceErrorMessage: undefined,
     contextMenuVisible: false,
     menuMode: undefined,
+    showVersions: false,
     filterString: urlSearchParams.get('filter') || '',
     microserviceListResizeCount: 0,
     addEditDialogFormAction: undefined,
@@ -82,6 +83,16 @@ export function updateStore(state = initialState, action) {
         case 'ADD_LINK': {
             return Object.assign({}, state, {
                 menuMode: 'ADD_LINK'
+            });
+        }
+        case 'SHOW_VERSIONS': {
+            return Object.assign({}, state, {
+                showVersions: true
+            });
+        }
+        case 'HIDE_VERSIONS': {
+            return Object.assign({}, state, {
+                showVersions: false
             });
         }
         case 'ADD_RELATION': {

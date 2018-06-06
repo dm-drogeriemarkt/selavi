@@ -18,7 +18,9 @@ import {
     onLogin,
     onLogout,
     onType,
-    onUnhideServices
+    onUnhideServices,
+    onShowVersions,
+    onHideVersions
 } from '../actions/microserviceFilderboxActions';
 
 const mapStateToProps = (state) => {
@@ -26,6 +28,7 @@ const mapStateToProps = (state) => {
         menuMode: state.menuMode,
         loggedInUser: state.loggedInUser,
         filterString: state.filterString,
+        showVersions: state.showVersions,
         stage: state.stage,
         hiddenMicroServices: state.hiddenMicroServices
     };
@@ -36,6 +39,8 @@ const mapDispatchToProps = {
     onLogin,
     onLogout,
     onAddLink,
+    onShowVersions,
+    onHideVersions,
     onAddService,
     onCancel,
     onUnhideServices
@@ -61,7 +66,6 @@ export class MicroserviceFilterbox extends React.Component {
     handleLinkAlertClose() {
         this.setState({linkUrl: undefined});
     }
-
     render() {
 
         let avatarToolGroup;
@@ -71,6 +75,12 @@ export class MicroserviceFilterbox extends React.Component {
         let addServiceMenuItem;
         let linkMenuItem;
         let unhideServicesMenuItem;
+        let showVersionsMenuItem;
+        if (this.props.showVersions) {
+            showVersionsMenuItem = (<MenuItem primaryText="Hide versions" onTouchTap={this.props.onHideVersions}/>);
+        }else {
+            showVersionsMenuItem = (<MenuItem primaryText="Show versions" onTouchTap={this.props.onShowVersions}/>);
+        }
 
         if (this.props.loggedInUser) {
             let avatar;
@@ -122,6 +132,7 @@ export class MicroserviceFilterbox extends React.Component {
                         {addServiceMenuItem}
                         {linkMenuItem}
                         {unhideServicesMenuItem}
+                        {showVersionsMenuItem}
                         <MenuItem primaryText="Share link" onTouchTap={this.handleLinkAlertOpen.bind(this)}/>
                     </IconMenu>
                 </ToolbarGroup>
