@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
-import { shallow } from 'enzyme';
-import { MicroserviceFilterbox } from '../../../main/javascript/components/microserviceFilterbox';
+import {shallow} from 'enzyme';
+import {MicroserviceFilterbox} from '../../../main/javascript/components/microserviceFilterbox';
 
 describe('<MicroserviceFilterbox/>', function () {
 
@@ -61,6 +61,15 @@ describe('<MicroserviceFilterbox/>', function () {
         chai.expect(wrapper.find('MenuItem').at(3).props().primaryText).to.equal('Share link');
     });
 
+    it('displays show hidden services button when there are hidden services', function () {
+        const props = createProps();
+        props.hiddenMicroServices = [{ id: 1337 }];
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+
+        chai.expect(wrapper.find('MenuItem').at(1).props().primaryText).to.equal('Show Hidden');
+    });
+
     it('shows selavi share link in alert dialog', function () {
         const props = createProps();
         props.filterString = "foobar";
@@ -75,6 +84,17 @@ describe('<MicroserviceFilterbox/>', function () {
         chai.expect(wrapper.find('Dialog').at(0).props().open).to.equal(true);
         chai.expect(wrapper.find('Dialog').find('span').text()).to.equal("http://localhost/?stage=baz&filter=foobar")
     });
+
+    it('dispatches UNHIDE_SERVICE action', function () {
+        const props = createProps();
+        props.hiddenMicroServices = [{ id: 1337 }];
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+
+        wrapper.find('MenuItem').at(1).simulate('touchTap');
+
+        sinon.assert.calledOnce(props.onUnhideServices);
+    });
 });
 
 function createProps() {
@@ -84,6 +104,8 @@ function createProps() {
         onLogout: sinon.spy(),
         onAddLink: sinon.spy(),
         onAddService: sinon.spy(),
-        onType: sinon.spy()
+        onType: sinon.spy(),
+        onUnhideServices: sinon.spy(),
+        hiddenMicroServices: []
     };
 }

@@ -27,3 +27,9 @@ export function onShowService() {
         type: 'SHOW_SERVICE'
     };
 }
+
+export function onHideService() {
+    return {
+        type: 'HIDE_SERVICE'
+    };
+}
