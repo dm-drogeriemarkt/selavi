@@ -2,7 +2,7 @@
 
 # set some environment variables
 export REPO=dmopensource/selavi
-export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+export TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi)
 
 # build and tag image
 docker build -f Dockerfile -t $REPO:$COMMIT .
