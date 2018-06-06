@@ -20,6 +20,16 @@ describe('<MicroserviceCountLabel/>', function () {
         chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪ | 1 service missing req. props');
     });
 
+    it('displays count of hidden services', function () {
+        const props = createProps();
+
+        const wrapper = shallow(<MicroserviceCountLabel {...props}/>);
+        chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪');
+
+        wrapper.setProps({ hiddenMicroServices: [ 'this is a service' ] });
+        chai.expect(wrapper.text()).to.equal('1 microservice ✪ | 1 external ✪ | 1 services hidden');
+    });
+
 });
 
 function createProps() {
@@ -38,6 +48,7 @@ function createProps() {
                 ]
             }
         ],
-        serviceRequiredProperties: []
+        serviceRequiredProperties: [],
+        hiddenMicroServices: []
     };
 }

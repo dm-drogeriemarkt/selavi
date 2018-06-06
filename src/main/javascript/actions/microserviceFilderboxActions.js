@@ -34,7 +34,7 @@ export function onLogout() {
             });
         });
     }
-      ;
+        ;
 }
 
 export function onAddLink() {
@@ -64,5 +64,11 @@ export function onAddService() {
 export function onCancel() {
     return {
         type: 'CANCEL_MENU_ACTION',
+    };
+}
+
+export function onUnhideServices() {
+    return {
+        type: 'UNHIDE_SERVICES',
     };
 }

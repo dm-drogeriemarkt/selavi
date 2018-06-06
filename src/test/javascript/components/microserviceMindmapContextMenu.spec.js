@@ -104,7 +104,7 @@ describe('<MicroserviceMindmapContextMenu/>', function () {
                 const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
 
                 chai.expect(wrapper.find('nav').props().hidden).to.be.undefined;
-                chai.expect(wrapper.find('button').at(0).text()).to.equal('Show Service');
+                chai.expect(wrapper.find('button').at(0).text()).to.equal('Service Details');
             });
 
             it('calls onAddProperty action when Show Service button is clicked', function () {
@@ -132,6 +132,18 @@ describe('<MicroserviceMindmapContextMenu/>', function () {
             });
         });
     });
+
+  it('dispatches HIDE_SERVICE action', function () {
+    const props = createProps();
+    props.contextMenuServiceId = 1337;
+
+    const wrapper = shallow(<MicroserviceMindmapContextMenu {...props}/>);
+
+    chai.expect(wrapper.find('button').at(1).text()).to.equal('Hide Service');
+    wrapper.find('button').at(1).simulate('click');
+
+    sinon.assert.calledOnce(props.onHideService);
+  });
 });
 
 function createProps() {
@@ -144,6 +156,7 @@ function createProps() {
         onDeleteService: sinon.spy(),
         onDeleteLink: sinon.spy(),
         onEditLink: sinon.spy(),
+        onHideService: sinon.spy(),
         loggedInUser: undefined
     };
 }

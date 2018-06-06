@@ -7,7 +7,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import static org.mockito.Mockito.mock;
@@ -23,7 +22,7 @@ public class HttpOkAuthenticationSuccessHandlerTest {
     }
 
     @Test
-    public void onAuthenticationSuccessRedirectsToUserController() throws IOException, ServletException {
+    public void onAuthenticationSuccessRedirect() throws IOException, ServletException {
         MockHttpServletRequest request = MockMvcRequestBuilders.post("login").buildRequest(null);
 
         HttpServletResponse response = mock(HttpServletResponse.class);

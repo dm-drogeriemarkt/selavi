@@ -19,7 +19,7 @@ public class HttpOkAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        // redirect to UserController.getUserDetails() to fetch user details
+        // redirect to PersonSearchController.getCurrentUser() to fetch user details
         response.sendRedirect("user");
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
