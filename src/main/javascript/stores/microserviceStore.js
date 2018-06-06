@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore } from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
 // TODO: is this a good place to handle url search params?
@@ -9,6 +9,7 @@ const initialState = {
     stage: undefined,
     availableStages: [],
     microservices: [],
+    hiddenMicroServices: [],
     bitbucketDetails: {},
     topComitters: undefined,
     selectedService: undefined,
@@ -126,6 +127,20 @@ export function updateStore(state = initialState, action) {
                 menuMode: 'DELETE_SERVICE'
             });
         }
+        case 'HIDE_SERVICE': {
+            return Object.assign({}, state, {
+                hiddenMicroServices: state.hiddenMicroServices.concat(state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0]),
+                microservices: state.microservices.filter((microservice) => microservice.id !== state.contextMenuServiceId),
+                contextMenuServiceId: undefined
+            });
+        }
+        case 'UNHIDE_SERVICES': {
+            return Object.assign({}, state, {
+                hiddenMicroServices: [],
+                microservices: state.microservices.concat(state.hiddenMicroServices),
+                contextMenuServiceId: undefined
+            });
+        }
         case 'DELETE_LINK': {
             return Object.assign({}, state, {
                 deleteLinkFromId: state.contextMenuFromId,
@@ -137,8 +152,8 @@ export function updateStore(state = initialState, action) {
         }
         case 'EDIT_LINK': {
             const relation = state.microservices
-                                  .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
-                                                                                                           .filter((relation) => relation.target === state.contextMenuToId)[0];
+                .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
+                .filter((relation) => relation.target === state.contextMenuToId)[0];
             relation.label = 'Relation ' + state.contextMenuFromId + ' -> ' + state.contextMenuToId;
 
             return Object.assign({}, state, {

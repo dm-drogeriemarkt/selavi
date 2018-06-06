@@ -60,4 +60,52 @@ describe('microserviceStore', function () {
             chai.expect(newState.stage).to.equal("stage");
         });
     });
+
+  describe('HIDE_SERVICE / UNHIDE_SERVICES', function () {
+
+    let store;
+
+    beforeEach(function () {
+      store = require("../../../main/javascript/stores/microserviceStore");
+    });
+
+    it('hides services', function () {
+
+      const initialState = {
+        microservices: [{ id: 1337 }],
+        hiddenMicroServices: []
+      }
+
+      const firstState = store.updateStore(initialState, {
+        type: 'CONTEXT_MENU_OPEN',
+        contextMenuServiceId: 1337
+      });
+
+      chai.expect(firstState.contextMenuServiceId).to.equal(1337);
+
+      const secondState = store.updateStore(firstState, {
+        type: 'HIDE_SERVICE'
+      });
+
+      chai.expect(secondState.hiddenMicroServices).to.have.lengthOf(1);
+      chai.expect(secondState.hiddenMicroServices[0].id).to.equal(1337);
+      chai.expect(secondState.microservices).to.have.lengthOf(0);
+    });
+
+    it('shows hidden services', function () {
+
+      const initialState = {
+        microservices: [],
+        hiddenMicroServices: [{ id: 1337 }]
+      }
+
+      const firstState = store.updateStore(initialState, {
+        type: 'UNHIDE_SERVICES'
+      });
+
+      chai.expect(firstState.microservices).to.have.lengthOf(1);
+      chai.expect(firstState.microservices[0].id).to.equal(1337);
+      chai.expect(firstState.hiddenMicroServices).to.have.lengthOf(0);
+    });
+  });
 });
