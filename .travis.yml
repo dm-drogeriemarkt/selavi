@@ -17,4 +17,4 @@ env:
 
 after_success:
 # build and deploy docker image, but only when building the master branch
-  - test $TRAVIS_BRANCH = "master" && ./docker_build_deploy.sh
+  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && ./docker_build_deploy.sh
