@@ -140,44 +140,50 @@ export class MicroserviceMindmap extends React.Component {
     }
 
     _addColorData(microservice, props) {
-        if (shouldFilterOut(microservice, props.filterString)) {
-            microservice.group = "filteredOut";
+        let coloredMicroservice = Object.assign({}, microservice);
 
-            if (!hasAllRequiredProperties(microservice, props.serviceRequiredProperties)) {
-                microservice.shadow = {
+        if (shouldFilterOut(coloredMicroservice, props.filterString)) {
+          coloredMicroservice.group = "filteredOut";
+
+            if (!hasAllRequiredProperties(coloredMicroservice, props.serviceRequiredProperties)) {
+              coloredMicroservice.shadow = {
                     color: "#c4c3c6"
                 }
             }
         } else {
-            if (microservice.external) {
-                microservice.group = "external";
+            if (coloredMicroservice.external) {
+              coloredMicroservice.group = "external";
             } else {
-                microservice.group = "microservice";
+              coloredMicroservice.group = "microservice";
             }
 
-            if (!hasAllRequiredProperties(microservice, props.serviceRequiredProperties)) {
-                microservice.shadow = {
+            if (!hasAllRequiredProperties(coloredMicroservice, props.serviceRequiredProperties)) {
+              coloredMicroservice.shadow = {
                     color: "#e50f03"
                 }
             }
         }
 
-        return microservice;
+        return coloredMicroservice;
     }
 
     _addVersionData(microservice) {
-        if (this.props.showVersions && microservice.version && !microservice.label.includes('@')) {
-            microservice.label = microservice.label + '@' + microservice.version;
-        }else if (!this.props.showVersions){
-            microservice.label=microservice.id
+        let microserviceWithVersion = Object.assign({}, microservice);
+
+        if (microserviceWithVersion.version && !microserviceWithVersion.label.includes('@')) {
+          microserviceWithVersion.label = microserviceWithVersion.label + '@' + microserviceWithVersion.version;
         }
 
-        return microservice;
+        return microserviceWithVersion;
     }
 
     updateMindmap() {
         let microservices = this.props.microservices.map(microservice => this._addColorData(microservice, this.props))
-            .map(microservice => this._addVersionData(microservice));
+
+
+        if (this.props.showVersions) {
+            microservices = microservices.map(microservice => this._addVersionData(microservice));
+        }
 
         // create an array with nodes
         let nodes = new vis.DataSet(microservices);

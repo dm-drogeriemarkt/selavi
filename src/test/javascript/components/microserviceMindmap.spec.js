@@ -229,6 +229,35 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledWith(networkDataUpdateNodesSpy, expectedAllNodes);
     });
 
+    it('displays versions of services when required', function () {
+
+        const props = createProps();
+        props.microservices[0].version = '0.4.2';
+        props.showVersions = true;
+
+        shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+
+        const expectedAllNodes = [
+          {
+            id: "foo-service",
+            label: "foo-service@0.4.2",
+            version: "0.4.2",
+            group: "microservice"
+          },
+          {
+            id: "bar-consumer",
+            label: "bar-consumer",
+            external: true,
+            consumes: [
+              { "target": "foo-service", "type": "REST" }
+            ],
+            group: "external"
+          }
+        ];
+
+        sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+    });
+
     it('only creates vis network once', function () {
 
         const props = createProps();

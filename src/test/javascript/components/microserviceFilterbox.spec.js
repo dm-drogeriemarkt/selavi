@@ -97,6 +97,27 @@ describe('<MicroserviceFilterbox/>', function () {
 
         sinon.assert.calledOnce(props.onUnhideServices);
     });
+
+    it('dispatches SHOW_VERSIONS action', function () {
+        const props = createProps();
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+
+        wrapper.find('MenuItem').at(1).simulate('touchTap');
+
+        sinon.assert.calledOnce(props.onShowVersions);
+    });
+
+    it('dispatches HIDE_VERSIONS action', function () {
+        const props = createProps();
+        props.showVersions = true;
+
+        const wrapper = shallow(<MicroserviceFilterbox {...props}/>);
+
+        wrapper.find('MenuItem').at(1).simulate('touchTap');
+
+        sinon.assert.calledOnce(props.onHideVersions);
+    });
 });
 
 function createProps() {
