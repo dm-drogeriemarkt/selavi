@@ -56,7 +56,7 @@ export class MicroserviceMindmapContextMenu extends React.Component {
         } else if (this.props.contextMenuServiceId) {
             return (
                 <nav style={style} className="contextMenu">
-                    <button onClick={this.props.onShowService}>Show Service</button>
+                    <button onClick={this.props.onShowService}>Service Details</button>
                     <button onClick={this.props.onHideService}>Hide Service</button>
                 </nav>
             );

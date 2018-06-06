@@ -26,7 +26,8 @@ const mapStateToProps = (state) => {
         menuMode: state.menuMode,
         loggedInUser: state.loggedInUser,
         filterString: state.filterString,
-        stage: state.stage
+        stage: state.stage,
+        hiddenMicroServices: state.hiddenMicroServices
     };
 };
 
@@ -103,7 +104,7 @@ export class MicroserviceFilterbox extends React.Component {
 
             loginLogoutMenuItem = (<MenuItem primaryText="Login" onTouchTap={this.props.onLogin}/>);
         }
-        unhideServicesMenuItem = (<MenuItem primaryText="Show Hidden" onTouchTap={this.props.onUnhideServices}/>);
+        unhideServicesMenuItem = this.props.hiddenMicroServices.length > 0 ? (<MenuItem primaryText="Show Hidden" onTouchTap={this.props.onUnhideServices}/>) : undefined;
 
         return (
             <Toolbar>
