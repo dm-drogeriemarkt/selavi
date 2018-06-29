@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
 import rest from 'rest';
