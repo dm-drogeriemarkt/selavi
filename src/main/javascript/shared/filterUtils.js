@@ -17,6 +17,16 @@ export function shouldFilterOut(microservice, filterString) {
         }
     }
 
+    // also search for edges
+    let consumes = microservice.consumes;
+    if(consumes !== undefined) {
+        for(let i = 0; i < consumes.length; i++) {
+            if(_match(consumes[i].type, filterString)) {
+                return false;
+            }
+        }
+    }
+
     // filter string does not match any of the fields we search
     return true;
 }
