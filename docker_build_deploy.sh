@@ -25,7 +25,7 @@ curl -n -X PATCH https://api.heroku.com/apps/selavi/formation \
   "updates": [
     {
       "type": "web",
-      "docker_image": "$DOCKER_IMAGE_ID"
+      "docker_image": "'$DOCKER_IMAGE_ID'"
     }
   ]
 }' \
