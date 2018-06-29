@@ -32,7 +32,7 @@ const propTypes = {
   onAddLink: PropTypes.func.isRequired,
   onSelectMicroserviceNode: PropTypes.func.isRequired,
   onContextMenuOpen: PropTypes.func.isRequired,
-  stage: PropTypes.string.isRequired,
+  stage: PropTypes.string,
   showVersions: PropTypes.bool.isRequired,
   debugMode: PropTypes.bool.isRequired,
   serviceRequiredProperties: PropTypes.array.isRequired
@@ -41,6 +41,7 @@ const propTypes = {
 const defaultProps = {
   microserviceListResizeCount: undefined,
   filterString: undefined,
+  stage: undefined,
   microservices: undefined,
   menuMode: undefined
 };

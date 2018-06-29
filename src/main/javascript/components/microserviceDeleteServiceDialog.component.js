@@ -5,14 +5,23 @@ import FlatButton from 'material-ui/FlatButton';
 import Snackbar from 'material-ui/Snackbar';
 
 const propTypes = {
-  menuMode: PropTypes.string.isRequired,
-  deleteServiceId: PropTypes.number.isRequired,
-  deleteLinkFromId: PropTypes.number.isRequired,
-  deleteLinkToId: PropTypes.number.isRequired,
-  stage: PropTypes.string.isRequired,
+  menuMode: PropTypes.string,
+  deleteServiceId: PropTypes.number,
+  deleteLinkFromId: PropTypes.number,
+  deleteLinkToId: PropTypes.number,
+  stage: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  deleteServiceErrorMessage: PropTypes.string.isRequired
+  deleteServiceErrorMessage: PropTypes.string
+};
+
+const defaultProps = {
+  deleteLinkFromId: undefined,
+  stage: undefined,
+  deleteLinkToId: undefined,
+  deleteServiceErrorMessage: undefined,
+  menuMode: undefined,
+  deleteServiceId: undefined
 };
 
 class MicroserviceDeleteServiceDialogComponent extends React.Component {
@@ -93,4 +102,6 @@ class MicroserviceDeleteServiceDialogComponent extends React.Component {
 }
 
 MicroserviceDeleteServiceDialogComponent.propTypes = propTypes;
+MicroserviceDeleteServiceDialogComponent.defaultProps = defaultProps;
+
 export default MicroserviceDeleteServiceDialogComponent;

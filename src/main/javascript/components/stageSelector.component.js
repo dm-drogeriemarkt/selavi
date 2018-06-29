@@ -7,7 +7,11 @@ import MenuItem from 'material-ui/MenuItem';
 const propTypes = {
   onStageSelected: PropTypes.func.isRequired,
   availableStages: PropTypes.array.isRequired,
-  stage: PropTypes.string.isRequired
+  stage: PropTypes.string
+};
+
+const defaultProps = {
+  stage: undefined
 };
 
 class StageSelectorComponent extends React.Component {
@@ -41,6 +45,7 @@ class StageSelectorComponent extends React.Component {
 }
 
 StageSelectorComponent.propTypes = propTypes;
+StageSelectorComponent.defaultProps = defaultProps;
 
 
 export default StageSelectorComponent;

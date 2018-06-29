@@ -15,10 +15,10 @@ import FlatButton from 'material-ui/FlatButton';
 
 const propTypes = {
   filterString: PropTypes.string.isRequired,
-  loggedInUser: PropTypes.object.isRequired,
-  stage: PropTypes.string.isRequired,
+  loggedInUser: PropTypes.object,
+  stage: PropTypes.string,
   onLogout: PropTypes.func.isRequired,
-  menuMode: PropTypes.string.isRequired,
+  menuMode: PropTypes.string,
   onAddService: PropTypes.func.isRequired,
   onLogin: PropTypes.func.isRequired,
   onAddLink: PropTypes.func.isRequired,
@@ -29,6 +29,12 @@ const propTypes = {
   onShowVersions: PropTypes.any.isRequired,
   hiddenMicroServices: PropTypes.any.isRequired,
   onUnhideServices: PropTypes.any.isRequired
+};
+
+const defaultProps = {
+  menuMode: undefined,
+  stage: undefined,
+  loggedInUser: undefined
 };
 
 class MicroserviceFilterboxComponent extends React.Component {
@@ -177,5 +183,6 @@ Not logged in
 }
 
 MicroserviceFilterboxComponent.propTypes = propTypes;
+MicroserviceFilterboxComponent.defaultProps = defaultProps;
 
 export default MicroserviceFilterboxComponent;

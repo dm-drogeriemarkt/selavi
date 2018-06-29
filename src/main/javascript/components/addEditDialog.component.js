@@ -15,8 +15,8 @@ import LinkTextField from './linkTextField.component';
 
 
 const propTypes = {
-  menuMode: PropTypes.string.isRequired,
-  stage: PropTypes.string.isRequired,
+  menuMode: PropTypes.string,
+  stage: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   editMenuMode: PropTypes.string.isRequired,
@@ -26,10 +26,12 @@ const propTypes = {
   topComitters: PropTypes.array,
   showMenuMode: PropTypes.string,
   entityDisplayName: PropTypes.string.isRequired,
-  entity: PropTypes.string
+  entity: PropTypes.object
 };
 
 const defaultProps = {
+  menuMode: undefined,
+  stage: undefined,
   topComitters: [],
   showMenuMode: '_DISABLED_',
   addEditDialogFormAction: null,

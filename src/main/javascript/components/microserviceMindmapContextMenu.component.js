@@ -3,18 +3,25 @@ import PropTypes from 'prop-types';
 
 
 const propTypes = {
-  loggedInUser: PropTypes.object.isRequired,
-  contextMenuServiceId: PropTypes.number.isRequired,
+  loggedInUser: PropTypes.object,
+  contextMenuServiceId: PropTypes.number,
   onAddProperty: PropTypes.func.isRequired,
-  contextMenuToId: PropTypes.number.isRequired,
+  contextMenuToId: PropTypes.number,
   onDeleteService: PropTypes.func.isRequired,
   top: PropTypes.number.isRequired,
   left: PropTypes.number.isRequired,
-  contextMenuFromId: PropTypes.number.isRequired,
+  contextMenuFromId: PropTypes.number,
   onDeleteLink: PropTypes.func.isRequired,
   onShowService: PropTypes.func.isRequired,
   onEditLink: PropTypes.func.isRequired,
   onHideService: PropTypes.func.isRequired
+};
+
+const defaultProps = {
+  loggedInUser: undefined,
+  contextMenuToId: undefined,
+  contextMenuFromId: undefined,
+  contextMenuServiceId: undefined
 };
 
 const MicroserviceMindmapContextMenuComponent = props => {
@@ -81,4 +88,6 @@ Hide Service
 };
 
 MicroserviceMindmapContextMenuComponent.propTypes = propTypes;
+MicroserviceMindmapContextMenuComponent.defaultProps = defaultProps;
+
 export default MicroserviceMindmapContextMenuComponent;

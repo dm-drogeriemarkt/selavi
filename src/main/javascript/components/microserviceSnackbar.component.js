@@ -5,9 +5,14 @@ import Snackbar from 'material-ui/Snackbar';
 
 
 const propTypes = {
-  menuMode: PropTypes.string.isRequired,
-  globalErrorMessage: PropTypes.string.isRequired,
+  menuMode: PropTypes.string,
+  globalErrorMessage: PropTypes.string,
   onRequestClose: PropTypes.func.isRequired
+};
+
+const defaultProps = {
+  menuMode: undefined,
+  globalErrorMessage: undefined
 };
 
 const MicroserviceSnackbarComponent = props => {
@@ -35,5 +40,6 @@ const MicroserviceSnackbarComponent = props => {
 };
 
 MicroserviceSnackbarComponent.propTypes = propTypes;
+MicroserviceSnackbarComponent.defaultProps = defaultProps;
 
 export default MicroserviceSnackbarComponent;

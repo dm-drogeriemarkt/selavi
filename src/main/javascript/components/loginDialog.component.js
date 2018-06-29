@@ -8,10 +8,15 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 
 const propTypes = {
-  menuMode: PropTypes.string.isRequired,
+  menuMode: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  loginErrorMessage: PropTypes.string.isRequired
+  loginErrorMessage: PropTypes.string
+};
+
+const defaultProps = {
+  loginErrorMessage: undefined,
+  menuMode: undefined
 };
 
 class LoginDialogComponent extends React.Component {
@@ -151,4 +156,6 @@ class LoginDialogComponent extends React.Component {
 }
 
 LoginDialogComponent.propTypes = propTypes;
+LoginDialogComponent.defaultProps = defaultProps;
+
 export default LoginDialogComponent;
