@@ -13,6 +13,7 @@
   "globals": {
     "vis": true
   },
+  "settings": { "import/resolver": { "node": { "paths": ["src"] } } } ,
   "rules": {
     "comma-dangle": [2, "never"],
     "react/jsx-filename-extension": [

@@ -106,7 +106,9 @@ describe('<AddEditDialogComponent/>', () => {
     props.inputTabs.push({
       label: 'my_input_tab',
       inputFields: {
-        id: { label: 'Service ID *', hint: 'eg. "ZOE"', required: true, disabled: true },
+        id: {
+          label: 'Service ID *', hint: 'eg. "ZOE"', required: true, disabled: true
+        },
         label: { label: 'Label *', hint: 'eg. "ZOE"', required: true }
       }
     });
@@ -168,7 +170,9 @@ describe('<AddEditDialogComponent/>', () => {
       label: 'my_input_tab',
       inputFields: {
         id: { label: 'Service ID *', hint: 'eg. "ZOE"', required: true },
-        label: { label: 'Label *', hint: 'eg. "ZOE"', required: true, multiLine: true }
+        label: {
+          label: 'Label *', hint: 'eg. "ZOE"', required: true, multiLine: true
+        }
       }
     });
 
@@ -188,7 +192,9 @@ describe('<AddEditDialogComponent/>', () => {
       label: 'my_input_tab',
       inputFields: {
         id: { label: 'Service ID *', hint: 'eg. "ZOE"', required: true },
-        label: { label: 'Label *', hint: 'eg. "ZOE"', required: true, isLink: true }
+        label: {
+          label: 'Label *', hint: 'eg. "ZOE"', required: true, isLink: true
+        }
       }
     });
 
@@ -409,4 +415,3 @@ describe('<AddEditDialogComponent/>', () => {
   });
 
 });
-

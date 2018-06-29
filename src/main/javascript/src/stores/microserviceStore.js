@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 

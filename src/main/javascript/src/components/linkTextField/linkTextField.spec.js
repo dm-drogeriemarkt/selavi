@@ -105,4 +105,3 @@ describe('<LinkTextField/>', () => {
     sinon.assert.calledWith(window.open, 'http://foo.bar.baz');
   });
 });
-

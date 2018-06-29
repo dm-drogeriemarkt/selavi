@@ -55,4 +55,3 @@ export function isFilterHit(fieldName, fieldValue, filterString) {
 
   return match(fieldValue, filterString);
 }
-

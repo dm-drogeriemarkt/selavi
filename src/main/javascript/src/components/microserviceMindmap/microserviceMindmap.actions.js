@@ -28,7 +28,7 @@ export function onContextMenuOpen(params) {
       contextMenuFromId: -1,
       contextMenuToId: -1
     };
-  } else if (params.edgeFromId && params.edgeToId) {
+  } if (params.edgeFromId && params.edgeToId) {
     return {
       type: 'CONTEXT_MENU_OPEN',
       top: params.top,

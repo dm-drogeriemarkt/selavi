@@ -75,8 +75,8 @@ describe('microserviceMindmapActions', () => {
 
     it('dispatches CONTEXT_MENU_OPEN for relations', () => {
       const result = onContextMenuOpen({
- edgeFromId: 42, edgeToId: 43, top: 100, left: 200 
-});
+        edgeFromId: 42, edgeToId: 43, top: 100, left: 200
+      });
 
       chai.expect(result.type).to.equal('CONTEXT_MENU_OPEN');
       chai.expect(result.contextMenuServiceId).to.equal(-1);
