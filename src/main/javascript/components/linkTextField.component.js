@@ -29,12 +29,13 @@ class LinkTextField extends React.Component {
   }
 
   render() {
-
-    const textFieldProps = Object.assign({}, this.props, {
+    const { linkActive } = this.state;
+    const textFieldProps = {
+      ...this.props,
       ref: (ref) => {
         this.textfieldRef = ref;
       }
-    });
+    };
     textFieldProps.style.width = '31em';
 
     const buttonProps = {};
@@ -42,7 +43,7 @@ class LinkTextField extends React.Component {
       onTouchTap: () => this.onTouchTap()
     };
 
-    if (!this.state.linkActive) {
+    if (!linkActive) {
       iconProps.color = grey300;
     } else {
       buttonProps.tooltip = 'Open link...';

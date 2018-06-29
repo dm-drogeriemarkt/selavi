@@ -21,7 +21,14 @@ const MicroserviceDocumentationLink = () => (
     >
       <span
         style={style}
-      >&#x025A4;</span><span style={style}>Doku</span></a>
+      >
+&#x025A4;
+      </span>
+      <span style={style}>
+Doku
+      </span>
+
+    </a>
   </span>
 
 );
