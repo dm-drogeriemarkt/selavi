@@ -1,4 +1,4 @@
-package de.dm.activedirectory.domain;
+package de.dm.personsearch;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,8 +7,9 @@ import lombok.Data;
 @Builder
 public class Person {
 
-    private String uid;
+    private String id;
     private String displayName;
     private String eMail;
     private byte[] thumbnailPhoto;
+
 }

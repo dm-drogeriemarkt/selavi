@@ -50,4 +50,5 @@ export class StageSelectorComponent extends React.Component {
 StageSelectorComponent.propTypes = propTypes;
 
 
-export const StageSelector = connect(mapStateToProps, mapDispatchToProps)(StageSelectorComponent);
+const StageSelector = connect(mapStateToProps, mapDispatchToProps)(StageSelectorComponent);
+export default StageSelector;

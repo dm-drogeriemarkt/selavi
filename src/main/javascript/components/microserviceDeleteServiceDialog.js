@@ -31,7 +31,7 @@ const propTypes = {
   deleteServiceErrorMessage: PropTypes.string.isRequired
 };
 
-export class MicroserviceDeleteServiceDialogComponent extends React.Component {
+class MicroserviceDeleteServiceDialogComponent extends React.Component {
 
   onSubmit() {
     const params = {
@@ -93,5 +93,7 @@ export class MicroserviceDeleteServiceDialogComponent extends React.Component {
 }
 
 MicroserviceDeleteServiceDialogComponent.propTypes = propTypes;
+export { MicroserviceDeleteServiceDialogComponent };
 
-export const MicroserviceDeleteServiceDialog = connect(mapStateToProps, mapDispatchToProps)(MicroserviceDeleteServiceDialogComponent);
+const MicroserviceDeleteServiceDialog = connect(mapStateToProps, mapDispatchToProps)(MicroserviceDeleteServiceDialogComponent);
+export default MicroserviceDeleteServiceDialog;

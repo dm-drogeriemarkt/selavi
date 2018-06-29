@@ -53,7 +53,7 @@ const defaultProps = {
   entity: undefined
 };
 
-export class AddEditDialogComponent extends React.Component {
+class AddEditDialogComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -417,5 +417,7 @@ export class AddEditDialogComponent extends React.Component {
 
 AddEditDialogComponent.defaultProps = defaultProps;
 AddEditDialogComponent.propTypes = propTypes;
+export { AddEditDialogComponent };
 
-export const AddEditDialog = connect(mapStateToProps, mapDispatchToProps)(AddEditDialogComponent);
+const AddEditDialog = connect(mapStateToProps, mapDispatchToProps)(AddEditDialogComponent);
+export default AddEditDialog;

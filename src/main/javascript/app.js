@@ -6,14 +6,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { MicroserviceFilterbox } from './components/microserviceFilterbox';
-import { MicroserviceSnackbar } from './components/microserviceSnackbar';
+import MicroserviceFilterBox from './components/microserviceFilterbox';
+import { MicroserviceMindmapComponent } from './components/microserviceMindmap';
+import MicroserviceSnackbar from './components/microserviceSnackbar';
+import AddEditDialog from './components/addEditDialog';
+import MicroserviceDeleteServiceDialog from './components/microserviceDeleteServiceDialog';
+import LoginDialog from './components/loginDialog';
 import store from './stores/microserviceStore';
 import { getRequiredPropertyNames } from './shared/requiredPropertyUtil';
-import { MicroserviceMindmap } from './components/microserviceMindmap';
-import { AddEditDialog } from './components/addEditDialog';
-import { MicroserviceDeleteServiceDialog } from './components/microserviceDeleteServiceDialog';
-import { LoginDialog } from './components/loginDialog';
 
 // see http://www.material-ui.com/#/get-started/installation
 injectTapEventPlugin();
@@ -22,35 +22,32 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    const client = rest.wrap(mime)
-      .wrap(errorCode);
-    client({ path: '/selavi/services/stages' })
-      .then(response => {
-        store.dispatch({
-          type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
-          response
-        });
-        client({ path: `/selavi/services/${store.getState().stage}` })
-          .then(() => {
-            store.dispatch({
-              type: 'FETCH_MICROSERVICES_SUCCESS',
-              response
-            });
-          });
+    const client = rest.wrap(mime).wrap(errorCode);
+    client({ path: '/selavi/services/stages' }).then(response => {
+      store.dispatch({
+        type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
+        response
       });
-    client({ path: '/selavi/user' })
-      .then(response => {
+      client({ path: `/selavi/services/${store.getState().stage}` }).then(res => {
         store.dispatch({
-          type: 'LOGIN_SUCCESS',
-          loggedInUser: response.entity
+          type: 'FETCH_MICROSERVICES_SUCCESS',
+          response: res
         });
-      }, () => console.log('Not logged in...'));
+      });
+    });
+    client({ path: '/selavi/user' }).then(response => {
+      store.dispatch({
+        type: 'LOGIN_SUCCESS',
+        loggedInUser: response.entity
+      });
+    }, response => console.log('Not logged in...', response));
   }
 
   render() {
     const serviceBusinessInputFields = {
       id: { label: 'Service ID *', hint: 'eg. "ZOE"', required: true },
       label: { label: 'Label *', hint: 'eg. "ZOE"', required: true },
+      version: { label: 'Version *', hint: 'eg. "1.0.1"', required: false },
       fdOwner: {
         label: 'Contact Person *',
         hint: 'eg. "Altmann, Erik"',
@@ -121,10 +118,10 @@ class App extends React.Component {
     return (
       <div className="appcontainer">
         <div className="appheader">
-          <MicroserviceFilterbox serviceRequiredProperties={serviceRequiredProperties}/>
+          <MicroserviceFilterBox serviceRequiredProperties={serviceRequiredProperties}/>
         </div>
         <div className="appcontent">
-          <MicroserviceMindmap serviceRequiredProperties={serviceRequiredProperties}/>
+          <MicroserviceMindmapComponent serviceRequiredProperties={serviceRequiredProperties}/>
         </div>
         <div className="appfooter">
           <MicroserviceSnackbar/>

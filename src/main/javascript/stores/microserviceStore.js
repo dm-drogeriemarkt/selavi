@@ -1,34 +1,32 @@
 import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
-export const urlSearchParams = new URLSearchParams(document.location.search.substring(1));
+// TODO: is this a good place to handle url search params?
+const urlSearchParams = new URLSearchParams(document.location.search.substring(1));
 
 // private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
-  stage: '',
+  stage: undefined,
   availableStages: [],
   microservices: [],
+  hiddenMicroServices: [],
   bitbucketDetails: {},
-  topComitters: [],
-  selectedService: '',
+  topComitters: undefined,
+  selectedService: undefined,
   contextMenuTop: -1,
   contextMenuLeft: -1,
-  contextMenuServiceId: -1,
-  contextMenuFromId: -1,
-  contextMenuToId: -1,
-  addPropertyServiceId: -1,
-  deleteServiceId: -1,
-  deleteServiceErrorMessage: '',
+  contextMenuServiceId: undefined,
+  contextMenuFromId: undefined,
+  contextMenuToId: undefined,
+  addPropertyServiceId: undefined,
+  deleteServiceId: undefined,
+  deleteServiceErrorMessage: undefined,
   contextMenuVisible: false,
-  menuMode: '',
+  menuMode: undefined,
+  showVersions: false,
   filterString: urlSearchParams.get('filter') || '',
   microserviceListResizeCount: 0,
-  addEditDialogFormAction: null,
-  globalErrorMessage: '',
-  loginErrorMessage: '',
-  deleteLinkToId: -1,
-  deleteLinkFromId: -1,
-  loggedInUser: {},
+  addEditDialogFormAction: undefined,
   debugMode: urlSearchParams.has('debug')
 };
 
@@ -41,9 +39,9 @@ export function updateStore(state = initialState, action) {
       return Object.assign({}, state, {
         microservices: action.response.entity,
         stage,
-        menuMode: '',
+        menuMode: undefined,
         entity: undefined,
-        topComitters: []
+        topComitters: undefined
       });
     }
     case 'FETCH_AVAILABLE_STAGES_SUCCESS': {
@@ -87,6 +85,16 @@ export function updateStore(state = initialState, action) {
         menuMode: 'ADD_LINK'
       });
     }
+    case 'SHOW_VERSIONS': {
+      return Object.assign({}, state, {
+        showVersions: true
+      });
+    }
+    case 'HIDE_VERSIONS': {
+      return Object.assign({}, state, {
+        showVersions: false
+      });
+    }
     case 'ADD_RELATION': {
       const relation = {
         target: action.consumedServiceId,
@@ -96,7 +104,7 @@ export function updateStore(state = initialState, action) {
       return Object.assign({}, state, {
         menuMode: 'ADD_RELATION',
         entity: relation,
-        topComitters: '',
+        topComitters: undefined,
         addEditDialogFormAction: `/selavi/services/${state.stage}/${action.consumerId}/relations`
       });
     }
@@ -104,7 +112,7 @@ export function updateStore(state = initialState, action) {
       return Object.assign({}, state, {
         entity: state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0],
         topComitters: state.bitbucketDetails[state.contextMenuServiceId],
-        contextMenuServiceId: '',
+        contextMenuServiceId: undefined,
         menuMode: 'EDIT_SERVICE',
         addEditDialogFormAction: `/selavi/services/${state.stage}/${state.contextMenuServiceId}/properties`
       });
@@ -113,41 +121,57 @@ export function updateStore(state = initialState, action) {
       return Object.assign({}, state, {
         entity: state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0],
         topComitters: state.bitbucketDetails[state.contextMenuServiceId],
-        contextMenuServiceId: '',
+        contextMenuServiceId: undefined,
         menuMode: 'SHOW_SERVICE'
       });
     }
     case 'ADD_EDIT_FAILED': {
       return Object.assign({}, state, {
-        menuMode: '',
+        menuMode: undefined,
         globalErrorMessage: action.message
       });
     }
     case 'DELETE_SERVICE': {
       return Object.assign({}, state, {
         deleteServiceId: state.contextMenuServiceId,
-        contextMenuServiceId: '',
+        contextMenuServiceId: undefined,
         menuMode: 'DELETE_SERVICE'
+      });
+    }
+    case 'HIDE_SERVICE': {
+      return Object.assign({}, state, {
+        hiddenMicroServices: state.hiddenMicroServices.concat(state.microservices.filter((microservice) => microservice.id === state.contextMenuServiceId)[0]),
+        microservices: state.microservices.filter((microservice) => microservice.id !== state.contextMenuServiceId),
+        contextMenuServiceId: undefined
+      });
+    }
+    case 'UNHIDE_SERVICES': {
+      return Object.assign({}, state, {
+        hiddenMicroServices: [],
+        microservices: state.microservices.concat(state.hiddenMicroServices),
+        contextMenuServiceId: undefined
       });
     }
     case 'DELETE_LINK': {
       return Object.assign({}, state, {
         deleteLinkFromId: state.contextMenuFromId,
         deleteLinkToId: state.contextMenuToId,
-        contextMenuFromId: -1,
-        contextMenuToId: -1,
+        contextMenuFromId: undefined,
+        contextMenuToId: undefined,
         menuMode: 'DELETE_LINK'
       });
     }
     case 'EDIT_LINK': {
-      const relation = state.microservices.filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes.filter(() => relation.target === state.contextMenuToId)[0];
+      const relation = state.microservices
+        .filter((microservice) => microservice.id === state.contextMenuFromId)[0].consumes
+        .filter((rel) => rel.target === state.contextMenuToId)[0];
       relation.label = `Relation ${state.contextMenuFromId} -> ${state.contextMenuToId}`;
 
       return Object.assign({}, state, {
         entity: relation,
-        topComitters: [],
-        contextMenuFromId: -1,
-        contextMenuToId: -1,
+        topComitters: undefined,
+        contextMenuFromId: undefined,
+        contextMenuToId: undefined,
         menuMode: 'EDIT_RELATION',
         addEditDialogFormAction: `/selavi/services/${state.stage}/${state.contextMenuFromId}/relations/${state.contextMenuToId}`
       });
@@ -172,25 +196,25 @@ export function updateStore(state = initialState, action) {
 
       return Object.assign({}, state, {
         microservices: newMicroservices,
-        menuMode: ''
+        menuMode: undefined
       });
     }
     case 'ADD_SERVICE': {
       return Object.assign({}, state, {
         menuMode: 'ADD_SERVICE',
         addEditDialogFormAction: `/selavi/services/${state.stage}`,
-        entity: '',
-        topComitters: []
+        entity: undefined,
+        topComitters: undefined
       });
     }
     case 'CANCEL_MENU_ACTION': {
       return Object.assign({}, state, {
-        menuMode: '',
-        addPropertyServiceId: -1,
-        deleteServiceErrorMessage: '',
-        globalErrorMessage: '',
-        entity: '',
-        topComitters: []
+        menuMode: undefined,
+        addPropertyServiceId: undefined,
+        deleteServiceErrorMessage: undefined,
+        globalErrorMessage: undefined,
+        entity: undefined,
+        topComitters: undefined
       });
     }
     case 'FILTERBOX_TYPE': {
@@ -206,14 +230,14 @@ export function updateStore(state = initialState, action) {
     case 'LOGIN': {
       return Object.assign({}, state, {
         menuMode: 'LOGIN',
-        loginErrorMessage: '',
-        loggedInUser: {}
+        loginErrorMessage: undefined,
+        loggedInUser: undefined
       });
     }
     case 'LOGIN_SUCCESS': {
       return Object.assign({}, state, {
-        menuMode: '',
-        loginErrorMessage: '',
+        menuMode: undefined,
+        loginErrorMessage: undefined,
         loggedInUser: action.loggedInUser
       });
     }
@@ -221,13 +245,13 @@ export function updateStore(state = initialState, action) {
       return Object.assign({}, state, {
         menuMode: 'LOGIN',
         loginErrorMessage: action.message,
-        loggedInUser: {}
+        loggedInUser: undefined
       });
     }
     case 'LOGOUT_SUCCESS': {
       return Object.assign({}, state, {
-        loggedInUser: {},
-        globalErrorMessage: ''
+        loggedInUser: undefined,
+        globalErrorMessage: undefined
       });
     }
     case 'LOGOUT_FAILED': {

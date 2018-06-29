@@ -2,7 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  onAddProperty, onDeleteLink, onDeleteService, onEditLink,
+  onAddProperty,
+  onDeleteLink,
+  onDeleteService,
+  onEditLink,
+  onHideService,
   onShowService
 } from './../actions/microserviceMindmapContextMenuActions';
 
@@ -15,13 +19,13 @@ const mapStateToProps = (state) => ({
   loggedInUser: state.loggedInUser
 });
 
-
 const mapDispatchToProps = {
   onAddProperty,
   onDeleteService,
   onDeleteLink,
   onEditLink,
-  onShowService
+  onShowService,
+  onHideService
 };
 
 const propTypes = {
@@ -35,23 +39,25 @@ const propTypes = {
   contextMenuFromId: PropTypes.number.isRequired,
   onDeleteLink: PropTypes.func.isRequired,
   onShowService: PropTypes.func.isRequired,
-  onEditLink: PropTypes.func.isRequired
+  onEditLink: PropTypes.func.isRequired,
+  onHideService: PropTypes.func.isRequired
 };
 
-export const MicroserviceMindmapContextMenuComponent = props => {
+const MicroserviceMindmapContextMenuComponent = props => {
 
   const { top, left } = props;
   const style = { position: 'fixed', top, left, zIndex: 999 };
 
-  if (!(Object.keys(props.loggedInUser).length === 0 && props.loggedInUser.constructor === Object)) {
-    if (props.contextMenuServiceId !== -1) {
+  if (props.loggedInUser) {
+    if (props.contextMenuServiceId) {
       return (
         <nav style={style} className="contextMenu">
           <button onClick={props.onAddProperty}>Edit Service</button>
           <button onClick={props.onDeleteService}>Delete Service</button>
+          <button onClick={props.onHideService}>Hide Service</button>
         </nav>
       );
-    } else if (props.contextMenuFromId > -1 && props.contextMenuToId > -1) {
+    } else if (props.contextMenuFromId && props.contextMenuToId) {
       return (
         <nav style={style} className="contextMenu">
           <button onClick={props.onDeleteLink}>Delete Link</button>
@@ -59,10 +65,11 @@ export const MicroserviceMindmapContextMenuComponent = props => {
         </nav>
       );
     }
-  } else if (props.contextMenuServiceId !== -1) {
+  } else if (props.contextMenuServiceId) {
     return (
       <nav style={style} className="contextMenu">
-        <button onClick={props.onShowService}>Show Service</button>
+        <button onClick={props.onShowService}>Service Details</button>
+        <button onClick={props.onHideService}>Hide Service</button>
       </nav>
     );
   }
@@ -71,5 +78,7 @@ export const MicroserviceMindmapContextMenuComponent = props => {
 };
 
 MicroserviceMindmapContextMenuComponent.propTypes = propTypes;
+export { MicroserviceMindmapContextMenuComponent };
 
-export const MicroserviceMindmapContextMenu = connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapContextMenuComponent);
+const MicroserviceMindmapContextMenu = connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapContextMenuComponent);
+export default MicroserviceMindmapContextMenu;

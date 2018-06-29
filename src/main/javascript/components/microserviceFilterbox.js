@@ -12,13 +12,25 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import { onAddLink, onAddService, onCancel, onLogin, onLogout, onType } from '../actions/microserviceFilderboxActions';
+import {
+  onAddLink,
+  onAddService,
+  onCancel,
+  onLogin,
+  onLogout,
+  onType,
+  onUnhideServices,
+  onShowVersions,
+  onHideVersions
+} from '../actions/microserviceFilderboxActions';
 
 const mapStateToProps = (state) => ({
   menuMode: state.menuMode,
   loggedInUser: state.loggedInUser,
   filterString: state.filterString,
-  stage: state.stage
+  showVersions: state.showVersions,
+  stage: state.stage,
+  hiddenMicroServices: state.hiddenMicroServices
 });
 
 const mapDispatchToProps = {
@@ -26,8 +38,11 @@ const mapDispatchToProps = {
   onLogin,
   onLogout,
   onAddLink,
+  onShowVersions,
+  onHideVersions,
   onAddService,
-  onCancel
+  onCancel,
+  onUnhideServices
 };
 
 const propTypes = {
@@ -40,10 +55,15 @@ const propTypes = {
   onLogin: PropTypes.func.isRequired,
   onAddLink: PropTypes.func.isRequired,
   onType: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  showVersions: PropTypes.any.isRequired,
+  onHideVersions: PropTypes.any.isRequired,
+  onShowVersions: PropTypes.any.isRequired,
+  hiddenMicroServices: PropTypes.any.isRequired,
+  onUnhideServices: PropTypes.any.isRequired
 };
 
-export class MicroserviceFilterboxComponent extends React.Component {
+class MicroserviceFilterboxComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -63,7 +83,6 @@ export class MicroserviceFilterboxComponent extends React.Component {
   handleLinkAlertClose() {
     this.setState({ linkUrl: undefined });
   }
-
   render() {
 
     let avatarToolGroup;
@@ -73,12 +92,22 @@ export class MicroserviceFilterboxComponent extends React.Component {
     let addServiceMenuItem;
     let linkMenuItem;
 
-    if (!(Object.keys(this.props.loggedInUser).length === 0 && this.props.loggedInUser.constructor === Object)) {
+    let showVersionsMenuItem;
+    if (this.props.showVersions) {
+      showVersionsMenuItem = (<MenuItem primaryText="Hide versions" onTouchTap={this.props.onHideVersions}/>);
+    } else {
+      showVersionsMenuItem = (<MenuItem primaryText="Show versions" onTouchTap={this.props.onShowVersions}/>);
+    }
+
+    if (this.props.loggedInUser) {
       let avatar;
 
       if (this.props.loggedInUser.thumbnailPhoto) {
         avatar =
-          <Avatar src={`data:image/png;base64,${this.props.loggedInUser.thumbnailPhoto}`} style={avatarStyle}/>;
+          <Avatar
+            src={`data:image/png;base64,${this.props.loggedInUser.thumbnailPhoto}`}
+            style={avatarStyle}
+          />;
       } else {
         avatar = <Avatar icon={<SentimentVerySatisfiedIcon/>} style={avatarStyle}/>;
       }
@@ -104,6 +133,7 @@ export class MicroserviceFilterboxComponent extends React.Component {
 
       loginLogoutMenuItem = (<MenuItem primaryText="Login" onTouchTap={this.props.onLogin}/>);
     }
+    const unhideServicesMenuItem = this.props.hiddenMicroServices.length > 0 ? (<MenuItem primaryText="Show Hidden" onTouchTap={this.props.onUnhideServices}/>) : undefined;
 
     return (
       <Toolbar>
@@ -123,6 +153,8 @@ export class MicroserviceFilterboxComponent extends React.Component {
             {loginLogoutMenuItem}
             {addServiceMenuItem}
             {linkMenuItem}
+            {unhideServicesMenuItem}
+            {showVersionsMenuItem}
             <MenuItem primaryText="Share link" onTouchTap={() => this.handleLinkAlertOpen()}/>
           </IconMenu>
         </ToolbarGroup>
@@ -146,4 +178,7 @@ export class MicroserviceFilterboxComponent extends React.Component {
 
 MicroserviceFilterboxComponent.propTypes = propTypes;
 
-export const MicroserviceFilterbox = connect(mapStateToProps, mapDispatchToProps)(MicroserviceFilterboxComponent);
+export { MicroserviceFilterboxComponent };
+
+const MicroserviceFilterbox = connect(mapStateToProps, mapDispatchToProps)(MicroserviceFilterboxComponent);
+export default MicroserviceFilterbox;

@@ -2,7 +2,7 @@ import rest from 'rest';
 import mime from 'rest/interceptor/mime';
 import errorCode from 'rest/interceptor/errorCode';
 
-export function onType(value) {
+export function onType(event, value) {
   return {
     type: 'FILTERBOX_TYPE',
     filterString: value
@@ -43,6 +43,18 @@ export function onAddLink() {
   };
 }
 
+export function onShowVersions() {
+  return {
+    type: 'SHOW_VERSIONS'
+  };
+}
+
+export function onHideVersions() {
+  return {
+    type: 'HIDE_VERSIONS'
+  };
+}
+
 export function onAddService() {
   return {
     type: 'ADD_SERVICE'
@@ -52,5 +64,11 @@ export function onAddService() {
 export function onCancel() {
   return {
     type: 'CANCEL_MENU_ACTION'
+  };
+}
+
+export function onUnhideServices() {
+  return {
+    type: 'UNHIDE_SERVICES'
   };
 }

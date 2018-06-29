@@ -4,6 +4,7 @@ import chai from 'chai';
 import { shallow } from 'enzyme';
 import { MicroserviceMindmapComponent } from '../../../main/javascript/components/microserviceMindmap';
 
+
 function createProps() {
   const microservices = [
     {
@@ -24,16 +25,13 @@ function createProps() {
     onSelectMicroserviceNode: sinon.spy(),
     onAddLink: sinon.spy(),
     onContextMenuOpen: sinon.spy(),
-    serviceRequiredProperties: [],
-    microserviceListResizeCount: 5,
-    filterString: '',
     microservices,
-    menuMode: '',
-    stage: 'dev'
+    serviceRequiredProperties: []
   };
 }
 
-describe('<MicroserviceMindmapComponent/>', () => {
+describe('<MicroserviceMindmap/>', () => {
+
 
   let clickEventHandler;
   let oncontextEventHandler;
@@ -91,9 +89,6 @@ describe('<MicroserviceMindmapComponent/>', () => {
     global.window = {
       addEventListener: windowAddEventListenerSpy
     };
-
-    global.resize = sinon.spy();
-
   });
 
   afterEach(() => {
@@ -111,8 +106,8 @@ describe('<MicroserviceMindmapComponent/>', () => {
   });
 
   it('can be instantiated', () => {
-    const props = createProps();
-    const wrapper = shallow(<MicroserviceMindmapComponent {...props}/>);
+
+    const wrapper = shallow(<MicroserviceMindmapComponent />);
 
     chai.expect(wrapper.type()).to.equal('div');
   });
@@ -263,6 +258,35 @@ describe('<MicroserviceMindmapComponent/>', () => {
     sinon.assert.calledWith(networkDataUpdateNodesSpy, expectedAllNodes);
   });
 
+  it('displays versions of services when required', () => {
+
+    const props = createProps();
+    props.microservices[0].version = '0.4.2';
+    props.showVersions = true;
+
+    shallow(<MicroserviceMindmapComponent {...props} />, { lifecycleExperimental: true });
+
+    const expectedAllNodes = [
+      {
+        id: 'foo-service',
+        label: 'foo-service@0.4.2',
+        version: '0.4.2',
+        group: 'microservice'
+      },
+      {
+        id: 'bar-consumer',
+        label: 'bar-consumer',
+        external: true,
+        consumes: [
+          { target: 'foo-service', type: 'REST' }
+        ],
+        group: 'external'
+      }
+    ];
+
+    sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+  });
+
   it('only creates vis network once', () => {
 
     const props = createProps();
@@ -310,7 +334,7 @@ describe('<MicroserviceMindmapComponent/>', () => {
     sinon.assert.notCalled(networkSetDataSpy);
     sinon.assert.notCalled(global.vis.Network);
 
-    props.menuMode = '';
+    props.menuMode = undefined;
     wrapper.setProps(props);
 
     sinon.assert.calledOnce(networkDisableEditModeSpy);

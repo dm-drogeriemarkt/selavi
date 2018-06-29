@@ -4,25 +4,25 @@ import chai from 'chai';
 import { shallow } from 'enzyme';
 import { MicroserviceMindmapContextMenuComponent } from '../../../main/javascript/components/microserviceMindmapContextMenu';
 
+
 function createProps() {
   return {
-    contextMenuServiceId: -1,
-    contextMenuFromId: -1,
-    contextMenuToId: -1,
+    contextMenuServiceId: undefined,
+    contextMenuFromId: undefined,
+    contextMenuToId: undefined,
     onAddProperty: sinon.spy(),
     onShowService: sinon.spy(),
     onDeleteService: sinon.spy(),
     onDeleteLink: sinon.spy(),
     onEditLink: sinon.spy(),
-    loggedInUser: {},
-    top: 1,
-    left: 1
+    onHideService: sinon.spy(),
+    loggedInUser: undefined
   };
 }
 
-describe('<MicroserviceMindmapContextMenuComponent/>', () => {
+describe('<MicroserviceMindmapContextMenu/>', () => {
 
-  it('is hidden when contextMenuServiceId, contextMenuFromId and contextMenuToId are -1', () => {
+  it('is hidden when contextMenuServiceId, contextMenuFromId and contextMenuToId are undefined', () => {
     const props = createProps();
 
     const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
@@ -35,7 +35,7 @@ describe('<MicroserviceMindmapContextMenuComponent/>', () => {
       it('displays Edit Service / Delete Service buttons when contextMenuServiceId is set', () => {
         const props = createProps();
         props.loggedInUser = 'my_user_id';
-        props.contextMenuServiceId = 'foo';
+        props.contextMenuServiceId = 1337;
 
         const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
@@ -47,7 +47,7 @@ describe('<MicroserviceMindmapContextMenuComponent/>', () => {
       it('calls onAddProperty action when Edit Service button is clicked', () => {
         const props = createProps();
         props.loggedInUser = 'my_user_id';
-        props.contextMenuServiceId = 'foo';
+        props.contextMenuServiceId = 1337;
 
         const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
@@ -59,7 +59,7 @@ describe('<MicroserviceMindmapContextMenuComponent/>', () => {
       it('calls onDeleteService action when Edit Service button is clicked', () => {
         const props = createProps();
         props.loggedInUser = 'my_user_id';
-        props.contextMenuServiceId = 'foo';
+        props.contextMenuServiceId = 1337;
 
         const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
@@ -115,17 +115,17 @@ describe('<MicroserviceMindmapContextMenuComponent/>', () => {
     describe('for services', () => {
       it('displays Show Service buttons when contextMenuServiceId is set', () => {
         const props = createProps();
-        props.contextMenuServiceId = 'foo';
+        props.contextMenuServiceId = 1337;
 
         const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
         chai.expect(wrapper.find('nav').props().hidden).to.be.undefined;
-        chai.expect(wrapper.find('button').at(0).text()).to.equal('Show Service');
+        chai.expect(wrapper.find('button').at(0).text()).to.equal('Service Details');
       });
 
       it('calls onAddProperty action when Show Service button is clicked', () => {
         const props = createProps();
-        props.contextMenuServiceId = 'foo';
+        props.contextMenuServiceId = 1337;
 
         const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
 
@@ -147,6 +147,18 @@ describe('<MicroserviceMindmapContextMenuComponent/>', () => {
         chai.expect(wrapper.find('button').length).to.equal(0);
       });
     });
+  });
+
+  it('dispatches HIDE_SERVICE action', () => {
+    const props = createProps();
+    props.contextMenuServiceId = 1337;
+
+    const wrapper = shallow(<MicroserviceMindmapContextMenuComponent {...props}/>);
+
+    chai.expect(wrapper.find('button').at(1).text()).to.equal('Hide Service');
+    wrapper.find('button').at(1).simulate('click');
+
+    sinon.assert.calledOnce(props.onHideService);
   });
 });
 

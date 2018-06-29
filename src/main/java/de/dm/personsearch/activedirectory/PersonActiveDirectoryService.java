@@ -1,25 +1,27 @@
-package de.dm.activedirectory.business;
+package de.dm.personsearch.activedirectory;
 
-import de.dm.activedirectory.domain.Person;
+import de.dm.personsearch.Person;
+import de.dm.personsearch.PersonRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.query.ContainerCriteria;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
-@Service
-public class ActiveDirectoryService {
+@Slf4j
+public class PersonActiveDirectoryService implements PersonRepository {
 
-    private LdapTemplate ldapTemplate;
+    private final LdapTemplate ldapTemplate;
 
-    public ActiveDirectoryService(LdapTemplate ldapTemplate) {
+    public PersonActiveDirectoryService(LdapTemplate ldapTemplate) {
         this.ldapTemplate = ldapTemplate;
     }
 
-    public List<Person> findPersonsByName(String name) {
+    @Override
+    public List<Person> findByName(String name) {
         String ldapQuery = "*" + name + "*";
         ldapQuery = ldapQuery.replace(' ', '*');
 
@@ -33,7 +35,7 @@ public class ActiveDirectoryService {
 
         final AttributesMapper<Person> attributesMapper = attrs -> {
             Person.PersonBuilder builder = Person.builder()
-                    .uid((String) attrs.get("sAMAccountName").get())
+                    .id((String) attrs.get("sAMAccountName").get())
                     .displayName((String) attrs.get("displayname").get())
                     .eMail((String) attrs.get("mail").get());
 
@@ -45,6 +47,8 @@ public class ActiveDirectoryService {
 
         };
 
+        log.info("Search person for name {}", name);
         return ldapTemplate.search(containerCriteria, attributesMapper);
     }
+
 }

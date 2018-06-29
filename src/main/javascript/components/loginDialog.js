@@ -26,7 +26,7 @@ const propTypes = {
   loginErrorMessage: PropTypes.string.isRequired
 };
 
-export class LoginDialogComponent extends React.Component {
+class LoginDialogComponent extends React.Component {
 
   constructor(props) {
     super(props);
@@ -156,5 +156,7 @@ export class LoginDialogComponent extends React.Component {
 }
 
 LoginDialogComponent.propTypes = propTypes;
+export { LoginDialogComponent };
 
-export const LoginDialog = connect(mapStateToProps, mapDispatchToProps)(LoginDialogComponent);
+const LoginDialog = connect(mapStateToProps, mapDispatchToProps)(LoginDialogComponent);
+export default LoginDialog;
