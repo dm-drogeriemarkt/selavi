@@ -9,7 +9,7 @@ module.exports = () => {
   console.log('====================================');
 
   return ({
-    entry: './app.js',
+    entry: './src/app.js',
     output: {
       path: path.resolve(__dirname, '../../../target/classes/static'),
       filename: 'bundle.js',
@@ -19,7 +19,10 @@ module.exports = () => {
     resolve: {
       modules: [path.resolve(__dirname, 'node_modules')],
       extensions: ['.js', '.jsx', '.json'],
-      mainFields: ['loader', 'main']
+      mainFields: ['loader', 'main'],
+      alias: {
+        components: path.resolve(__dirname, 'src/components/')
+      }
     },
     optimization: {
       minimize: process.env.NODE_ENV === 'production'
