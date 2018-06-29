@@ -108,17 +108,27 @@ export class MicroserviceMindmap extends React.Component {
         }
     }
 
+    _filterChanged(filterString, nextFilterString) {
+        return filterString !== nextFilterString;
+    }
+
+    _showVersionsChanged(showVersions, nextShowVersions) {
+        return (showVersions !== nextShowVersions)
+    }
+
     shouldComponentUpdate(nextProps) {
         if (nextProps.microserviceListResizeCount !== this.props.microserviceListResizeCount) {
             // service list was resized, no need to re-draw the graph itself
             this._resize();
 
             return false;
-        } else if (nextProps.filterString !== this.props.filterString) {
-            // we are filtering, no need to re-draw the graph itself
+        } else if (this._filterChanged(this.props.filterString, nextProps.filterString)
+            || this._showVersionsChanged(this.props.showVersions, nextProps.showVersions)) {
+
+            // we are filtering or changing showVersions, no need to re-draw the graph itself
             let microservices = this.props.microservices.map(microservice => this._addColorData(microservice, nextProps));
 
-            if (this.props.showVersions) {
+            if (nextProps.showVersions) {
                 microservices = microservices.map(microservice => this._addVersionData(microservice));
             }
 
