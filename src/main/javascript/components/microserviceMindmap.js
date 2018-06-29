@@ -116,7 +116,12 @@ export class MicroserviceMindmap extends React.Component {
             return false;
         } else if (nextProps.filterString !== this.props.filterString) {
             // we are filtering, no need to re-draw the graph itself
-            const microservices = this.props.microservices.map(microservice => this._addColorData(microservice, nextProps));
+            let microservices = this.props.microservices.map(microservice => this._addColorData(microservice, nextProps));
+
+            if (this.props.showVersions) {
+                microservices = microservices.map(microservice => this._addVersionData(microservice));
+            }
+
             this._network.body.data.nodes.update(microservices);
 
             return false;
