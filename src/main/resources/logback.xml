@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration>
+<configuration debug="true" scan="true" scanPeriod="1 minute">
 
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{ISO8601}] [%t] %-5p %c - %m%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
 
-    <!-- If the system property HOST_LOGDIR is set, the configuration assumes to run in a hosted environment. -->
-    <if condition='isDefined("HOST_LOGDIR")'>
-        <then>
-            <!-- Production -->
-            <include file="${catalina.base}/conf/app/logging.xml"/>
-        </then>
-        <else>
-            <!-- Development -->
-            <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
-
-            <logger name="org.springframework" level="WARN"/>
-
-            <root level="INFO">
-                <appender-ref ref="CONSOLE"/>
-            </root>
-        </else>
-    </if>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
 
 </configuration>
