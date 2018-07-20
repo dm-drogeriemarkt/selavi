@@ -76,13 +76,13 @@ class LoginDialogComponent extends React.Component {
       <FlatButton
         label="Cancel"
         secondary
-        onTouchTap={() => onCancel()}
+        onClick={() => onCancel()}
         disabled={inProgress}
       />,
       <FlatButton
         label="Submit"
         primary
-        onTouchTap={() => this.onSubmit()}
+        onClick={() => this.onSubmit()}
         disabled={inProgress}
       />
     ];

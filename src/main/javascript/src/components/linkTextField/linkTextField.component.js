@@ -21,7 +21,7 @@ class LinkTextField extends React.Component {
     this.setState({ linkActive: !!event.target.value });
   }
 
-  onTouchTap() {
+  onClick() {
     const value = this.textfieldRef.getValue();
     if (value) {
       window.open(value);
@@ -40,7 +40,7 @@ class LinkTextField extends React.Component {
 
     const buttonProps = {};
     const iconProps = {
-      onTouchTap: () => this.onTouchTap()
+      onClick: () => this.onClick()
     };
 
     if (!linkActive) {

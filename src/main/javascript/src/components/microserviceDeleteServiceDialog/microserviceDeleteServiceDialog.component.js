@@ -60,12 +60,12 @@ class MicroserviceDeleteServiceDialogComponent extends React.Component {
       <FlatButton
         label="Cancel"
         primary
-        onTouchTap={() => onCancel}
+        onClick={() => onCancel}
       />,
       <FlatButton
         label="Submit"
         primary
-        onTouchTap={() => this.onSubmit}
+        onClick={() => this.onSubmit}
       />
     ];
 

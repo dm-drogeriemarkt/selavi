@@ -51,7 +51,7 @@ describe('<LinkTextField/>', () => {
     chai.expect(wrapper.find('IconButton').at(0).props().tooltip).to.be.undefined;
     chai.expect(wrapper.find('ActionOpenInNew').at(0).props().color).to.equal('#e0e0e0');
 
-    wrapper.instance().onTouchTap();
+    wrapper.instance().onClick();
 
     sinon.assert.notCalled(window.open);
   });
@@ -71,14 +71,14 @@ describe('<LinkTextField/>', () => {
     chai.expect(wrapper.find('IconButton').at(0).props().tooltip).to.be.undefined;
     chai.expect(wrapper.find('ActionOpenInNew').at(0).props().color).to.equal('#e0e0e0');
 
-    wrapper.instance().onTouchTap();
+    wrapper.instance().onClick();
 
     sinon.assert.notCalled(window.open);
 
     // setting the text fields value 'enables' submit button
     wrapper.instance().textfieldRef.input.value = 'http://foo.bar.baz';
 
-    wrapper.instance().onTouchTap();
+    wrapper.instance().onClick();
 
     sinon.assert.calledOnce(window.open);
     sinon.assert.calledWith(window.open, 'http://foo.bar.baz');
@@ -99,7 +99,7 @@ describe('<LinkTextField/>', () => {
 
     chai.expect(wrapper.find('IconButton').at(0).props().tooltip).to.equal('Open link...');
 
-    wrapper.instance().onTouchTap();
+    wrapper.instance().onClick();
 
     sinon.assert.calledOnce(window.open);
     sinon.assert.calledWith(window.open, 'http://foo.bar.baz');

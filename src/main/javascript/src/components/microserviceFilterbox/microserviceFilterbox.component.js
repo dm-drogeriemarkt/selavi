@@ -89,9 +89,9 @@ class MicroserviceFilterboxComponent extends React.Component {
     const { linkUrl } = this.state;
 
     if (showVersions) {
-      showVersionsMenuItem = (<MenuItem primaryText="Hide versions" onTouchTap={onHideVersions}/>);
+      showVersionsMenuItem = (<MenuItem primaryText="Hide versions" onClick={onHideVersions}/>);
     } else {
-      showVersionsMenuItem = (<MenuItem primaryText="Show versions" onTouchTap={onShowVersions}/>);
+      showVersionsMenuItem = (<MenuItem primaryText="Show versions" onClick={onShowVersions}/>);
     }
 
     if (loggedInUser) {
@@ -112,16 +112,16 @@ class MicroserviceFilterboxComponent extends React.Component {
           {loggedInUser.displayName}
         </ToolbarGroup>);
 
-      loginLogoutMenuItem = (<MenuItem primaryText="Logout" onTouchTap={onLogout}/>);
+      loginLogoutMenuItem = (<MenuItem primaryText="Logout" onClick={onLogout}/>);
 
       if (menuMode === 'ADD_LINK') {
-        linkMenuItem = (<MenuItem primaryText="Cancel add link" onTouchTap={onCancel}/>);
+        linkMenuItem = (<MenuItem primaryText="Cancel add link" onClick={onCancel}/>);
       } else {
-        linkMenuItem = (<MenuItem primaryText="Add link" onTouchTap={onAddLink}/>);
+        linkMenuItem = (<MenuItem primaryText="Add link" onClick={onAddLink}/>);
       }
 
       addServiceMenuItem = (
-        <MenuItem primaryText="Add Service" onTouchTap={onAddService}/>);
+        <MenuItem primaryText="Add Service" onClick={onAddService}/>);
     } else {
       avatarToolGroup = (
         <ToolbarGroup>
@@ -129,9 +129,9 @@ class MicroserviceFilterboxComponent extends React.Component {
 Not logged in
         </ToolbarGroup>);
 
-      loginLogoutMenuItem = (<MenuItem primaryText="Login" onTouchTap={onLogin}/>);
+      loginLogoutMenuItem = (<MenuItem primaryText="Login" onClick={onLogin}/>);
     }
-    const unhideServicesMenuItem = hiddenMicroServices.length > 0 ? (<MenuItem primaryText="Show Hidden" onTouchTap={onUnhideServices}/>) : undefined;
+    const unhideServicesMenuItem = hiddenMicroServices.length > 0 ? (<MenuItem primaryText="Show Hidden" onClick={onUnhideServices}/>) : undefined;
 
     return (
       <Toolbar>
@@ -159,7 +159,7 @@ Not logged in
             {linkMenuItem}
             {unhideServicesMenuItem}
             {showVersionsMenuItem}
-            <MenuItem primaryText="Share link" onTouchTap={() => this.handleLinkAlertOpen()}/>
+            <MenuItem primaryText="Share link" onClick={() => this.handleLinkAlertOpen()}/>
           </IconMenu>
         </ToolbarGroup>
         <Dialog
@@ -167,7 +167,7 @@ Not logged in
           actions={<FlatButton
             label="Ok"
             primary
-            onTouchTap={() => this.handleLinkAlertClose()}
+            onClick={() => this.handleLinkAlertClose()}
           />}
           modal={false}
           open={!!linkUrl}

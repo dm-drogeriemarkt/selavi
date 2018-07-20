@@ -46,13 +46,9 @@ class AddEditDialogComponent extends React.Component {
     this.allRefs = [];
   }
 
-  handleOnSubmit() {
+  handleOnSubmit(menuMode, editMenuMode, addMenuMode, onSubmit, addEditDialogFormAction, stage, inputTabs) {
 
-    const {
-      menuMode, editMenuMode, addMenuMode, onSubmit, addEditDialogFormAction, stage
-    } = this.props;
-
-    if (this.validate()) {
+    if (this.validate(inputTabs)) {
       const entity = {};
 
       Object.keys(this.allRefs)
@@ -82,8 +78,7 @@ class AddEditDialogComponent extends React.Component {
     }
   }
 
-  handleOnCancel() {
-    const { onCancel } = this.props;
+  handleOnCancel(onCancel) {
     this.setState({ validationMessages: {} });
     onCancel();
   }
@@ -118,8 +113,7 @@ class AddEditDialogComponent extends React.Component {
     }
   }
 
-  validate() {
-    const { inputTabs } = this.props;
+  validate(inputTabs) {
     const { validationMessages } = this.state;
 
     let isValid = true;
@@ -203,7 +197,6 @@ class AddEditDialogComponent extends React.Component {
   }
 
   render() {
-
     const {
       entity,
       menuMode,
@@ -212,7 +205,11 @@ class AddEditDialogComponent extends React.Component {
       editMenuMode,
       showMenuMode,
       inputTabs,
-      topComitters
+      topComitters,
+      onCancel,
+      onSubmit,
+      addEditDialogFormAction,
+      stage
     } = this.props;
 
     const { validationMessages } = this.state;
@@ -221,12 +218,12 @@ class AddEditDialogComponent extends React.Component {
       <FlatButton
         label="Cancel"
         primary
-        onTouchTap={this.handleOnCancel}
+        onClick={() => this.handleOnCancel(onCancel)}
       />,
       <FlatButton
         label="Submit"
         primary
-        onTouchTap={this.handleOnSubmit}
+        onClick={() => this.handleOnSubmit(menuMode, editMenuMode, addMenuMode, onSubmit, addEditDialogFormAction, stage, inputTabs)}
       />
     ];
 
@@ -250,7 +247,7 @@ class AddEditDialogComponent extends React.Component {
         <FlatButton
           label="Close"
           primary
-          onTouchTap={() => this.handleOnCancel()}
+          onClick={() => this.handleOnCancel(onCancel)}
         />
       ];
 
