@@ -2,10 +2,7 @@ import 'babel-polyfill';
 import errorCode from 'rest/interceptor/errorCode';
 import mime from 'rest/interceptor/mime';
 import rest from 'rest';
-import ReactDOM from 'react-dom';
 import React from 'react';
-import { Provider } from 'react-redux';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MicroserviceFilterBox from 'components/microserviceFilterbox/microserviceFilterbox';
 import MicroserviceMindmap from 'components/microserviceMindmap/microserviceMindmap';
@@ -13,11 +10,18 @@ import MicroserviceSnackbar from 'components/microserviceSnackbar/microserviceSn
 import AddEditDialog from 'components/addEditDialog/addEditDialog';
 import MicroserviceDeleteServiceDialog from 'components/microserviceDeleteServiceDialog/microserviceDeleteServiceDialog';
 import LoginDialog from 'components/loginDialog/loginDialog';
-import store from './stores/microserviceStore';
-import { getRequiredPropertyNames } from './shared/requiredPropertyUtil';
+import PropTypes from 'prop-types';
+import { getRequiredPropertyNames } from 'shared/requiredPropertyUtil';
 
 // see http://www.material-ui.com/#/get-started/installation
 injectTapEventPlugin();
+
+const propTypes = {
+  fetchAvailableStages: PropTypes.func.isRequired,
+  fetchMicroservices: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
+  stage: PropTypes.string.isRequired
+};
 
 class App extends React.Component {
 
@@ -25,22 +29,15 @@ class App extends React.Component {
 
     const client = rest.wrap(mime).wrap(errorCode);
     client({ path: '/selavi/services/stages' }).then(response => {
-      store.dispatch({
-        type: 'FETCH_AVAILABLE_STAGES_SUCCESS',
-        response
-      });
-      client({ path: `/selavi/services/${store.getState().stage}` }).then(res => {
-        store.dispatch({
-          type: 'FETCH_MICROSERVICES_SUCCESS',
-          response: res
-        });
+      this.props.fetchAvailableStages(response);
+      client({ path: `/selavi/services/${this.props.stage}` }).then(res => {
+        this.props.fetchMicroservices(res);
       });
     });
     client({ path: '/selavi/user' }).then(response => {
-      store.dispatch({
-        type: 'LOGIN_SUCCESS',
-        loggedInUser: response.entity
-      });
+      this.props.login(response.entity);
+
+
     }, response => console.log('Not logged in...', response));
   }
 
@@ -147,11 +144,7 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <MuiThemeProvider>
-    <Provider store={store}>
-      <App/>
-    </Provider>
-  </MuiThemeProvider>,
-  document.getElementById('react')
-);
+App.propTypes = propTypes;
+
+export default App;
+

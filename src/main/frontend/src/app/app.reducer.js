@@ -1,11 +1,6 @@
-/* eslint-disable prefer-destructuring */
-import { applyMiddleware, createStore } from 'redux';
-import thunk from 'redux-thunk';
-
 // TODO: is this a good place to handle url search params?
 const urlSearchParams = new URLSearchParams(document.location.search.substring(1));
 
-// private, initial (and 'immutable') state. its only mutated by the reducer function
 const initialState = {
   stage: undefined,
   availableStages: [],
@@ -32,7 +27,7 @@ const initialState = {
 };
 
 // reducer function, creates a new state object from the previous state and the action
-export function updateStore(state = initialState, action) {
+const app = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH_MICROSERVICES_SUCCESS': {
       const stage = action.stage ? action.stage : state.stage;
@@ -263,7 +258,7 @@ export function updateStore(state = initialState, action) {
     default:
       return state;
   }
-}
+};
 
-// create & export redux store
-export default createStore(updateStore, applyMiddleware(thunk));
+
+export default app;

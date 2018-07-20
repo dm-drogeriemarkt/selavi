@@ -4,6 +4,7 @@ import MicroserviceMindmapContextMenu from 'components/microserviceMindmapContex
 import MicroserviceCountLabel from 'components/microserviceCountLabel';
 import MicroserviceDocumentationLink from 'components/microserviceDocumentationLink';
 import StageSelector from 'components/stageSelector';
+import { DataSet, Network } from 'vis';
 import { hasAllRequiredProperties } from '../../shared/requiredPropertyUtil';
 import { shouldFilterOut } from '../../shared/filterUtils';
 
@@ -217,7 +218,7 @@ class MicroserviceMindmapComponent extends React.Component {
     }
 
     // create an array with nodes
-    const nodes = new vis.DataSet(mappedMicroservices);
+    const nodes = new DataSet(mappedMicroservices);
 
     // create a network
     const data = {
@@ -275,7 +276,7 @@ class MicroserviceMindmapComponent extends React.Component {
         };
       }
 
-      this.network = new vis.Network(this.vizcontainerRef, data, options);
+      this.network = new Network(this.vizcontainerRef, data, options);
 
       const boundOnSelectMicroserviceNode = this.onSelectMicroserviceNodeHandler.bind(this);
       const boundOnContextMenuOpen = this.onContextMenuHandler.bind(this);

@@ -23,11 +23,11 @@ class StageSelectorComponent extends React.Component {
 
   render() {
     const { availableStages, stage } = this.props;
-    const menuItems = availableStages.map((mappingStage, index) => <MenuItem
+    const menuItems = availableStages ? availableStages.map((mappingStage, index) => <MenuItem
       value={index}
       primaryText={mappingStage}
       key={`stage_selector_item_${index}`}
-    />);
+    />) : null;
     const selectedStageIndex = availableStages.indexOf(stage);
 
     return (
