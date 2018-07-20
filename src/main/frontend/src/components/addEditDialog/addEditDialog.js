@@ -4,12 +4,12 @@ import AddEditDialogComponent from './addEditDialog.component';
 
 
 const mapStateToProps = (state) => ({
-  menuMode: state.menuMode,
-  entity: state.entity,
-  topComitters: state.topComitters,
-  addEditDialogFormAction: state.addEditDialogFormAction,
-  autocompleteDataSource: state.autocompleteDataSource,
-  stage: state.stage
+  menuMode: state.app.menuMode,
+  entity: state.app.entity,
+  topComitters: state.app.topComitters,
+  addEditDialogFormAction: state.app.addEditDialogFormAction,
+  autocompleteDataSource: state.app.autocompleteDataSource,
+  stage: state.app.stage
 });
 
 const mapDispatchToProps = {

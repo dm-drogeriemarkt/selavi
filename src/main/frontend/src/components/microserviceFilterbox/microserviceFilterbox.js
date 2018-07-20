@@ -13,12 +13,12 @@ import {
 import MicroserviceFilterboxComponent from './microserviceFilterbox.component';
 
 const mapStateToProps = (state) => ({
-  menuMode: state.menuMode,
-  loggedInUser: state.loggedInUser,
-  filterString: state.filterString,
-  showVersions: state.showVersions,
-  stage: state.stage,
-  hiddenMicroServices: state.hiddenMicroServices
+  menuMode: state.app.menuMode,
+  loggedInUser: state.app.loggedInUser,
+  filterString: state.app.filterString,
+  showVersions: state.app.showVersions,
+  stage: state.app.stage,
+  hiddenMicroServices: state.app.hiddenMicroServices
 });
 
 const mapDispatchToProps = {

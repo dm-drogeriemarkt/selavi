@@ -3,8 +3,8 @@ import onStageSelected from './stageSelector.actions';
 import StageSelectorComponent from './stageSelector.component';
 
 const mapStateToProps = (state) => ({
-  stage: state.stage,
-  availableStages: state.availableStages
+  stage: state.app.stage,
+  availableStages: state.app.availableStages
 });
 
 const mapDispatchToProps = {

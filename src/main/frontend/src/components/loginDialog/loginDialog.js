@@ -4,8 +4,8 @@ import { onCancel, onSubmit } from './loginDialog.actions';
 import LoginDialogComponent from './loginDialog.component';
 
 const mapStateToProps = (state) => ({
-  menuMode: state.menuMode,
-  loginErrorMessage: state.loginErrorMessage
+  menuMode: state.app.menuMode,
+  loginErrorMessage: state.app.loginErrorMessage
 });
 
 const mapDispatchToProps = {

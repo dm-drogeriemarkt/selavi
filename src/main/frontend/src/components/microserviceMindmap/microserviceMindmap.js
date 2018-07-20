@@ -5,13 +5,13 @@ import MicroserviceMindmapComponent from './microserviceMindmap.component';
 
 
 const mapStateToProps = (state) => ({
-  microservices: state.microservices,
-  menuMode: state.menuMode,
-  filterString: state.filterString,
-  microserviceListResizeCount: state.microserviceListResizeCount,
-  debugMode: state.debugMode,
-  showVersions: state.showVersions,
-  stage: state.stage
+  microservices: state.app.microservices,
+  menuMode: state.app.menuMode,
+  filterString: state.app.filterString,
+  microserviceListResizeCount: state.app.microserviceListResizeCount,
+  debugMode: state.app.debugMode,
+  showVersions: state.app.showVersions,
+  stage: state.app.stage
 });
 
 const mapDispatchToProps = {

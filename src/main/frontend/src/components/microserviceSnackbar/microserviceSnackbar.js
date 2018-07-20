@@ -3,8 +3,8 @@ import MicroserviceSnackbarComponent from './microserviceSnackbar.component';
 
 
 const mapStateToProps = (state) => ({
-  menuMode: state.menuMode,
-  globalErrorMessage: state.globalErrorMessage
+  menuMode: state.app.menuMode,
+  globalErrorMessage: state.app.globalErrorMessage
 });
 
 const mapDispatchToProps = (dispatch) => ({

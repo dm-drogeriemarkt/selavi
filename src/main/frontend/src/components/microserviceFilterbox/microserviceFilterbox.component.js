@@ -24,7 +24,7 @@ const propTypes = {
   onAddLink: PropTypes.func.isRequired,
   onType: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  showVersions: PropTypes.any.isRequired,
+  showVersions: PropTypes.bool.isRequired,
   onHideVersions: PropTypes.any.isRequired,
   onShowVersions: PropTypes.any.isRequired,
   hiddenMicroServices: PropTypes.any.isRequired,
