@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import AppComponent from './app.component';
 import { actionCreator } from 'shared/actionHelper';
+import AppComponent from './app.component';
 
 const mapStateToProps = (state) => ({
   stage: state.app.stage,
