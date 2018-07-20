@@ -8,7 +8,6 @@ export function* login(action) {
     yield put(actionCreator('LOGIN_SUCCESS', user));
   } catch (e) {
     yield put(actionFailed('LOGIN_FAILED', e));
-    yield put(actionCreator('OPEN_SNACKBAR', 'Stages konnten nicht geladen werden'));
   }
 }
 
