@@ -14,7 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 
 
 const propTypes = {
-  filterString: PropTypes.string.isRequired,
+  filterString: PropTypes.string,
   loggedInUser: PropTypes.object,
   stage: PropTypes.string,
   onLogout: PropTypes.func.isRequired,
@@ -32,6 +32,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  filterString: '',
   menuMode: undefined,
   stage: undefined,
   loggedInUser: undefined

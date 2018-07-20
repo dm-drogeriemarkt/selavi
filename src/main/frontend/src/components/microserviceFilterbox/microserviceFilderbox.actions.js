@@ -2,13 +2,6 @@ import rest from 'rest';
 import mime from 'rest/interceptor/mime';
 import errorCode from 'rest/interceptor/errorCode';
 
-export function onType(event, value) {
-  return {
-    type: 'FILTERBOX_TYPE',
-    filterString: value
-  };
-}
-
 export function onLogin() {
   return {
     type: 'LOGIN'

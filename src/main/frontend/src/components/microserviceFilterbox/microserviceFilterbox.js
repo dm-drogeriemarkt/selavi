@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
+import { actionCreator } from 'shared/actionHelper';
 import {
   onAddLink,
   onAddService,
   onCancel,
   onLogin,
   onLogout,
-  onType,
   onUnhideServices,
   onShowVersions,
   onHideVersions
@@ -21,8 +21,10 @@ const mapStateToProps = (state) => ({
   hiddenMicroServices: state.app.hiddenMicroServices
 });
 
-const mapDispatchToProps = {
-  onType,
+const mapDispatchToProps = (dispatch) => ({
+  onType: (value) => {
+    dispatch(actionCreator('FILTERBOX_TYPE', value));
+  },
   onLogin,
   onLogout,
   onAddLink,
@@ -31,7 +33,7 @@ const mapDispatchToProps = {
   onAddService,
   onCancel,
   onUnhideServices
-};
+});
 
 
 const MicroserviceFilterbox = connect(mapStateToProps, mapDispatchToProps)(MicroserviceFilterboxComponent);
