@@ -45,15 +45,15 @@ const app = (state = initialState, action) => {
       return {
         ...state,
         stage: action.payload[0],
-        stages: action.payload
+        availableStages: action.payload
       };
     }
-    case 'MICROSERVICE_NODE_SELECTED': {
+    case 'SELECT_MICROSERVICE_NODE_SUSCCESS': {
       const newBitbucketDetails = Object.assign({}, state.bitbucketDetails);
       newBitbucketDetails[action.selectedServiceId] = action.response.entity;
 
       return Object.assign({}, state, {
-        selectedService: action.selectedServiceId,
+        selectedService: action.payload,
         bitbucketDetails: newBitbucketDetails,
         topComitters: newBitbucketDetails[action.selectedServiceId]
       });

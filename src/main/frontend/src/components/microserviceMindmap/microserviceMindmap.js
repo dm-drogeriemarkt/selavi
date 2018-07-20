@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
-import { onAddLink, onContextMenuOpen, onSelectMicroserviceNode } from './microserviceMindmap.actions';
+import { onAddLink, onContextMenuOpen } from './microserviceMindmap.actions';
+import { actionCreator } from 'shared/actionHelper';
 
 import MicroserviceMindmapComponent from './microserviceMindmap.component';
 
@@ -14,11 +15,13 @@ const mapStateToProps = (state) => ({
   stage: state.app.stage
 });
 
-const mapDispatchToProps = {
-  onSelectMicroserviceNode,
+const mapDispatchToProps = dispatch => ({
+  onSelectMicroserviceNode: (params) => {
+    dispatch(actionCreator('SELECT_MICROSERVICE_NODE_REQUESTED', params));
+  },
   onContextMenuOpen,
   onAddLink
-};
+});
 
 
 const MicroserviceMindmap = connect(mapStateToProps, mapDispatchToProps)(MicroserviceMindmapComponent);

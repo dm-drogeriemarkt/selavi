@@ -9,6 +9,7 @@ import App from 'app';
 import reducer from 'stores/microserviceStore';
 import appSaga from 'app/app.middleware';
 import loginSaga from 'components/loginDialog/loginDialog.middleware';
+import microserviceMindmapSaga from 'components/microserviceMindmap/microserviceMindmap.middleware';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -31,6 +32,7 @@ const store = createStore(reducer, {}, composeEnhancers(composeMiddleware()));
 
 sagaMiddleware.run(appSaga);
 sagaMiddleware.run(loginSaga);
+sagaMiddleware.run(microserviceMindmapSaga);
 
 ReactDOM.render(
   <MuiThemeProvider>
