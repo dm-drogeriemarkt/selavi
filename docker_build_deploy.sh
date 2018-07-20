@@ -17,3 +17,18 @@ docker push $REPO
 docker tag $REPO:$COMMIT registry.heroku.com/selavi/web
 docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com
 docker push registry.heroku.com/selavi/web
+
+# release image on heroku
+export DOCKER_IMAGE_ID=$(docker inspect $REPO:$TAG --format={{.Id}})
+curl -n -X PATCH https://api.heroku.com/apps/selavi/formation \
+  -d '{
+  "updates": [
+    {
+      "type": "web",
+      "docker_image": "'$DOCKER_IMAGE_ID'"
+    }
+  ]
+}' \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+  -H "Authorization: Bearer $HEROKU_TOKEN"
