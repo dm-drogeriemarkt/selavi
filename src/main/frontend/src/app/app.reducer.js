@@ -50,12 +50,13 @@ const app = (state = initialState, action) => {
     }
     case 'SELECT_MICROSERVICE_NODE_SUSCCESS': {
       const newBitbucketDetails = Object.assign({}, state.bitbucketDetails);
-      newBitbucketDetails[action.selectedServiceId] = action.response.entity;
+      const entity = action.payload ? action.payload.entity : 0;
+      newBitbucketDetails[action.payload] = entity;
 
       return Object.assign({}, state, {
         selectedService: action.payload,
         bitbucketDetails: newBitbucketDetails,
-        topComitters: newBitbucketDetails[action.selectedServiceId]
+        topComitters: newBitbucketDetails[entity]
       });
     }
     case 'CONTEXT_MENU_OPEN': {
@@ -205,9 +206,10 @@ const app = (state = initialState, action) => {
       });
     }
     case 'FILTERBOX_TYPE': {
-      return Object.assign({}, state, {
-        filterString: action.filterString
-      });
+      return {
+        ...state,
+        filterString: action.payload
+      };
     }
     case 'MICROSERVICE_LIST_RESIZE': {
       return Object.assign({}, state, {
