@@ -107,7 +107,7 @@ class App extends React.Component {
 
     return (
       <div className="appcontainer">
-        {/* <div className="appheader">
+        <div className="appheader">
           <MicroserviceFilterBox serviceRequiredProperties={serviceRequiredProperties}/>
         </div>
         <div className="appcontent">
@@ -130,7 +130,7 @@ class App extends React.Component {
           />
           <MicroserviceDeleteServiceDialog/>
           <LoginDialog/>
-        </div> */}
+        </div>
       </div>
     );
   }

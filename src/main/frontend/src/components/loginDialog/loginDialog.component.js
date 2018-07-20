@@ -9,7 +9,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 const propTypes = {
   menuMode: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   loginErrorMessage: PropTypes.string
 };
@@ -55,7 +55,7 @@ class LoginDialogComponent extends React.Component {
   }
 
   onSubmit() {
-    const { onSubmit } = this.props;
+    const { login } = this.props;
     this.setState({ inProgress: true });
 
     const params = {
@@ -64,7 +64,16 @@ class LoginDialogComponent extends React.Component {
         password: this.passwordInput ? this.passwordInput.getValue() : undefined
       }
     };
-    onSubmit(params);
+
+    login({
+      method: 'POST',
+      path: '/selavi/login',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      entity: params.entity
+    });
+
   }
 
   render() {

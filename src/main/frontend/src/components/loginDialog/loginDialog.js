@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
-
-import { onCancel, onSubmit } from './loginDialog.actions';
+import { actionCreator } from 'shared/actionHelper';
 import LoginDialogComponent from './loginDialog.component';
 
 const mapStateToProps = (state) => ({
@@ -8,10 +7,14 @@ const mapStateToProps = (state) => ({
   loginErrorMessage: state.app.loginErrorMessage
 });
 
-const mapDispatchToProps = {
-  onCancel,
-  onSubmit
-};
+const mapDispatchToProps = (dispatch) => ({
+  onCancel: () => {
+    dispatch(actionCreator('CANCEL_MENU_ACTION'));
+  },
+  login: (options) => {
+    dispatch(actionCreator('LOGIN_REQUESTED', options));
+  }
+});
 
 const LoginDialog = connect(mapStateToProps, mapDispatchToProps)(LoginDialogComponent);
 export default LoginDialog;

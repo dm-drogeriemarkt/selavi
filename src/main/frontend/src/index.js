@@ -8,6 +8,7 @@ import createSagaMiddleware from 'redux-saga';
 import App from 'app';
 import reducer from 'stores/microserviceStore';
 import appSaga from 'app/app.middleware';
+import loginSaga from 'components/loginDialog/loginDialog.middleware';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -29,6 +30,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, {}, composeEnhancers(composeMiddleware()));
 
 sagaMiddleware.run(appSaga);
+sagaMiddleware.run(loginSaga);
 
 ReactDOM.render(
   <MuiThemeProvider>
