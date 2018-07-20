@@ -326,15 +326,14 @@ class AddEditDialogComponent extends React.Component {
         tabstyle = { color: 'rgb(244, 67, 54)' };
       }
 
-      defaultPropertyInputTabs.push(
-        <Tab
+      defaultPropertyInputTabs
+        .push(<Tab
           key={`add_edit_dialog_tab_${i}`}
           label={inputTabs[i].label}
           style={tabstyle}
         >
           {inputs}
-        </Tab>
-      );
+        </Tab>);
     }
 
     // custom input field tab (contains all properties defined for entity that are _not_ included in pre-defined input fields)

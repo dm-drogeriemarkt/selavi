@@ -131,7 +131,7 @@ Not logged in
 
       loginLogoutMenuItem = (<MenuItem primaryText="Login" onClick={onLogin}/>);
     }
-    const unhideServicesMenuItem = hiddenMicroServices.length > 0 ? (<MenuItem primaryText="Show Hidden" onClick={onUnhideServices}/>) : undefined;
+    const unhideServicesMenuItem = hiddenMicroServices && hiddenMicroServices.length ? (<MenuItem primaryText="Show Hidden" onClick={onUnhideServices}/>) : undefined;
 
     return (
       <Toolbar>

@@ -12,12 +12,12 @@ const propTypes = {
 const MicroserviceCountLabelComponent = props => {
   const { microservices, serviceRequiredProperties, hiddenMicroServices } = props;
 
-  const externalCount = microservices.filter((microservice) => microservice.external).length;
-  const internalCount = microservices.length - externalCount;
+  const externalCount = microservices ? microservices.filter((microservice) => microservice.external).length : 0;
+  const internalCount = microservices ? microservices.length - externalCount : 0;
 
   const internalLabel = (internalCount === 1 ? 'microservice' : 'microservices');
 
-  const servicesMissingReqPropsCount = microservices.filter((microservice) => !hasAllRequiredProperties(microservice, serviceRequiredProperties)).length;
+  const servicesMissingReqPropsCount = microservices ? microservices.filter((microservice) => !hasAllRequiredProperties(microservice, serviceRequiredProperties)).length : 0;
   const servicesMissingReqPropsLabel = `${servicesMissingReqPropsCount === 1 ? 'service' : 'services'} missing req. props`;
   const getServicesMissingReqPropsCount = () => (
     <div>
@@ -29,7 +29,7 @@ const MicroserviceCountLabelComponent = props => {
       </span>
     </div>);
 
-  const hiddenServicesLabel = hiddenMicroServices.length > 0 ? ` | ${hiddenMicroServices.length} services hidden` : '';
+  const hiddenServicesLabel = hiddenMicroServices && hiddenMicroServices.length ? ` | ${hiddenMicroServices.length} services hidden` : '';
 
   return (
     <span style={{

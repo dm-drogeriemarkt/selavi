@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -26,10 +27,8 @@ const composeMiddleware = () => {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, {}, composeEnhancers(composeMiddleware()));
-const muiTheme = createMuiTheme(dmTheme);
 
 sagaMiddleware.run(appSaga);
-sagaMiddleware.run(shoppingCartSaga);
 
 ReactDOM.render(
   <MuiThemeProvider>

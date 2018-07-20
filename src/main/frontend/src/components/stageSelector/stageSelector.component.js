@@ -28,7 +28,7 @@ class StageSelectorComponent extends React.Component {
       primaryText={mappingStage}
       key={`stage_selector_item_${index}`}
     />) : null;
-    const selectedStageIndex = availableStages.indexOf(stage);
+    const selectedStageIndex = availableStages ? availableStages.indexOf(stage) : 0;
 
     return (
       <DropDownMenu

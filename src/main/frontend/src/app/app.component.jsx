@@ -1,9 +1,5 @@
 import 'babel-polyfill';
-import errorCode from 'rest/interceptor/errorCode';
-import mime from 'rest/interceptor/mime';
-import rest from 'rest';
 import React from 'react';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import MicroserviceFilterBox from 'components/microserviceFilterbox/microserviceFilterbox';
 import MicroserviceMindmap from 'components/microserviceMindmap/microserviceMindmap';
 import MicroserviceSnackbar from 'components/microserviceSnackbar/microserviceSnackbar';
@@ -13,32 +9,28 @@ import LoginDialog from 'components/loginDialog/loginDialog';
 import PropTypes from 'prop-types';
 import { getRequiredPropertyNames } from 'shared/requiredPropertyUtil';
 
-// see http://www.material-ui.com/#/get-started/installation
-injectTapEventPlugin();
-
 const propTypes = {
   fetchAvailableStages: PropTypes.func.isRequired,
   fetchMicroservices: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired,
-  stage: PropTypes.string.isRequired
+  stage: PropTypes.string
+};
+
+const defaultProps = {
+  stage: undefined
 };
 
 class App extends React.Component {
 
   componentDidMount() {
+    this.props.fetchAvailableStages();
+    this.props.login();
+  }
 
-    const client = rest.wrap(mime).wrap(errorCode);
-    client({ path: '/selavi/services/stages' }).then(response => {
-      this.props.fetchAvailableStages(response);
-      client({ path: `/selavi/services/${this.props.stage}` }).then(res => {
-        this.props.fetchMicroservices(res);
-      });
-    });
-    client({ path: '/selavi/user' }).then(response => {
-      this.props.login(response.entity);
-
-
-    }, response => console.log('Not logged in...', response));
+  componentDidUpdate(prevProps) {
+    if (prevProps.stage !== this.props.stage) {
+      this.props.fetchMicroservices(this.props.stage);
+    }
   }
 
   render() {
@@ -115,7 +107,7 @@ class App extends React.Component {
 
     return (
       <div className="appcontainer">
-        <div className="appheader">
+        {/* <div className="appheader">
           <MicroserviceFilterBox serviceRequiredProperties={serviceRequiredProperties}/>
         </div>
         <div className="appcontent">
@@ -138,13 +130,14 @@ class App extends React.Component {
           />
           <MicroserviceDeleteServiceDialog/>
           <LoginDialog/>
-        </div>
+        </div> */}
       </div>
     );
   }
 }
 
 App.propTypes = propTypes;
+App.defaultProps = defaultProps;
 
 export default App;
 

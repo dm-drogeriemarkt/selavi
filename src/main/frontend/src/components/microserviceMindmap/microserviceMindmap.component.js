@@ -66,7 +66,7 @@ class MicroserviceMindmapComponent extends React.Component {
       return false;
     } if (nextProps.filterString !== filterString) {
       // we are filtering, no need to re-draw the graph itself
-      const mappedMicroservices = microservices.map(microservice => this.addColorData(microservice, nextProps));
+      const mappedMicroservices = microservices ? microservices.map(microservice => this.addColorData(microservice, nextProps)) : [];
       this.network.body.data.nodes.update(mappedMicroservices);
 
       return false;
@@ -210,7 +210,7 @@ class MicroserviceMindmapComponent extends React.Component {
 
   updateMindmap = () => {
     const { microservices, showVersions, debugMode } = this.props;
-    let mappedMicroservices = microservices.map(microservice => this.addColorData(microservice, this.props));
+    let mappedMicroservices = microservices ? microservices.map(microservice => this.addColorData(microservice, this.props)) : [];
 
 
     if (showVersions) {
@@ -293,16 +293,18 @@ class MicroserviceMindmapComponent extends React.Component {
     }
 
     // add edges to existing network (a lot faster than adding them with the node data)
-    microservices.filter((el) => el.consumes).forEach((el) => {
-      el.consumes.forEach((consumer) => {
-        this.network.body.data.edges.add({
-          from: el.id,
-          to: consumer.target,
-          label: consumer.type !== null ? consumer.type : '',
-          font: { align: 'middle' }
-        });
+    if (microservices) {
+      microservices.filter((el) => el.consumes).forEach((el) => {
+        el.consumes.forEach((consumer) => {
+          this.network.body.data.edges.add({
+            from: el.id,
+            to: consumer.target,
+            label: consumer.type !== null ? consumer.type : '',
+            font: { align: 'middle' }
+          });
+        }, this);
       }, this);
-    }, this);
+    }
 
     // because we add the edges to an existing network, things are kind of tangled up, so we start a simulation manually (to un-tangle everything)
     this.network.startSimulation();

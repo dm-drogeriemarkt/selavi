@@ -3,7 +3,8 @@ import AppComponent from './app.component';
 import { actionCreator } from 'shared/actionHelper';
 
 const mapStateToProps = (state) => ({
-  stage: state.stage
+  stage: state.stage,
+  stages: state.stages
 });
 
 

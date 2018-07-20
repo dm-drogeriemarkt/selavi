@@ -41,21 +41,11 @@ const app = (state = initialState, action) => {
       });
     }
     case 'FETCH_AVAILABLE_STAGES_SUCCESS': {
-      let stage;
-      const stageFromUrl = urlSearchParams.get('stage');
-
-      if (action.response.entity.indexOf(stageFromUrl) !== -1) {
-        stage = stageFromUrl;
-      } else if (action.response.entity.indexOf('dev') !== -1) {
-        stage = 'dev';
-      } else {
-        stage = action.response.entity[0];
-      }
-
-      return Object.assign({}, state, {
-        availableStages: action.response.entity,
-        stage
-      });
+      return {
+        ...state,
+        stage: action.payload[0],
+        stages: action.payload
+      };
     }
     case 'MICROSERVICE_NODE_SELECTED': {
       const newBitbucketDetails = Object.assign({}, state.bitbucketDetails);
