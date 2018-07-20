@@ -1,5 +1,6 @@
 package de.dm.microservices.business;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.dm.microservices.repository.ServiceRegistryRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +20,20 @@ public class ServiceRegistryContentProviderTest {
 
     ServiceRegistryRepository serviceRegistryRepository;
 
+    MicroserviceDtoFactory microserviceDtoFactory;
+
+    DefaultNodeContentFactory defaultNodeContentFactory;
+
+    ObjectMapper mapper;
+
     @Before
     public void setup() {
         serviceRegistryRepository = mock(ServiceRegistryRepository.class);
+        defaultNodeContentFactory = mock(DefaultNodeContentFactory.class);
+        microserviceDtoFactory = mock(MicroserviceDtoFactory.class);
+        mapper = new ObjectMapper();
 
-        serviceRegistryContentProvider = new ServiceRegistryContentProvider(serviceRegistryRepository);
+        serviceRegistryContentProvider = new ServiceRegistryContentProvider(defaultNodeContentFactory, serviceRegistryRepository, microserviceDtoFactory, mapper);
     }
 
     @Test
