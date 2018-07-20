@@ -32,13 +32,14 @@ const app = (state = initialState, action) => {
     case 'FETCH_MICROSERVICES_SUCCESS': {
       const stage = action.stage ? action.stage : state.stage;
 
-      return Object.assign({}, state, {
-        microservices: action.response.entity,
+      return {
+        ...state,
+        microservices: action.payload,
         stage,
         menuMode: undefined,
         entity: undefined,
         topComitters: undefined
-      });
+      };
     }
     case 'FETCH_AVAILABLE_STAGES_SUCCESS': {
       return {

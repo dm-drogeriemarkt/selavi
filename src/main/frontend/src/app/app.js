@@ -12,11 +12,11 @@ const mapDispatchToProps = dispatch => ({
   fetchAvailableStages: () => {
     dispatch(actionCreator('FETCH_AVAILABLE_STAGES_REQUESTED'));
   },
-  fetchMicroservices: () => {
-    dispatch(actionCreator('FETCH_MICROSERVICES_REQUESTED'));
+  fetchMicroservices: (stage) => {
+    dispatch(actionCreator('FETCH_MICROSERVICES_REQUESTED', stage));
   },
-  login: () => {
-    dispatch(actionCreator('LOGIN_REQUESTED'));
+  login: (options) => {
+    dispatch(actionCreator('LOGIN_REQUESTED', options));
   }
 });
 
