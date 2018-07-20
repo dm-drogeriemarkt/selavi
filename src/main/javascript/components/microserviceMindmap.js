@@ -142,23 +142,37 @@ export class MicroserviceMindmap extends React.Component {
     _addColorData(microservice, props) {
         let coloredMicroservice = Object.assign({}, microservice);
 
+        let borderColor;
+        if (coloredMicroservice.external) {
+            borderColor = "#f69805";
+        } else {
+            borderColor = "#19c786"
+        }
+
+        let backgroundColor;
+        if (microservice.hosts[0].status === "UP") {
+            backgroundColor = "#000000"
+        } else {
+            backgroundColor = "#ffffff"
+        }
+
+
         if (shouldFilterOut(coloredMicroservice, props.filterString)) {
-          coloredMicroservice.group = "filteredOut";
+            coloredMicroservice.group = "filteredOut";
 
             if (!hasAllRequiredProperties(coloredMicroservice, props.serviceRequiredProperties)) {
-              coloredMicroservice.shadow = {
+                coloredMicroservice.shadow = {
                     color: "#c4c3c6"
                 }
             }
         } else {
-            if (coloredMicroservice.external) {
-              coloredMicroservice.group = "external";
-            } else {
-              coloredMicroservice.group = "microservice";
-            }
+            coloredMicroservice.color = {
+                background: backgroundColor,
+                border: borderColor
+            };
 
             if (!hasAllRequiredProperties(coloredMicroservice, props.serviceRequiredProperties)) {
-              coloredMicroservice.shadow = {
+                coloredMicroservice.shadow = {
                     color: "#e50f03"
                 }
             }
@@ -171,7 +185,7 @@ export class MicroserviceMindmap extends React.Component {
         let microserviceWithVersion = Object.assign({}, microservice);
 
         if (microserviceWithVersion.version && !microserviceWithVersion.label.includes('@')) {
-          microserviceWithVersion.label = microserviceWithVersion.label + '@' + microserviceWithVersion.version;
+            microserviceWithVersion.label = microserviceWithVersion.label + '@' + microserviceWithVersion.version;
         }
 
         return microserviceWithVersion;
@@ -205,17 +219,9 @@ export class MicroserviceMindmap extends React.Component {
                     arrows: "to"
                 },
                 groups: {
-                    "microservice": {
-                        color: _colors.MICROSERVICE,
-                        font: { color: "#000000" }
-                    },
-                    "external": {
-                        color: _colors.EXTERNAL,
-                        font: { color: "#000000" }
-                    },
                     "filteredOut": {
                         color: _colors.GREY,
-                        font: { color: "#c4c3c6" }
+                        font: {color: "#c4c3c6"}
                     }
                 },
                 layout: {
