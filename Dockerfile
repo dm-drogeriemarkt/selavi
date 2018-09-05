@@ -6,4 +6,4 @@ WORKDIR /srv/
 
 EXPOSE 8080
 
-CMD [ "java", "-Xmx350m", "-jar", "app.jar", "--server.port=${PORT:8080}", "--spring.config.location=/srv/conf/" ]
+CMD [ "java", "-Xmx450m", "-jar", "app.jar", "--server.port=${PORT:8080}", "--spring.config.location=/srv/conf/" ]
