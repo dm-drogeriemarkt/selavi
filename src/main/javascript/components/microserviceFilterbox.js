@@ -15,12 +15,12 @@ import {
     onAddLink,
     onAddService,
     onCancel,
+    onHideVersions,
     onLogin,
     onLogout,
-    onType,
-    onUnhideServices,
     onShowVersions,
-    onHideVersions
+    onType,
+    onUnhideServices
 } from '../actions/microserviceFilderboxActions';
 
 const mapStateToProps = (state) => {
@@ -123,7 +123,7 @@ export class MicroserviceFilterbox extends React.Component {
                     <ToolbarTitle text="SeLaVi - Service Landscape Visualizer"/>
                 </ToolbarGroup>
                 <ToolbarGroup>
-                    <TextField hintText="Filter services.... (label, tags)" value={this.props.filterString}
+                    <TextField hintText="Filter services... (label, tags, edges)" value={this.props.filterString}
                                onChange={this.props.onType.bind(this)}/>
                 </ToolbarGroup>
                 <ToolbarGroup>

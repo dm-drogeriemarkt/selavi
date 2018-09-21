@@ -91,6 +91,23 @@ describe('filterUtils', function () {
 
             chai.expect(result).to.be.true;
         });
+        it('return false if edge matches filterString', function() {
+
+            const service = {
+               label: 'foo bar',
+               consumes: [
+                   {
+                       type: 'REST'
+                   }
+               ]
+           };
+
+           const filterString = 'rest';
+
+           const result = shouldFilterOut(service, filterString);
+
+           chai.expect(result).to.be.false;
+        });
         it('throws an exception when filterString is defined, but not a string', function () {
 
             const service = {
