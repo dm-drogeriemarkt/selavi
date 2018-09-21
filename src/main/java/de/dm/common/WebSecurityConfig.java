@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/services/**").hasRole(userRole)
                 .antMatchers(HttpMethod.PUT, "/services/**").hasRole(userRole)
                 .antMatchers(HttpMethod.DELETE, "/services/**").hasRole(userRole)
+                .antMatchers("/swagger-ui.html", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/api-docs").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
