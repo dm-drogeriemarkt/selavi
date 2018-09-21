@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import React from 'react';
 import chai from 'chai';
-import { mount, shallow } from 'enzyme';
-import { LoginDialog } from '../../../main/javascript/components/loginDialog';
+import {mount, shallow} from 'enzyme';
+import {LoginDialog} from '../../../main/javascript/components/loginDialog';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 describe('<LoginDialog/>', function () {
@@ -55,13 +55,13 @@ describe('<LoginDialog/>', function () {
             },
         });
 
-        wrapper.ref('input_username').find('input').getDOMNode().value = "foobar";
-        wrapper.ref('input_password').find('input').getDOMNode().value = "baz";
+        wrapper.ref('input_username').find('input').getDOMNode().value = 'foobar';
+        wrapper.ref('input_password').find('input').getDOMNode().value = 'baz';
 
         wrapper.instance().onSubmit();
 
         sinon.assert.calledOnce(props.onSubmit);
-        sinon.assert.calledWith(props.onSubmit, { entity: { password: "baz", username: "foobar" } });
+        sinon.assert.calledWith(props.onSubmit, {entity: {password: 'baz', username: 'foobar'}});
     });
 
     it('displays snackbar with error message when present', function () {
@@ -98,11 +98,13 @@ describe('<LoginDialog/>', function () {
         chai.expect(wrapper.find('CircularProgress').length).to.equal(0);
 
         wrapper.instance().onSubmit();
+        wrapper.setProps({loginInProgress: true});
 
         chai.expect(wrapper.find('CircularProgress').length).to.equal(1);
 
         wrapper.setProps({
-            menuMode: 'something_else'
+            menuMode: 'something_else',
+            loginInProgress: false
         });
 
         chai.expect(wrapper.find('CircularProgress').length).to.equal(0);
@@ -127,13 +129,15 @@ describe('<LoginDialog/>', function () {
 
         // fake refs
         wrapper.instance().refs = {
-            input_username: { getValue: () => "login" },
-            input_password: { getValue: () => "using_keyboard" }
+            input_username: {getValue: () => 'login'},
+            input_password: {getValue: () => 'using_keyboard'}
         };
 
         keyboardHandlerFn({
             key: 'Enter'
         });
+
+        wrapper.setProps({loginInProgress: true})
 
         // make sure onSubmit is not called twice by accident
         keyboardHandlerFn({
@@ -141,7 +145,7 @@ describe('<LoginDialog/>', function () {
         });
 
         sinon.assert.calledOnce(props.onSubmit);
-        sinon.assert.calledWith(props.onSubmit, { entity: { username: "login", password: "using_keyboard" } });
+        sinon.assert.calledWith(props.onSubmit, {entity: {username: 'login', password: 'using_keyboard'}});
 
         document.addEventListener.restore();
     });
@@ -160,7 +164,7 @@ describe('<LoginDialog/>', function () {
 
         let callbackFn;
 
-        sinon.stub(window, "setTimeout", (cb, timeout, param) => {
+        sinon.stub(window, 'setTimeout', (cb, timeout, param) => {
             callbackFn = cb;
         });
 
@@ -186,6 +190,7 @@ function createProps() {
         onSubmit: sinon.spy(),
         menuMode: undefined,
         deleteServiceId: undefined,
-        deleteServiceErrorMessage: undefined
+        deleteServiceErrorMessage: undefined,
+        loginInProgress: false
     };
 }

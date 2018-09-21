@@ -2,7 +2,7 @@ import rest from 'rest';
 import sinon from 'sinon';
 import chai from 'chai';
 
-import { onCancel, onSubmit } from '../../../main/javascript/actions/loginDialogActions';
+import {onCancel, onSubmit} from '../../../main/javascript/actions/loginDialogActions';
 
 describe('loginDialogActions', function () {
     describe('onCancel', function () {
@@ -57,10 +57,10 @@ describe('loginDialogActions', function () {
 
             sinon.assert.calledOnce(clientStub);
             sinon.assert.calledWith(clientStub, {
-                entity: { password: "bar", username: "foo" },
+                entity: {password: 'bar', username: 'foo'},
                 method: 'POST',
-                path: "/selavi/login",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                path: '/selavi/login',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             });
 
             const loggedInUser = {
@@ -71,8 +71,8 @@ describe('loginDialogActions', function () {
                 entity: loggedInUser
             });
 
-            sinon.assert.calledOnce(dispatchSpy);
-            sinon.assert.calledWith(dispatchSpy, { loggedInUser: loggedInUser, type: "LOGIN_SUCCESS" });
+            sinon.assert.calledTwice(dispatchSpy);
+            sinon.assert.calledWith(dispatchSpy, {loggedInUser: loggedInUser, type: 'LOGIN_SUCCESS'});
         });
 
         it('POSTs /login request and dispatches LOGIN_FAILED event on error', function () {
@@ -88,10 +88,10 @@ describe('loginDialogActions', function () {
 
             sinon.assert.calledOnce(clientStub);
             sinon.assert.calledWith(clientStub, {
-                entity: { password: "baz", username: "foo" },
+                entity: {password: 'baz', username: 'foo'},
                 method: 'POST',
-                path: "/selavi/login",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+                path: '/selavi/login',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             });
 
             errorHandler({
@@ -100,10 +100,10 @@ describe('loginDialogActions', function () {
                 }
             });
 
-            sinon.assert.calledOnce(dispatchSpy);
+            sinon.assert.calledTwice(dispatchSpy);
             sinon.assert.calledWith(dispatchSpy, {
                 message: 'heute leider nur fuer stammgaeste',
-                type: "LOGIN_FAILED"
+                type: 'LOGIN_FAILED'
             });
         });
     });
