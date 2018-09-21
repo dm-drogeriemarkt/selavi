@@ -27,7 +27,8 @@ const initialState = {
     filterString: urlSearchParams.get('filter') || '',
     microserviceListResizeCount: 0,
     addEditDialogFormAction: undefined,
-    debugMode: urlSearchParams.has('debug')
+    debugMode: urlSearchParams.has('debug'),
+    frontendConfig: null,
 };
 
 // reducer function, creates a new state object from the previous state and the action
@@ -105,7 +106,7 @@ export function updateStore(state = initialState, action) {
                 menuMode: 'ADD_RELATION',
                 entity: relation,
                 topComitters: undefined,
-                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + action.consumerId + "/relations"
+                addEditDialogFormAction: '/selavi/services/' + state.stage + '/' + action.consumerId + '/relations'
             });
         }
         case 'EDIT_SERVICE': {
@@ -114,7 +115,7 @@ export function updateStore(state = initialState, action) {
                 topComitters: state.bitbucketDetails[state.contextMenuServiceId],
                 contextMenuServiceId: undefined,
                 menuMode: 'EDIT_SERVICE',
-                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + state.contextMenuServiceId + "/properties"
+                addEditDialogFormAction: '/selavi/services/' + state.stage + '/' + state.contextMenuServiceId + '/properties'
             });
         }
         case 'SHOW_SERVICE': {
@@ -173,7 +174,7 @@ export function updateStore(state = initialState, action) {
                 contextMenuFromId: undefined,
                 contextMenuToId: undefined,
                 menuMode: 'EDIT_RELATION',
-                addEditDialogFormAction: "/selavi/services/" + state.stage + "/" + state.contextMenuFromId + "/relations/" + state.contextMenuToId
+                addEditDialogFormAction: '/selavi/services/' + state.stage + '/' + state.contextMenuFromId + '/relations/' + state.contextMenuToId
             });
         }
         case 'DELETE_SERVICE_FAILED': {
@@ -202,7 +203,7 @@ export function updateStore(state = initialState, action) {
         case 'ADD_SERVICE': {
             return Object.assign({}, state, {
                 menuMode: 'ADD_SERVICE',
-                addEditDialogFormAction: "/selavi/services/" + state.stage,
+                addEditDialogFormAction: '/selavi/services/' + state.stage,
                 entity: undefined,
                 topComitters: undefined
             });
@@ -258,6 +259,12 @@ export function updateStore(state = initialState, action) {
             return Object.assign({}, state, {
                 globalErrorMessage: action.message
             });
+        }
+
+        case 'FETCH_FRONTENDCONFIG_SUCCESS': {
+            return Object.assign({}, state, {
+                frontendConfig: action.frontendConfig
+            })
         }
         default:
             return state;
