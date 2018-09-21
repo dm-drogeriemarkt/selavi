@@ -149,7 +149,7 @@ export class MicroserviceMindmap extends React.Component {
             borderColor = "#19c786"
         }
 
-        let backgroundColor = undefined;
+        let backgroundColor = "#ffffff";
         if (microservice.hosts) {
             backgroundColor = this._getHealthStatus(microservice.hosts);
         }
@@ -164,12 +164,9 @@ export class MicroserviceMindmap extends React.Component {
             }
         } else {
             coloredMicroservice.color = {
+                background: backgroundColor,
                 border: borderColor
             };
-
-            if (backgroundColor) {
-                coloredMicroservice.color.background = backgroundColor;
-            }
 
             if (!hasAllRequiredProperties(coloredMicroservice, props.serviceRequiredProperties)) {
                 coloredMicroservice.shadow = {
