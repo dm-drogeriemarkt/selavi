@@ -149,13 +149,10 @@ export class MicroserviceMindmap extends React.Component {
             borderColor = "#19c786"
         }
 
-        let backgroundColor;
-        if (microservice.hosts[0].status === "UP") {
-            backgroundColor = "#000000"
-        } else {
-            backgroundColor = "#ffffff"
+        let backgroundColor = undefined;
+        if (microservice.hosts) {
+            backgroundColor = this._getHealthStatus(microservice.hosts);
         }
-
 
         if (shouldFilterOut(coloredMicroservice, props.filterString)) {
             coloredMicroservice.group = "filteredOut";
@@ -167,9 +164,12 @@ export class MicroserviceMindmap extends React.Component {
             }
         } else {
             coloredMicroservice.color = {
-                background: backgroundColor,
                 border: borderColor
             };
+
+            if (backgroundColor) {
+                coloredMicroservice.color.background = backgroundColor;
+            }
 
             if (!hasAllRequiredProperties(coloredMicroservice, props.serviceRequiredProperties)) {
                 coloredMicroservice.shadow = {
@@ -189,6 +189,13 @@ export class MicroserviceMindmap extends React.Component {
         }
 
         return microserviceWithVersion;
+    }
+
+    _getHealthStatus(hosts) {
+        if (hosts.filter(host => host.status !== "UP").length === 0) {
+            return "#afff69";
+        }
+        return "#ff6641";
     }
 
     updateMindmap() {

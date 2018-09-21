@@ -199,6 +199,33 @@ describe('<MicroserviceMindmap/>', function () {
         sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
     });
 
+    it('highlights services with offline hosts', function () {
+
+        const props = createProps();
+        props.microservices = [{
+          id: "service-with-offline-hosts",
+          label: "service-with-offline-hosts",
+          hosts: [{
+              status: "UP"
+          }, {
+            status: "SOMETHING_ELSE_THAN_UP"
+          }]
+        }];
+
+        shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+
+        const expectedAllNodes = [
+            {
+                color: { background: "#ff6641", border: "#19c786" },
+                hosts: [{ status: "UP" }, { status: "SOMETHING_ELSE_THAN_UP" }],
+                id: "service-with-offline-hosts",
+                label: "service-with-offline-hosts"
+            }
+        ];
+
+        sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+    });
+
     it('updates nodes in network (instead of adding a complete dataset) when filtering', function () {
 
         const props = createProps();
