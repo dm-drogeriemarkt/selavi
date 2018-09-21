@@ -10,6 +10,11 @@ export function onCancel() {
 
 export function onSubmit(params) {
     return function (dispatch) {
+
+        dispatch({
+            type: 'LOGIN_REQUESTED',
+        });
+
         let request = {
             method: 'POST',
             path: '/selavi/login',

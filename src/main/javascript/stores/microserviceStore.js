@@ -29,6 +29,7 @@ const initialState = {
     addEditDialogFormAction: undefined,
     debugMode: urlSearchParams.has('debug'),
     frontendConfig: null,
+    loginInProgress: false
 };
 
 // reducer function, creates a new state object from the previous state and the action
@@ -235,18 +236,25 @@ export function updateStore(state = initialState, action) {
                 loggedInUser: undefined
             });
         }
+        case 'LOGIN_REQUESTED': {
+            return Object.assign({}, state, {
+                loginInProgress: true
+            })
+        }
         case 'LOGIN_SUCCESS': {
             return Object.assign({}, state, {
                 menuMode: undefined,
                 loginErrorMessage: undefined,
-                loggedInUser: action.loggedInUser
+                loggedInUser: action.loggedInUser,
+                loginInProgress: false
             });
         }
         case 'LOGIN_FAILED': {
             return Object.assign({}, state, {
                 menuMode: 'LOGIN',
                 loginErrorMessage: action.message,
-                loggedInUser: undefined
+                loggedInUser: undefined,
+                loginInProgress: false
             });
         }
         case 'LOGOUT_SUCCESS': {

@@ -13,7 +13,6 @@ const documentationStyle = {
 };
 
 const mapStateToProps = (state) => {
-    console.log(state)
     return {
         frontendConfig: state.frontendConfig,
     };
