@@ -37,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bitbucket/**").permitAll()
                 .antMatchers("/person/**").permitAll()
                 .antMatchers("/_system/**").permitAll()
+                .antMatchers("/frontendconfig").permitAll()
                 .antMatchers(HttpMethod.GET, "/services/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/services/**").hasRole(userRole)
                 .antMatchers(HttpMethod.PUT, "/services/**").hasRole(userRole)
