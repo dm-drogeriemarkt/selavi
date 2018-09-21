@@ -15,12 +15,12 @@ import {
     onAddLink,
     onAddService,
     onCancel,
+    onHideVersions,
     onLogin,
     onLogout,
-    onType,
-    onUnhideServices,
     onShowVersions,
-    onHideVersions
+    onType,
+    onUnhideServices
 } from '../actions/microserviceFilderboxActions';
 
 const mapStateToProps = (state) => {
