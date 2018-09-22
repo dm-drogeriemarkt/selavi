@@ -1,6 +1,7 @@
 package de.dm.microservices.business;
 
 import de.dm.microservices.domain.ConsumeDto;
+import de.dm.microservices.domain.HealthStatus;
 import de.dm.microservices.domain.HostDto;
 import de.dm.microservices.domain.MicroserviceDto;
 import org.junit.Test;
@@ -13,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 public class MicroserviceDtoFactoryUnitTest {
     @Test
     public void getMicroserviceDtoFromJSON() throws Exception {
-        final String json = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81]}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true,\"version\":\"1.0.1\"}";
+        final String json = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81],\"status\":\"UP\"}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true,\"version\":\"1.0.1\"}";
 
         final MicroserviceDtoFactory factory = new MicroserviceDtoFactory();
         final MicroserviceDto dto2 = factory.getMicroserviceDtoFromJSON(json);
@@ -41,12 +42,13 @@ public class MicroserviceDtoFactoryUnitTest {
         assertThat(dto2.getHosts().get(0).getHostName(), is("hostName"));
         assertThat(dto2.getHosts().get(0).getIpAddr(), is("ipOfHost"));
         assertThat(dto2.getHosts().get(0).getPorts(), is(Arrays.asList(80, 81)));
+        assertThat(dto2.getHosts().get(0).getStatus(), is(HealthStatus.UP));
 
     }
 
     @Test
     public void getJsonFromMicroserviceDto() throws Exception {
-        final String expectedJson = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81]}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true,\"version\":\"1.0.1\"}";
+        final String expectedJson = "{\"id\":\"id\",\"label\":\"label\",\"hosts\":[{\"hostName\":\"hostName\",\"ipAddr\":\"ipOfHost\",\"homePageUrl\":\"homepageUrl\",\"ports\":[80,81],\"status\":\"UP\"}],\"consumes\":[{\"target\":\"target\",\"type\":\"type\",\"label\":\"labelConsume\"}],\"description\":\"description\",\"bitbucketUrl\":\"bitbucketUrl\",\"ignoredCommitters\":\"ignoredCommiters\",\"fdOwner\":\"fdOwner\",\"tags\":\"tags\",\"microserviceUrl\":\"microserviceUrl\",\"ipAddress\":\"ipAdress\",\"networkZone\":\"networkZone\",\"documentationLink\":\"documentationLink\",\"buildMonitorLink\":\"buidlMonitorLink\",\"monitoringLink\":\"monitoringLink\",\"external\":true,\"version\":\"1.0.1\"}";
         final MicroserviceDtoFactory factory = new MicroserviceDtoFactory();
         final MicroserviceDto dto = new MicroserviceDto();
         dto.setId("id");
@@ -75,6 +77,7 @@ public class MicroserviceDtoFactoryUnitTest {
         hostDto.setHomePageUrl("homepageUrl");
         hostDto.setHostName("hostName");
         hostDto.setIpAddr("ipOfHost");
+        hostDto.setStatus(HealthStatus.UP);
         hostDto.setPorts(Arrays.asList(80, 81));
         dto.getHosts().add(hostDto);
 

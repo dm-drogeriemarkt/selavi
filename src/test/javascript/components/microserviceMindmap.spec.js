@@ -96,7 +96,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "foo-service",
                 label: "foo-service",
-                group: "microservice"
+                color: { background: "#ffffff", border: "#19c786" }
             },
             {
                 id: "bar-consumer",
@@ -105,7 +105,7 @@ describe('<MicroserviceMindmap/>', function () {
                 consumes: [
                     { "target": "foo-service", "type": "REST" }
                 ],
-                group: "external"
+                color: { background: "#ffffff", border: "#f69805" }
             }
         ];
 
@@ -124,11 +124,6 @@ describe('<MicroserviceMindmap/>', function () {
         chai.expect(global.vis.Network.args[0][2].nodes.borderWidth).to.equal(2);
         chai.expect(global.vis.Network.args[0][2].edges.width).to.equal(2);
         chai.expect(global.vis.Network.args[0][2].layout.randomSeed).to.equal(2);
-        chai.expect(global.vis.Network.args[0][2].groups.microservice.color.background).to.equal("#bef24d");
-        chai.expect(global.vis.Network.args[0][2].groups.external.color.background).to.equal("#f2d12d");
-        chai.expect(global.vis.Network.args[0][2].groups.filteredOut.color.background).to.equal("#f0f0f0");
-        chai.expect(global.vis.Network.args[0][2].groups.filteredOut.color.background).to.equal("#f0f0f0");
-        chai.expect(global.vis.Network.args[0][2].groups.filteredOut.font.color).to.equal("#c4c3c6");
 
         sinon.assert.callCount(networkOnSpy, 5);
         sinon.assert.calledWith(networkOnSpy, "selectNode", sinon.match.func);
@@ -153,10 +148,10 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "foo-service",
                 label: "foo-service",
-                group: "microservice",
                 shadow: {
                     color: "#e50f03"
-                }
+                },
+                color: { background: "#ffffff", border: "#19c786" }
             },
             {
                 id: "bar-consumer",
@@ -165,7 +160,7 @@ describe('<MicroserviceMindmap/>', function () {
                 consumes: [
                     { "target": "foo-service", "type": "REST" }
                 ],
-                group: "external",
+                color: { background: "#ffffff", border: "#f69805" }
             }
         ];
 
@@ -183,7 +178,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "foo-service",
                 label: "foo-service",
-                group: "microservice"
+                color: { background: "#ffffff", border: "#19c786" }
             },
             {
                 id: "bar-consumer",
@@ -193,6 +188,33 @@ describe('<MicroserviceMindmap/>', function () {
                     { "target": "foo-service", "type": "REST" }
                 ],
                 group: "filteredOut",
+            }
+        ];
+
+        sinon.assert.calledWith(global.vis.DataSet, expectedAllNodes);
+    });
+
+    it('highlights services with offline hosts', function () {
+
+        const props = createProps();
+        props.microservices = [{
+          id: "service-with-offline-hosts",
+          label: "service-with-offline-hosts",
+          hosts: [{
+              status: "UP"
+          }, {
+            status: "SOMETHING_ELSE_THAN_UP"
+          }]
+        }];
+
+        shallow(<MicroserviceMindmap {...props} />, { lifecycleExperimental: true });
+
+        const expectedAllNodes = [
+            {
+                color: { background: "#ff6641", border: "#19c786" },
+                hosts: [{ status: "UP" }, { status: "SOMETHING_ELSE_THAN_UP" }],
+                id: "service-with-offline-hosts",
+                label: "service-with-offline-hosts"
             }
         ];
 
@@ -212,7 +234,7 @@ describe('<MicroserviceMindmap/>', function () {
             {
                 id: "foo-service",
                 label: "foo-service",
-                group: "microservice"
+                color: { background: "#ffffff", border: "#19c786" }
             },
             {
                 id: "bar-consumer",
@@ -242,7 +264,7 @@ describe('<MicroserviceMindmap/>', function () {
             id: "foo-service",
             label: "foo-service@0.4.2",
             version: "0.4.2",
-            group: "microservice"
+            color: { background: "#ffffff", border: "#19c786" }
           },
           {
             id: "bar-consumer",
@@ -251,7 +273,7 @@ describe('<MicroserviceMindmap/>', function () {
             consumes: [
               { "target": "foo-service", "type": "REST" }
             ],
-            group: "external"
+            color: { background: "#ffffff", border: "#f69805" }
           }
         ];
 
