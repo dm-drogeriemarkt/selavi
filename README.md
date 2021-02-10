@@ -1,3 +1,6 @@
+:warning: | This repository is not being maintained anymore.
+:---: | :---
+
 # SeLaVi
 SeLaVi (ServiceLandscapeVisualizer) displays all microservices which are registered in a service registry and their relations to each other in a graphical mindmap.
 This grants an overview over a complex system landscape for developers, operators and product owners alike.
